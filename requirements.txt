@@ -1,0 +1,4 @@
+jupyter
+jupytext
+sunpy
+astroquery
