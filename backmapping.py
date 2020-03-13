@@ -19,12 +19,15 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.constants as const
 from sunpy.coordinates import frames
 from sunpy.coordinates import get_horizons_coord
 
 plt.rcParams['axes.linewidth'] = 1.5
 plt.rcParams['font.size'] = 15
 plt.rcParams['agg.path.chunksize'] = 20000
+
+AU = const.au / 1000  # km
 
 
 # pos_bepi = get_horizons_coord('MPO', dt.datetime.now())  #(lon, lat, radius) in (deg, deg, AU)
@@ -59,7 +62,6 @@ def make_the_plot(date, sc_list, vsw_list, flare_long):
         dist_e = pos_E.radius.value
 
         omega = np.radians(360. / (25.38 * 24 * 60 * 60))  # rot-angle in rad/sec, sidereal period
-        AU = 149597870.691  # km
 
         tt = dist_a * AU / vsw_list[i]
         alpha = np.degrees(omega * tt)
@@ -116,7 +118,6 @@ def get_long_sep(sc, date, flare_long, vsw=400):
     dist = pos.radius.value
 
     omega = math.radians(360. / (25.38 * 24 * 60 * 60))  # rot-angle in rad/sec, sidereal period
-    AU = 149597870.691  # km
 
     tt = dist * AU / vsw
     alpha = math.degrees(omega * tt)

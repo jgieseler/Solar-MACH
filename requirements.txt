@@ -2,3 +2,6 @@ jupyter
 jupytext
 sunpy
 astroquery
+scipy
+numpy
+matplotlib
