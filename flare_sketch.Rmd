@@ -16,15 +16,6 @@ jupyter:
 
 ```{python}
 # import libraries
-import matplotlib.pyplot as plt
-plt.rcParams['axes.linewidth'] = 1.5
-plt.rcParams['font.size'] = 15
-plt.rcParams['agg.path.chunksize'] = 20000
-import datetime as dt
-from sunpy.coordinates import get_horizons_coord
-from sunpy.coordinates import frames
-import math
-import numpy as np
 import backmapping
 ```
 
