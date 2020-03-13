@@ -27,6 +27,10 @@ plt.rcParams['axes.linewidth'] = 1.5
 plt.rcParams['font.size'] = 15
 plt.rcParams['agg.path.chunksize'] = 20000
 
+# disable unnecessary logging
+from sunpy import log
+log.setLevel('WARNING')
+
 AU = const.au / 1000  # km
 
 
