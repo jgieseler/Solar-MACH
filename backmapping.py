@@ -133,11 +133,12 @@ def get_long_sep(sc, date, flare_long, vsw=400):
     if long_sep < -180.:
         long_sep = 360 - abs(long_sep)
 
-    print('spacecraft:', sc)
-    print('alpha: ', alpha)
-    print('lon: ', lon)
-    print('v_sw: ', vsw)
-    print('Longitudinal separation:', long_sep)
+    print('spacecraft: {}'.format(sc))
+    print('alpha: {:.1f}°'.format(alpha))
+    print('lon: {:.1f}°'.format(lon))
+    print('v_sw: {:.1f} km/s'.format(vsw))
+    print('Longitudinal separation: {:.1f}°'.format(long_sep))
+    print()
 
     return long_sep
 
