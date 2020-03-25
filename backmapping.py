@@ -43,7 +43,7 @@ def make_the_plot(date, sc_list, vsw_list, flare_long):
         vsw_list = np.zeros(len(sc_list)) + 400
 
     color_dic = {'STEREO-A': 'red', 'STEREO-B': 'blue', 'Earth': 'green', 'MPO': 'orange', 'PSP': 'purple',
-                 'SolarOrbiter': 'dodgerblue'}
+                 'Solar Orbiter': 'dodgerblue'}
     for i, sc in enumerate(sc_list):
         sc_color = color_dic[sc]
         sep = get_long_sep(sc, date, flare_long, vsw=vsw_list[i])
