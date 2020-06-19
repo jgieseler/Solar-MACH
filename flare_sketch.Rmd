@@ -28,7 +28,7 @@ date = '2019-1-17 03:31:00'
 # chose spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)
 
 ```{python}
-sc_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP']
+sc_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter']
 vsw_list = []
 ```
 
