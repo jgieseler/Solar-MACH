@@ -1,6 +1,6 @@
 jupyter
 jupytext
-sunpy
+sunpy==1.1.0
 astroquery
 scipy
 numpy
