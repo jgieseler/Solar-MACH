@@ -1,12 +1,12 @@
 # backmapping.py
 import math
-import matplotlib.pyplot as plt
-from matplotlib.legend_handler import HandlerPatch
+
 import matplotlib.patches as mpatches
-from matplotlib.pyplot import figure, show, grid, tight_layout
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy.constants as const
+from matplotlib.legend_handler import HandlerPatch
 from sunpy.coordinates import frames
 from sunpy.coordinates import get_horizons_coord
 
@@ -16,6 +16,7 @@ plt.rcParams['agg.path.chunksize'] = 20000
 
 # disable unnecessary logging
 from sunpy import log
+
 log.setLevel('WARNING')
 
 
@@ -30,9 +31,10 @@ def PRINT_BODY_LIST():
     for key in body_dict.keys():
         key_list.append(key)
         bodyname_list.append(body_dict[key][1])
-    data = pd.DataFrame({'Key':key_list, 'Body':bodyname_list})
+    data = pd.DataFrame({'Key': key_list, 'Body': bodyname_list})
     pd.options.display.max_rows = None
     return data
+
 
 class HELIOSPHERIC_CONSTELLATION():
     '''
@@ -51,13 +53,14 @@ class HELIOSPHERIC_CONSTELLATION():
     reference_lat: float, optional
                 Heliographic latitude of referene position at the Sun
     '''
+
     def __init__(self, date, body_list, vsw_list=[], reference_long=None, reference_lat=None):
         body_list = list(dict.fromkeys(body_list))
         from selected_bodies import body_dict
 
         self.date = date
         self.reference_long = reference_long
-        self.reference_lat  = reference_lat
+        self.reference_lat = reference_lat
 
         pos_E = get_horizons_coord(399, self.date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
         self.pos_E = pos_E.transform_to(frames.HeliographicCarrington)
@@ -65,17 +68,18 @@ class HELIOSPHERIC_CONSTELLATION():
         if len(vsw_list) == 0:
             vsw_list = np.zeros(len(body_list)) + 400
 
-        random_cols = ['forestgreen', 'mediumblue', 'm', 'saddlebrown', 'tomato', 'olive', 'steelblue', 'darkmagenta', 'c', 'darkslategray', 'yellow', 'darkolivegreen']
-        body_lon_list   = []
-        body_lat_list   = []
-        body_dist_list  = []
-        longsep_E_list  = []
-        latsep_E_list   = []
-        body_vsw_list   = []
+        random_cols = ['forestgreen', 'mediumblue', 'm', 'saddlebrown', 'tomato', 'olive', 'steelblue', 'darkmagenta',
+                       'c', 'darkslategray', 'yellow', 'darkolivegreen']
+        body_lon_list = []
+        body_lat_list = []
+        body_dist_list = []
+        longsep_E_list = []
+        latsep_E_list = []
+        body_vsw_list = []
         footp_long_list = []
-        longsep_list    = []
-        latsep_list     = []
-        footp_longsep_list  = []
+        longsep_list = []
+        latsep_list = []
+        footp_longsep_list = []
 
         for i, body in enumerate(body_list.copy()):
             if body in body_dict:
@@ -96,7 +100,7 @@ class HELIOSPHERIC_CONSTELLATION():
                 body_dict[body_id].append(vsw_list[i])
 
                 longsep_E = pos.lon.value - self.pos_E.lon.value
-                latsep_E  = pos.lat.value - self.pos_E.lat.value
+                latsep_E = pos.lat.value - self.pos_E.lat.value
 
                 body_lon_list.append(pos.lon.value)
                 body_lat_list.append(pos.lat.value)
@@ -106,7 +110,6 @@ class HELIOSPHERIC_CONSTELLATION():
 
                 body_vsw_list.append(vsw_list[i])
 
-
                 sep, alpha = self.BACKMAPPING(pos, date, reference_long, vsw=vsw_list[i])
                 body_dict[body_id].append(sep)
 
@@ -114,7 +117,6 @@ class HELIOSPHERIC_CONSTELLATION():
                 if body_footp_long > 360:
                     body_footp_long = body_footp_long - 360
                 footp_long_list.append(body_footp_long)
-
 
                 if reference_long != None:
                     body_dict[body_id].append(sep)
@@ -130,24 +132,28 @@ class HELIOSPHERIC_CONSTELLATION():
                     latsep_list.append(lat_sep)
             except:
                 print('')
-                print('!!! No ephemeris for target "'+str(body)+'" for date '+self.date)
+                print('!!! No ephemeris for target "' + str(body) + '" for date ' + self.date)
                 body_list.remove(body)
 
-        body_dict_short = { sel_key: body_dict[sel_key] for sel_key in body_list}
+        body_dict_short = {sel_key: body_dict[sel_key] for sel_key in body_list}
         self.body_dict = body_dict_short
         self.max_dist = np.max(body_dist_list)
-        self.coord_table = pd.DataFrame({'Spacecraft/Body':list(self.body_dict.keys()), 'Carrington Longitude (°)':body_lon_list, 'Latitude (°)':body_lat_list, 'Heliocentric Distance (AU)': body_dist_list,
-        "Longitudinal separation to Earth's longitude":longsep_E_list, "Latitudinal separation to Earth's latitude":latsep_E_list, 'Vsw':body_vsw_list, 'Magnetic footpoint longitude (Carrington)':footp_long_list})
+        self.coord_table = pd.DataFrame(
+            {'Spacecraft/Body': list(self.body_dict.keys()), 'Carrington Longitude (°)': body_lon_list,
+             'Latitude (°)': body_lat_list, 'Heliocentric Distance (AU)': body_dist_list,
+             "Longitudinal separation to Earth's longitude": longsep_E_list,
+             "Latitudinal separation to Earth's latitude": latsep_E_list, 'Vsw': body_vsw_list,
+             'Magnetic footpoint longitude (Carrington)': footp_long_list})
 
         if self.reference_long != None:
             self.coord_table['Longitudinal separation between body and reference_long'] = longsep_list
-            self.coord_table["Longitudinal separation between body's mangetic footpoint and reference_long"] = footp_longsep_list
+            self.coord_table[
+                "Longitudinal separation between body's mangetic footpoint and reference_long"] = footp_longsep_list
         if self.reference_lat != None:
             self.coord_table['Latitudinal separation between body and reference_lat'] = latsep_list
 
         pass
         self.coord_table.style.set_properties(**{'text-align': 'left'})
-
 
     def BACKMAPPING(self, body_pos, date, reference_long, vsw=400):
         '''
@@ -172,8 +178,8 @@ class HELIOSPHERIC_CONSTELLATION():
         '''
         AU = const.au / 1000  # km
 
-        pos  = body_pos
-        lon  = pos.lon.value
+        pos = body_pos
+        lon = pos.lon.value
         dist = pos.radius.value
 
         omega = math.radians(360. / (25.38 * 24 * 60 * 60))  # rot-angle in rad/sec, sidereal period
@@ -193,9 +199,8 @@ class HELIOSPHERIC_CONSTELLATION():
 
         return sep, alpha
 
-
-
-    def MAKE_CONSTELLATION_PLOT(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, outfile=''):
+    def MAKE_CONSTELLATION_PLOT(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True,
+                                outfile=''):
         '''
         This makes a polar plot showing the Sun in the center (view from North) and the positions of the selected bodies
 
@@ -216,17 +221,16 @@ class HELIOSPHERIC_CONSTELLATION():
         fig, ax = plt.subplots(subplot_kw=dict(projection='polar'), figsize=(12, 8))
         self.ax = ax
 
-        r = np.arange(0.007, self.max_dist+0.3, 0.001)
+        r = np.arange(0.007, self.max_dist + 0.3, 0.001)
         omega = np.radians(360. / (25.38 * 24 * 60 * 60))  # solar rot-angle in rad/sec, sidereal period
 
-
         for i, body_id in enumerate(self.body_dict):
-            body_lab   = self.body_dict[body_id][1]
+            body_lab = self.body_dict[body_id][1]
             body_color = self.body_dict[body_id][2]
-            body_vsw   = self.body_dict[body_id][4]
-            body_pos   = self.body_dict[body_id][3]
+            body_vsw = self.body_dict[body_id][4]
+            body_pos = self.body_dict[body_id][3]
 
-            pos       = body_pos
+            pos = body_pos
             dist_body = pos.radius.value
             body_long = pos.lon.value
 
@@ -245,35 +249,34 @@ class HELIOSPHERIC_CONSTELLATION():
                 alpha_body = np.deg2rad(body_long) + omega / (body_vsw / AU) * (dist_body - r)
                 ax.plot(alpha_body, r, color=body_color)
 
-
         if self.reference_long >= 0:
             delta_ref = self.reference_long
             if delta_ref < 0.:
                 delta_ref = delta_ref + 360.
-            alpha_ref = np.deg2rad(delta_ref) + omega / (body_vsw / AU) * (dist_e / AU - r) - (omega / (body_vsw / AU) * (dist_e / AU))
-            arrow_dist = min([self.max_dist+0.1, 2.])
-            ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.12, head_length=0.11, edgecolor='black', facecolor='black', lw=2, zorder=5, overhang=0.2)
+            alpha_ref = np.deg2rad(delta_ref) + omega / (body_vsw / AU) * (dist_e / AU - r) - (
+                        omega / (body_vsw / AU) * (dist_e / AU))
+            arrow_dist = min([self.max_dist + 0.1, 2.])
+            ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.12, head_length=0.11, edgecolor='black',
+                                facecolor='black', lw=2, zorder=5, overhang=0.2)
 
             if plot_spirals:
                 ax.plot(alpha_ref, r, '--k', label='field line connecting to\nref. long. (vsw=400 km/s)')
 
-
         leg1 = ax.legend(loc=(1.2, 0.7), fontsize=13)
         if self.reference_long >= 0:
-            leg2 = ax.legend([ref_arr], ['reference long.'], loc=(1.2, 0.6), handler_map={mpatches.FancyArrow : HandlerPatch(patch_func=self.MAKE_LEGEND_ARROW),}, fontsize=13)
+            leg2 = ax.legend([ref_arr], ['reference long.'], loc=(1.2, 0.6),
+                             handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=self.MAKE_LEGEND_ARROW), },
+                             fontsize=13)
             ax.add_artist(leg1)
 
-
-
-
-        ax.set_rlabel_position(E_long+120)
-        ax.set_theta_offset(np.deg2rad(270-E_long))
-        ax.set_rmax(self.max_dist+0.3)
+        ax.set_rlabel_position(E_long + 120)
+        ax.set_theta_offset(np.deg2rad(270 - E_long))
+        ax.set_rmax(self.max_dist + 0.3)
         ax.set_rmin(0.01)
         ax.yaxis.get_major_locator().base.set_params(nbins=4)
-        circle = pl.Circle((0., 0.), self.max_dist+0.29, transform=ax.transData._b, edgecolor="k", facecolor=None, fill=False, lw=2)
+        circle = pl.Circle((0., 0.), self.max_dist + 0.29, transform=ax.transData._b, edgecolor="k", facecolor=None,
+                           fill=False, lw=2)
         ax.add_artist(circle)
-
 
         ax.set_title(self.date + '\n', pad=40)
 
@@ -281,21 +284,18 @@ class HELIOSPHERIC_CONSTELLATION():
         plt.subplots_adjust(bottom=0.15)
 
         if show_earth_centered_coord:
-            pos1 = ax.get_position() # get the original position of the polar plot
+            pos1 = ax.get_position()  # get the original position of the polar plot
             offset = 0.12
-            pos2 = [pos1.x0-offset/2, pos1.y0-offset/2,  pos1.width+offset, pos1.height+offset]
+            pos2 = [pos1.x0 - offset / 2, pos1.y0 - offset / 2, pos1.width + offset, pos1.height + offset]
             ax2 = self.POLAR_TWIN(ax, E_long, pos2)
 
         ax_ticks = ax.get_xmajorticklabels()
         ax.set_xticklabels(ax_ticks)
         ax.tick_params(axis='x', pad=6)
 
-
-
         if outfile != '':
             plt.savefig(outfile)
         plt.show()
-
 
     def POLAR_TWIN(self, ax, E_long, position):
         '''
@@ -306,7 +306,7 @@ class HELIOSPHERIC_CONSTELLATION():
                                  theta_direction=ax.get_theta_direction(),
                                  theta_offset=E_long)
 
-        ax2.set_rmax(self.max_dist+0.3)
+        ax2.set_rmax(self.max_dist + 0.3)
         ax2.yaxis.set_visible(False)
         ax2.set_theta_zero_location("S")
         ax2.tick_params(axis='x', colors='darkgreen', pad=10)
@@ -316,9 +316,9 @@ class HELIOSPHERIC_CONSTELLATION():
 
         return ax2
 
-    def MAKE_LEGEND_ARROW(self, legend, orig_handle, xdescent, ydescent,width, height, fontsize):
+    def MAKE_LEGEND_ARROW(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize):
         '''
         Funciton used to add a legend with an arrow
         '''
-        p = mpatches.FancyArrow(0, 0.5*height, width, 0, length_includes_head=True, head_width=0.75*height )
+        p = mpatches.FancyArrow(0, 0.5 * height, width, 0, length_includes_head=True, head_width=0.75 * height)
         return p
