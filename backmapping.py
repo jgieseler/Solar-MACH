@@ -26,12 +26,11 @@ def print_body_list():
     """
     print('Please visit https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top \nfor a complete list of available bodies')
     from selected_bodies import body_dict
-    key_list = []
-    bodyname_list = []
-    for key in body_dict.keys():
-        key_list.append(key)
-        bodyname_list.append(body_dict[key][1])
-    data = pd.DataFrame({'Key': key_list, 'Body': bodyname_list})
+    data = pd.DataFrame\
+        .from_dict(body_dict, orient='index', columns=['ID', 'Body', 'Color'])\
+        .drop(['ID', 'Color'], 'columns')\
+        .drop_duplicates()
+    data.index.name = 'Key'
     pd.options.display.max_rows = None
     return data
 
