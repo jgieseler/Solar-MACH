@@ -266,8 +266,12 @@ class HeliosphericConstellation():
 
         leg1 = ax.legend(loc=(1.2, 0.7), fontsize=13)
         if self.reference_long >= 0:
+            def legend_arrow(width, height, **_):
+                return mpatches.FancyArrow(0, 0.5 * height, width, 0, length_includes_head=True,
+                                           head_width=0.75 * height)
+
             leg2 = ax.legend([ref_arr], ['reference long.'], loc=(1.2, 0.6),
-                             handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=self._legend_arrow), },
+                             handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=legend_arrow), },
                              fontsize=13)
             ax.add_artist(leg1)
 
@@ -317,10 +321,3 @@ class HeliosphericConstellation():
             xax.set_color('darkgreen')
 
         return ax2
-
-    def _legend_arrow(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize):
-        """
-        add a legend with an arrow
-        """
-        p = mpatches.FancyArrow(0, 0.5 * height, width, 0, length_includes_head=True, head_width=0.75 * height)
-        return p
