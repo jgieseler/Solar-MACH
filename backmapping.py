@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import scipy.constants as const
 from matplotlib.legend_handler import HandlerPatch
+from sunpy import log
 from sunpy.coordinates import frames
 from sunpy.coordinates import get_horizons_coord
 
@@ -15,15 +16,14 @@ plt.rcParams['font.size'] = 15
 plt.rcParams['agg.path.chunksize'] = 20000
 
 # disable unnecessary logging
-from sunpy import log
-
 log.setLevel('WARNING')
 
 
-def PRINT_BODY_LIST():
-    '''
-    This function prints a selection of body keys and the corresponding body names which may be provided to the HELIOSPHERIC_CONSTELLATION class
-    '''
+def print_body_list():
+    """
+    prints a selection of body keys and the corresponding body names which may be provided to the
+    HeliosphericConstellation class
+    """
     print('Please visit https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top \nfor a complete list of available bodies')
     from selected_bodies import body_dict
     key_list = []
@@ -36,13 +36,13 @@ def PRINT_BODY_LIST():
     return data
 
 
-class HELIOSPHERIC_CONSTELLATION():
-    '''
+class HeliosphericConstellation():
+    """
     Class which handles the selected bodies
 
     Parameters
     ----------
-    date,
+    date: str
     body_list: list
             list of body keys to be used. Keys can be string of int.
     vsw_list: list, optional
@@ -52,7 +52,7 @@ class HELIOSPHERIC_CONSTELLATION():
                 Carrington longitute of reference position at the Sun
     reference_lat: float, optional
                 Heliographic latitude of referene position at the Sun
-    '''
+    """
 
     def __init__(self, date, body_list, vsw_list=[], reference_long=None, reference_lat=None):
         body_list = list(dict.fromkeys(body_list))
@@ -110,7 +110,7 @@ class HELIOSPHERIC_CONSTELLATION():
 
                 body_vsw_list.append(vsw_list[i])
 
-                sep, alpha = self.BACKMAPPING(pos, date, reference_long, vsw=vsw_list[i])
+                sep, alpha = self.backmapping(pos, date, reference_long, vsw=vsw_list[i])
                 body_dict[body_id].append(sep)
 
                 body_footp_long = pos.lon.value + alpha
@@ -155,9 +155,9 @@ class HELIOSPHERIC_CONSTELLATION():
         pass
         self.coord_table.style.set_properties(**{'text-align': 'left'})
 
-    def BACKMAPPING(self, body_pos, date, reference_long, vsw=400):
-        '''
-        Determines the longitudinal separation angle of a given spacecraft and a given reference longitude
+    def backmapping(self, body_pos, date, reference_long, vsw=400):
+        """
+        Determine the longitudinal separation angle of a given spacecraft and a given reference longitude
 
         Parameters
         ----------
@@ -175,7 +175,7 @@ class HELIOSPHERIC_CONSTELLATION():
                 longitudinal separation of body magnetic footpoint and reference longitude in degrees
             alpha: float
                 backmapping angle
-        '''
+        """
         AU = const.au / 1000  # km
 
         pos = body_pos
@@ -199,10 +199,9 @@ class HELIOSPHERIC_CONSTELLATION():
 
         return sep, alpha
 
-    def MAKE_CONSTELLATION_PLOT(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True,
-                                outfile=''):
-        '''
-        This makes a polar plot showing the Sun in the center (view from North) and the positions of the selected bodies
+    def plot(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, outfile=''):
+        """
+        Make a polar plot showing the Sun in the center (view from North) and the positions of the selected bodies
 
         Parameters
         ----------
@@ -214,7 +213,7 @@ class HELIOSPHERIC_CONSTELLATION():
                     if True, additional longitudinal tickmarks are shown with Earth at longitude 0
         outfile: string
                 if provided, the plot is saved with outfile as filename
-        '''
+        """
         import pylab as pl
         AU = const.au / 1000  # km
 
@@ -265,7 +264,7 @@ class HELIOSPHERIC_CONSTELLATION():
         leg1 = ax.legend(loc=(1.2, 0.7), fontsize=13)
         if self.reference_long >= 0:
             leg2 = ax.legend([ref_arr], ['reference long.'], loc=(1.2, 0.6),
-                             handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=self.MAKE_LEGEND_ARROW), },
+                             handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=self._legend_arrow), },
                              fontsize=13)
             ax.add_artist(leg1)
 
@@ -287,7 +286,7 @@ class HELIOSPHERIC_CONSTELLATION():
             pos1 = ax.get_position()  # get the original position of the polar plot
             offset = 0.12
             pos2 = [pos1.x0 - offset / 2, pos1.y0 - offset / 2, pos1.width + offset, pos1.height + offset]
-            ax2 = self.POLAR_TWIN(ax, E_long, pos2)
+            ax2 = self._polar_twin(ax, E_long, pos2)
 
         ax_ticks = ax.get_xmajorticklabels()
         ax.set_xticklabels(ax_ticks)
@@ -297,10 +296,10 @@ class HELIOSPHERIC_CONSTELLATION():
             plt.savefig(outfile)
         plt.show()
 
-    def POLAR_TWIN(self, ax, E_long, position):
-        '''
-        Function used to add an additional axes which is needed to plot additional longitudinal tickmarks with Earth at longitude 0
-        '''
+    def _polar_twin(self, ax, E_long, position):
+        """
+        add an additional axes which is needed to plot additional longitudinal tickmarks with Earth at longitude 0
+        """
         ax2 = ax.figure.add_axes(position, projection='polar',
                                  label='twin', frameon=False,
                                  theta_direction=ax.get_theta_direction(),
@@ -316,9 +315,9 @@ class HELIOSPHERIC_CONSTELLATION():
 
         return ax2
 
-    def MAKE_LEGEND_ARROW(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize):
-        '''
-        Funciton used to add a legend with an arrow
-        '''
+    def _legend_arrow(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize):
+        """
+        add a legend with an arrow
+        """
         p = mpatches.FancyArrow(0, 0.5 * height, width, 0, length_includes_head=True, head_width=0.75 * height)
         return p
