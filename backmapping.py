@@ -1,5 +1,6 @@
 # backmapping.py
 import math
+from copy import deepcopy
 
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -58,7 +59,7 @@ class HeliosphericConstellation():
 
     def __init__(self, date, body_list, vsw_list=[], reference_long=None, reference_lat=None):
         body_list = list(dict.fromkeys(body_list))
-        from selected_bodies import body_dict
+        bodies = deepcopy(body_dict)
 
         self.date = date
         self.reference_long = reference_long
@@ -84,22 +85,22 @@ class HeliosphericConstellation():
         footp_longsep_list = []
 
         for i, body in enumerate(body_list.copy()):
-            if body in body_dict:
-                body_id = body_dict[body][0]
-                body_lab = body_dict[body][1]
-                body_color = body_dict[body][2]
+            if body in bodies:
+                body_id = bodies[body][0]
+                body_lab = bodies[body][1]
+                body_color = bodies[body][2]
 
             else:
                 body_id = body
                 body_lab = str(body)
                 body_color = random_cols[i]
-                body_dict.update(dict.fromkeys([body_id], [body_id, body_lab, body_color]))
+                bodies.update(dict.fromkeys([body_id], [body_id, body_lab, body_color]))
 
             try:
                 pos = get_horizons_coord(body_id, date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
                 pos = pos.transform_to(frames.HeliographicCarrington)
-                body_dict[body_id].append(pos)
-                body_dict[body_id].append(vsw_list[i])
+                bodies[body_id].append(pos)
+                bodies[body_id].append(vsw_list[i])
 
                 longsep_E = pos.lon.value - self.pos_E.lon.value
                 latsep_E = pos.lat.value - self.pos_E.lat.value
@@ -113,7 +114,7 @@ class HeliosphericConstellation():
                 body_vsw_list.append(vsw_list[i])
 
                 sep, alpha = self.backmapping(pos, date, reference_long, vsw=vsw_list[i])
-                body_dict[body_id].append(sep)
+                bodies[body_id].append(sep)
 
                 body_footp_long = pos.lon.value + alpha
                 if body_footp_long > 360:
@@ -121,7 +122,7 @@ class HeliosphericConstellation():
                 footp_long_list.append(body_footp_long)
 
                 if reference_long is not None:
-                    body_dict[body_id].append(sep)
+                    bodies[body_id].append(sep)
                     long_sep = pos.lon.value - self.reference_long
                     if long_sep > 180:
                         long_sep = long_sep - 360.
@@ -137,7 +138,7 @@ class HeliosphericConstellation():
                 print('!!! No ephemeris for target "' + str(body) + '" for date ' + self.date)
                 body_list.remove(body)
 
-        body_dict_short = {sel_key: body_dict[sel_key] for sel_key in body_list}
+        body_dict_short = {sel_key: bodies[sel_key] for sel_key in body_list}
         self.body_dict = body_dict_short
         self.max_dist = np.max(body_dist_list)
         self.coord_table = pd.DataFrame(
