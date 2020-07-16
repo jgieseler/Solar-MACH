@@ -17,6 +17,9 @@ plt.rcParams['axes.linewidth'] = 1.5
 plt.rcParams['font.size'] = 15
 plt.rcParams['agg.path.chunksize'] = 20000
 
+pd.options.display.max_rows = None
+pd.options.display.float_format = '{:.1f}'.format
+
 # disable unnecessary logging
 log.setLevel('WARNING')
 
@@ -32,7 +35,6 @@ def print_body_list():
         .drop(['ID', 'Color'], 'columns')\
         .drop_duplicates()
     data.index.name = 'Key'
-    pd.options.display.max_rows = None
     return data
 
 
