@@ -22,7 +22,7 @@ from backmapping import *
 # provide date and time
 
 ```{python}
-date = '2020-5-1 13:00:00'
+date = '2020-05-01 13:00:00'
 ```
 
 # Chose bodies/spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)
@@ -63,10 +63,10 @@ display(c.coord_table)
 
 ```{python}
 c.plot(
-    plot_spirals=True,  # plot Parker spirals for each body
-    plot_sun_body_line=True,  # plot straight line between Sun and body
-    show_earth_centered_coord=True,  # display Earth-centered coordinate system
-    outfile='plot.png'  # output file (optional)
+    plot_spirals=True,                 # plot Parker spirals for each body
+    plot_sun_body_line=True,           # plot straight line between Sun and body
+    show_earth_centered_coord=True,    # display Earth-centered coordinate system
+    outfile='plot.png'                 # output file (optional)
 )
 ```
 
