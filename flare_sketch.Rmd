@@ -29,12 +29,12 @@ date = '2020-5-1 13:00:00'
 
 ```{python}
 # selection of inner heliospheric spacecraft and bodies to be provided to body_list
-PRINT_BODY_LIST()
+print_body_list()
 ```
 
 ```{python}
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']
-vsw_list = [300,400,500,600,700,800,900,200]
+vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
 #vsw_list = []
 
@@ -50,19 +50,24 @@ reference_lat  = -20
 # Initialize the Bodies
 
 ```{python}
-HC = HELIOSPHERIC_CONSTELLATION(date, body_list, vsw_list, reference_long, reference_lat)
+c = HeliosphericConstellation(date, body_list, vsw_list, reference_long, reference_lat)
 ```
 
 # Display coordinates
 
 ```{python}
-display(HC.coord_table)
+display(c.coord_table)
 ```
 
 # Make the longitudinal constellation plot
 
 ```{python}
-HC.MAKE_CONSTELLATION_PLOT(plot_spirals=True, plot_sun_body_line=True, show_earth_centered_coord=True, outfile='test_plot')
+c.plot(
+    plot_spirals=True,  # plot Parker spirals for each body
+    plot_sun_body_line=True,  # plot straight line between Sun and body
+    show_earth_centered_coord=True,  # display Earth-centered coordinate system
+    outfile='plot.png'  # output file (optional)
+)
 ```
 
 ```{python}
