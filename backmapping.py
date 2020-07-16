@@ -11,6 +11,8 @@ from sunpy import log
 from sunpy.coordinates import frames
 from sunpy.coordinates import get_horizons_coord
 
+from selected_bodies import body_dict
+
 plt.rcParams['axes.linewidth'] = 1.5
 plt.rcParams['font.size'] = 15
 plt.rcParams['agg.path.chunksize'] = 20000
@@ -25,7 +27,6 @@ def print_body_list():
     HeliosphericConstellation class
     """
     print('Please visit https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top for a complete list of available bodies')
-    from selected_bodies import body_dict
     data = pd.DataFrame\
         .from_dict(body_dict, orient='index', columns=['ID', 'Body', 'Color'])\
         .drop(['ID', 'Color'], 'columns')\
