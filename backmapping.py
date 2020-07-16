@@ -118,7 +118,7 @@ class HeliosphericConstellation():
                     body_footp_long = body_footp_long - 360
                 footp_long_list.append(body_footp_long)
 
-                if reference_long != None:
+                if reference_long is not None:
                     body_dict[body_id].append(sep)
                     long_sep = pos.lon.value - self.reference_long
                     if long_sep > 180:
@@ -127,10 +127,10 @@ class HeliosphericConstellation():
                     longsep_list.append(long_sep)
                     footp_longsep_list.append(sep)
 
-                if reference_lat != None:
+                if reference_lat is not None:
                     lat_sep = pos.lat.value - self.reference_lat
                     latsep_list.append(lat_sep)
-            except:
+            except ValueError:
                 print('')
                 print('!!! No ephemeris for target "' + str(body) + '" for date ' + self.date)
                 body_list.remove(body)
@@ -145,11 +145,11 @@ class HeliosphericConstellation():
              "Latitudinal separation to Earth's latitude": latsep_E_list, 'Vsw': body_vsw_list,
              'Magnetic footpoint longitude (Carrington)': footp_long_list})
 
-        if self.reference_long != None:
+        if self.reference_long is not None:
             self.coord_table['Longitudinal separation between body and reference_long'] = longsep_list
             self.coord_table[
                 "Longitudinal separation between body's mangetic footpoint and reference_long"] = footp_longsep_list
-        if self.reference_lat != None:
+        if self.reference_lat is not None:
             self.coord_table['Latitudinal separation between body and reference_lat'] = latsep_list
 
         pass
