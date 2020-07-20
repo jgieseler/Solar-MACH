@@ -295,8 +295,6 @@ class HeliosphericConstellation():
             pos2 = [pos1.x0 - offset / 2, pos1.y0 - offset / 2, pos1.width + offset, pos1.height + offset]
             ax2 = self._polar_twin(ax, E_long, pos2)
 
-        ax_ticks = ax.get_xmajorticklabels()
-        ax.set_xticklabels(ax_ticks)
         ax.tick_params(axis='x', pad=6)
 
         if outfile != '':
