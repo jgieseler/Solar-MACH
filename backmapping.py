@@ -103,6 +103,8 @@ class HeliosphericConstellation():
                 bodies[body_id].append(vsw_list[i])
 
                 longsep_E = pos.lon.value - self.pos_E.lon.value
+                if longsep_E > 180:
+                    longsep_E = longsep_E - 360.
                 latsep_E = pos.lat.value - self.pos_E.lat.value
 
                 body_lon_list.append(pos.lon.value)
