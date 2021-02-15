@@ -66,7 +66,7 @@ class HeliosphericConstellation():
         self.reference_lat = reference_lat
 
         pos_E = get_horizons_coord(399, self.date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
-        self.pos_E = pos_E.transform_to(frames.HeliographicCarrington)
+        self.pos_E = pos_E.transform_to(frames.HeliographicCarrington(observer='Sun'))
 
         if len(vsw_list) == 0:
             vsw_list = np.zeros(len(body_list)) + 400
@@ -98,7 +98,7 @@ class HeliosphericConstellation():
 
             try:
                 pos = get_horizons_coord(body_id, date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
-                pos = pos.transform_to(frames.HeliographicCarrington)
+                pos = pos.transform_to(frames.HeliographicCarrington(observer='Sun'))
                 bodies[body_id].append(pos)
                 bodies[body_id].append(vsw_list[i])
 
