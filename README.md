@@ -1,4 +1,4 @@
-# Heliospheric propagation tool
+# Solar MAgnetic Connection Haus tool
 
 
 
