@@ -66,7 +66,7 @@ class HeliosphericConstellation():
         self.reference_lat = reference_lat
 
         pos_E = get_horizons_coord(399, self.date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
-        self.pos_E = pos_E.transform_to(frames.HeliographicCarrington)
+        self.pos_E = pos_E.transform_to(frames.HeliographicCarrington(observer='Sun'))
 
         if len(vsw_list) == 0:
             vsw_list = np.zeros(len(body_list)) + 400
@@ -98,7 +98,7 @@ class HeliosphericConstellation():
 
             try:
                 pos = get_horizons_coord(body_id, date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
-                pos = pos.transform_to(frames.HeliographicCarrington)
+                pos = pos.transform_to(frames.HeliographicCarrington(observer='Sun'))
                 bodies[body_id].append(pos)
                 bodies[body_id].append(vsw_list[i])
 
@@ -121,7 +121,7 @@ class HeliosphericConstellation():
                     body_footp_long = body_footp_long - 360
                 footp_long_list.append(body_footp_long)
 
-                if reference_long is not None:
+                if self.reference_long is not None:
                     bodies[body_id].append(sep)
                     long_sep = pos.lon.value - self.reference_long
                     if long_sep > 180:
@@ -130,7 +130,7 @@ class HeliosphericConstellation():
                     longsep_list.append(long_sep)
                     footp_longsep_list.append(sep)
 
-                if reference_lat is not None:
+                if self.reference_lat is not None:
                     lat_sep = pos.lat.value - self.reference_lat
                     latsep_list.append(lat_sep)
             except ValueError:
@@ -190,7 +190,7 @@ class HeliosphericConstellation():
         tt = dist * AU / vsw
         alpha = math.degrees(omega * tt)
 
-        if reference_long >= 0:
+        if reference_long is not None:
             sep = (lon + alpha) - reference_long
             if sep > 180.:
                 sep = sep - 360
@@ -198,7 +198,7 @@ class HeliosphericConstellation():
             if sep < -180.:
                 sep = 360 - abs(sep)
         else:
-            sep = -1
+            sep = np.nan
 
         return sep, alpha
 
@@ -251,7 +251,7 @@ class HeliosphericConstellation():
                 alpha_body = np.deg2rad(body_long) + omega / (body_vsw / AU) * (dist_body - r)
                 ax.plot(alpha_body, r, color=body_color)
 
-        if self.reference_long >= 0:
+        if self.reference_long is not None:
             delta_ref = self.reference_long
             if delta_ref < 0.:
                 delta_ref = delta_ref + 360.
@@ -265,7 +265,7 @@ class HeliosphericConstellation():
                 ax.plot(alpha_ref, r, '--k', label='field line connecting to\nref. long. (vsw=400 km/s)')
 
         leg1 = ax.legend(loc=(1.2, 0.7), fontsize=13)
-        if self.reference_long >= 0:
+        if self.reference_long is not None:
             def legend_arrow(width, height, **_):
                 return mpatches.FancyArrow(0, 0.5 * height, width, 0, length_includes_head=True,
                                            head_width=0.75 * height)
