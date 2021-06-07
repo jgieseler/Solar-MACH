@@ -1,11 +1,12 @@
 ---
 jupyter:
   jupytext:
+    formats: Rmd,ipynb
     text_representation:
       extension: .Rmd
       format_name: rmarkdown
       format_version: '1.2'
-      jupytext_version: 1.5.1
+      jupytext_version: 1.11.2
   kernelspec:
     display_name: Python 3
     language: python
@@ -13,6 +14,25 @@ jupyter:
 ---
 
 # Multi-spacecraft longitudinal configuration plotter
+
+```{python}
+# Mount Google Drive
+from google.colab import drive # import drive from google colab
+
+ROOT = "/content/drive"     # default location for the drive
+print(ROOT)                 # print content of ROOT (Optional)
+
+drive.mount(ROOT)           # we mount the google drive at /content/drive
+```
+
+```{python}
+# %cd /content/drive/MyDrive/Solar-MACH
+```
+
+```{python}
+# # !pip install sunpy
+# # !pip install astroquery
+```
 
 ```{python}
 # import libraries
