@@ -28,6 +28,8 @@ vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 full_body_list = st.text_input('SC', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
 vsw_list = st.multiselect('v', [300, 400, 500, 600, 700, 800, 900, 200])
 body_list = full_body_list.split(',')
+for i in range(len(body_list)):
+    body_list[i] = body_list[i].lstrip()
 st.write(body_list, vsw_list)
 
 # st.markdown("""---""")
