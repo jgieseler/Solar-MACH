@@ -15,19 +15,19 @@ date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 # st.sidebar.markdown("""---""")
 
-col1, col2 = st.beta_columns([1, 2])
+# col1, col2 = st.beta_columns([1, 2])
 
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 st.sidebar.text('vst_list: leave empty for nominal speed of vsw=400 km/s')
-col1.write(print_body_list())
+st.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
 vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
-# body_list = st.multiselect('SC', ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars'])
-# vsw_list = st.multiselect('v', [300, 400, 500, 600, 700, 800, 900, 200])
-# st.write(body_list, vsw_list)
+body_list = st.multiselect('SC', ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars'], ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars'])
+vsw_list = st.multiselect('v', [300, 400, 500, 600, 700, 800, 900, 200])
+st.write(body_list, vsw_list)
 
 # st.markdown("""---""")
 
@@ -53,4 +53,4 @@ c.plot(
 )
 
 # Display coordinates
-col2.write(c.coord_table)
+st.write(c.coord_table)
