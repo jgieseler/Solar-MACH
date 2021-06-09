@@ -3,7 +3,7 @@ from backmapping import *
 import datetime
 
 
-st.write('provide date and time')
+st.markdown('*provide date and time*')
 # date = '2020-05-01 13:00:00'
 d = st.date_input("Select date", datetime.date.today())
 # st.write('Selected date:', d)
@@ -14,8 +14,7 @@ st.write('Selected datetime:', date)
 
 st.markdown("""---""")
 
-st.write('Chose bodies/spacecraft and measured solar wind speeds')
-st.write('(vst_list: leave empty for nominal speed of vsw=400 km/s)')
+st.write('Chose bodies/spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)')
 st.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
@@ -39,6 +38,8 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
 
 # Display coordinates
 st.write(c.coord_table)
+
+st.markdown("""---""")
 
 # Make the longitudinal constellation plot
 c.plot(
