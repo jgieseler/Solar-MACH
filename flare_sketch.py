@@ -57,4 +57,4 @@ st.dataframe(c.coord_table)
 
 st.markdown("""---""")
 st.markdown('Solar MAgnetic Connection Haus tool was originally developed at Kiel University, Germany and further discussed within the ESA Heliophysics Archives USer (HAUS) group. It is now opened to everyone. ')
-st.markdown('Original code forked from [github.com/esdc-esac-esa-int/Solar-MACH](https://github.com/esdc-esac-esa-int/Solar-MACH)' by [J. Gieseler](https://jgieseler.github.io).)
+st.markdown('Original code forked from [github.com/esdc-esac-esa-int/Solar-MACH](https://github.com/esdc-esac-esa-int/Solar-MACH) and modified by [J. Gieseler](https://jgieseler.github.io).')
