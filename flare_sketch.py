@@ -3,7 +3,8 @@ from backmapping import *
 import datetime
 
 # -- Set page config
-st.set_page_config(page_title='SC plotter', page_icon=":satellite:")
+st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:", 
+                   initial_sidebar_state="expanded")
 
 st.title('Multi-spacecraft longitudinal configuration plotter')
 
