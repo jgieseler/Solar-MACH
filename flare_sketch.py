@@ -19,7 +19,7 @@ col1, col2 = st.beta_columns([1, 2])
 
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 st.sidebar.text('vst_list: leave empty for nominal speed of vsw=400 km/s')
-st.col1.write(print_body_list())
+col1.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
@@ -53,4 +53,4 @@ c.plot(
 )
 
 # Display coordinates
-st.col2.write(c.coord_table)
+col2.write(c.coord_table)
