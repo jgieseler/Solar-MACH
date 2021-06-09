@@ -9,7 +9,7 @@ d = st.date_input("Select date", datetime.date.today())
 st.write('Selected date:', d)
 t = st.time_input('Select time', datetime.time(16, 45))
 st.write('Selected time:', t)
-date = datetime.datetime.combine(d, t)
+date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 st.write('Selected datetime:', date)
 
 
