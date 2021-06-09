@@ -17,10 +17,16 @@ date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 # col1, col2 = st.beta_columns([1, 2])
 
+st.sidebar.subheader('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
+reference_long = 20
+reference_lat = -20
+reference_long = st.sidebar.slider('Reference longitude:', 0, 360, 20)
+reference_lat = st.sidebar.slider('Reference latitude:', -180, 180, -20)
+# st.write('Selected reference longitude and latituide:', reference_long, reference_lat)
+
+
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 # st.sidebar.subheader('vst_list: leave empty for nominal speed of vsw=400 km/s')
-all_bodies = print_body_list()
-st.write(all_bodies)
 
 # body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']
 # vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
@@ -33,16 +39,10 @@ for i in range(len(body_list)):
     body_list[i] = body_list[i].lstrip()
 vsw_list = [np.int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
 
+st.sidebar.write(print_body_list())
+
 # st.markdown("""---""")
 
-st.sidebar.subheader('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
-reference_long = 20
-reference_lat = -20
-reference_long = st.sidebar.slider('Reference longitude:', 0, 360, 20)
-reference_lat = st.sidebar.slider('Reference latitude:', -180, 180, -20)
-# st.write('Selected reference longitude and latituide:', reference_long, reference_lat)
-
-# st.sidebar.markdown("""---""")
 
 # Initialize the Bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
