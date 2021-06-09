@@ -25,8 +25,9 @@ body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
 vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
-body_list = st.text_input('SC', "['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']")
+full_body_list = st.text_input('SC', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
 vsw_list = st.multiselect('v', [300, 400, 500, 600, 700, 800, 900, 200])
+body_list = full_body_list.split(',')
 st.write(body_list, vsw_list)
 
 # st.markdown("""---""")
