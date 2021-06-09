@@ -12,6 +12,7 @@ t = st.time_input('Select time', datetime.time(16, 45))
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 st.write('Selected datetime:', date)
 
+st.markdown("""---""")
 
 st.write('Chose bodies/spacecraft and measured solar wind speeds')
 st.write('(vst_list: leave empty for nominal speed of vsw=400 km/s)')
@@ -21,12 +22,16 @@ body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
 vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
+st.markdown("""---""")
+
 st.write('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
 reference_long = 20
 reference_lat = -20
 reference_long = st.slider('Reference longitude:', 0, 360, 20)
 reference_lat = st.slider('Reference latitude:', -180, 180, -20)
-st.write(reference_long, reference_lat)
+st.write('Selected reference longitude and latituide:', reference_long, reference_lat)
+
+st.markdown("""---""")
 
 # Initialize the Bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
