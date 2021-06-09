@@ -3,7 +3,7 @@ from backmapping import *
 import datetime
 
 
-st.markdown('<h3>Provide date and time</h3>')
+st.header('Provide date and time')
 # date = '2020-05-01 13:00:00'
 d = st.date_input("Select date", datetime.date.today())
 # st.write('Selected date:', d)
@@ -14,7 +14,7 @@ st.write('Selected datetime:', date)
 
 st.markdown("""---""")
 
-st.write('Chose bodies/spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)')
+st.header('Chose bodies/spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)')
 st.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
@@ -23,7 +23,7 @@ vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
 st.markdown("""---""")
 
-st.write('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
+st.header('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
 reference_long = 20
 reference_lat = -20
 reference_long = st.slider('Reference longitude:', 0, 360, 20)
