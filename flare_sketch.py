@@ -2,6 +2,9 @@ import streamlit as st
 from backmapping import *
 import datetime
 
+# -- Set page config
+st.set_page_config(page_title='SC plotter', page_icon=":satellite:")
+
 st.title('Multi-spacecraft longitudinal configuration plotter')
 
 # st.sidebar.subheader('Provide date and time')
@@ -51,4 +54,5 @@ c.plot(
 # Display coordinates
 st.dataframe(c.coord_table)
 
+st.markdown("""---""")
 st.markdown('Original code forked from [github.com/esdc-esac-esa-int/Solar-MACH](https://github.com/esdc-esac-esa-int/Solar-MACH)')
