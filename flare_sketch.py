@@ -31,8 +31,8 @@ st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 # body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']
 # vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
-full_body_list = st.sidebar.text_area('bodies/spacecraft (scroll down for full list)', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars", height=20)
-vsw_list = st.sidebar.text_area('vst_list: leave empty for nominal speed of vsw=400 km/s', "300, 400, 500, 600, 700, 800, 900, 200", height=10)
+full_body_list = st.sidebar.text_area('bodies/spacecraft (scroll down for full list)', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars", height=1)
+vsw_list = st.sidebar.text_area('vst_list', "400, 400, 400, 400, 400, 400, 400, 400", height=None)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
 for i in range(len(body_list)):
