@@ -23,6 +23,10 @@ body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
 vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
+body_list = st.multiselect(['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars'])
+vsw_list = st.multiselect([300, 400, 500, 600, 700, 800, 900, 200])
+st.write(body_list, vsw_list)
+
 st.markdown("""---""")
 
 st.header('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
