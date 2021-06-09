@@ -39,7 +39,8 @@ for i in range(len(body_list)):
     body_list[i] = body_list[i].lstrip()
 vsw_list = [np.int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
 
-st.sidebar.write(print_body_list())
+all_bodies = print_body_list()
+st.sidebar.write(all_bodies)
 
 # st.markdown("""---""")
 
@@ -57,4 +58,4 @@ c.plot(
 )
 
 # Display coordinates
-st.write(c.coord_table)
+st.table(c.coord_table)
