@@ -15,7 +15,8 @@ st.write('Selected datetime:', date)
 
 st.markdown("""---""")
 
-st.header('Chose bodies/spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)')
+st.header('Chose bodies/spacecraft and measured solar wind speeds')
+st.subheader('vst_list: leave empty for nominal speed of vsw=400 km/s')
 st.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
