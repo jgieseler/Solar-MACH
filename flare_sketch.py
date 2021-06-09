@@ -3,10 +3,15 @@ from backmapping import *
 
 # provide date and time
 date = '2020-05-01 13:00:00'
+d = st.date_input("Select date", datetime.date.today())
+st.write('Selected date:', d)
+t = st.time_input('Select time', datetime.time(16, 45))
+st.write('Selected time:', t)
+
 
 # Chose bodies/spacecraft and measured solar wind speeds
 # (vst_list: leave empty for nominal speed of vsw=400 km/s)
-print_body_list()
+st.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
@@ -22,7 +27,7 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
 
 # Display coordinates
-print(c.coord_table)
+st.write(c.coord_table)
 
 # Make the longitudinal constellation plot
 c.plot(
