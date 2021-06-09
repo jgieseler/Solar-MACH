@@ -4,7 +4,7 @@ import datetime
 
 st.title('Multi-spacecraft longitudinal configuration plotter')
 
-st.sidebar.subheader('Provide date and time')
+# st.sidebar.subheader('Provide date and time')
 # date = '2020-05-01 13:00:00'
 d = st.sidebar.date_input("Select date", datetime.date.today())
 # st.write('Selected date:', d)
@@ -24,8 +24,8 @@ st.write(print_body_list())
 # body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']
 # vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
-full_body_list = st.sidebar.text_area('SC', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
-vsw_list = st.sidebar.text_input('vst_list: leave empty for nominal speed of vsw=400 km/s', "300, 400, 500, 600, 700, 800, 900, 200")
+full_body_list = st.sidebar.text_area('bodies/spacecraft', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
+vsw_list = st.sidebar.text_area('vst_list: leave empty for nominal speed of vsw=400 km/s', "300, 400, 500, 600, 700, 800, 900, 200")
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
 for i in range(len(body_list)):
