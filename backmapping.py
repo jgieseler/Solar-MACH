@@ -287,7 +287,7 @@ class HeliosphericConstellation():
                            fill=False, lw=2)
         ax.add_artist(circle)
 
-        ax.set_title(self.date + '\n', pad=40)
+        ax.set_title(self.date + '\n', pad=0)
 
         plt.tight_layout()
         plt.subplots_adjust(bottom=0.15)
