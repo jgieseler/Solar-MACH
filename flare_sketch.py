@@ -6,9 +6,9 @@ import datetime
 st.write('provide date and time')
 # date = '2020-05-01 13:00:00'
 d = st.date_input("Select date", datetime.date.today())
-st.write('Selected date:', d)
+# st.write('Selected date:', d)
 t = st.time_input('Select time', datetime.time(16, 45))
-st.write('Selected time:', t)
+# st.write('Selected time:', t)
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 st.write('Selected datetime:', date)
 
@@ -24,6 +24,9 @@ vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 st.write('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
 reference_long = 20
 reference_lat = -20
+reference_long = st.slider('Reference longitude:', 0, 360, 20)
+reference_lat = st.slider('Reference latitude:', -180, 180, -20)
+st.write(reference_long, reference_lat)
 
 # Initialize the Bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
