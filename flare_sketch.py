@@ -15,9 +15,11 @@ date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 # st.sidebar.markdown("""---""")
 
+col1, col2 = st.beta_columns([1, 2])
+
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
-st.sidebar.subheader('vst_list: leave empty for nominal speed of vsw=400 km/s')
-st.write(print_body_list())
+st.sidebar.text('vst_list: leave empty for nominal speed of vsw=400 km/s')
+st.col1.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
              'Mars']
@@ -51,4 +53,4 @@ c.plot(
 )
 
 # Display coordinates
-st.write(c.coord_table)
+st.col2.write(c.coord_table)
