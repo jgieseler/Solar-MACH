@@ -25,7 +25,7 @@ full_body_list = \
                          'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars',
                          height=50)
 vsw_list = \
-    st.sidebar.text_area('vst_list', '400, 400, 400, 400, 400, 400, 400, 400',
+    st.sidebar.text_area('vst_list', '400, 400, 400, 400, 400, 400, 400',
                          height=50)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
@@ -50,3 +50,5 @@ c.plot(
 
 # Display coordinates
 st.dataframe(c.coord_table)
+
+st.markdown('Original code forked from [github.com/esdc-esac-esa-int/Solar-MACH](https://github.com/esdc-esac-esa-int/Solar-MACH)')
