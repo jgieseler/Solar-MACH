@@ -13,7 +13,7 @@ t = st.sidebar.time_input('Select time', datetime.time(16, 45))
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 st.write('Selected datetime:', date)
 
-st.sidebar.markdown("""---""")
+# st.sidebar.markdown("""---""")
 
 st.header('Chose bodies/spacecraft and measured solar wind speeds')
 st.subheader('vst_list: leave empty for nominal speed of vsw=400 km/s')
@@ -25,7 +25,7 @@ vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
 # body_list = st.multiselect('SC', ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars'])
 # vsw_list = st.multiselect('v', [300, 400, 500, 600, 700, 800, 900, 200])
-st.write(body_list, vsw_list)
+# st.write(body_list, vsw_list)
 
 st.markdown("""---""")
 
@@ -42,11 +42,6 @@ st.sidebar.markdown("""---""")
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
 
-# Display coordinates
-st.write(c.coord_table)
-
-st.markdown("""---""")
-
 # Make the longitudinal constellation plot
 c.plot(
     plot_spirals=True,               # plot Parker spirals for each body
@@ -54,3 +49,6 @@ c.plot(
     show_earth_centered_coord=True,  # display Earth-centered coordinate system
     outfile='plot.png'               # output file (optional)
 )
+
+# Display coordinates
+st.write(c.coord_table)
