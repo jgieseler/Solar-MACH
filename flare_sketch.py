@@ -19,19 +19,19 @@ date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 # st.sidebar.subheader('vst_list: leave empty for nominal speed of vsw=400 km/s')
-st.write(print_body_list())
+all_bodies = print_body_list()
+st.write(all_bodies)
 
 # body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']
 # vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
-full_body_list = st.sidebar.text_area('bodies/spacecraft', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
-vsw_list = st.sidebar.text_area('vst_list: leave empty for nominal speed of vsw=400 km/s', "300, 400, 500, 600, 700, 800, 900, 200")
+full_body_list = st.sidebar.text_area('bodies/spacecraft', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars", height=50)
+vsw_list = st.sidebar.text_area('vst_list: leave empty for nominal speed of vsw=400 km/s', "300, 400, 500, 600, 700, 800, 900, 200", height=100)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
 for i in range(len(body_list)):
     body_list[i] = body_list[i].lstrip()
 vsw_list = [np.int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
-st.write(body_list, vsw_list)
 
 # st.markdown("""---""")
 
