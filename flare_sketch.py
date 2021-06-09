@@ -29,7 +29,7 @@ vsw_list = \
                          height=50)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
-body_list = [np.int(body_list[i].lstrip()) for i in range(len(body_list))]
+body_list = [body_list[i].lstrip() for i in range(len(body_list))]
 vsw_list = [np.int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
 
 all_bodies = print_body_list()
