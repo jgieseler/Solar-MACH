@@ -40,7 +40,7 @@ for i in range(len(body_list)):
 vsw_list = [np.int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
 
 all_bodies = print_body_list()
-st.sidebar.write(all_bodies)
+st.sidebar.table(all_bodies)
 
 # st.markdown("""---""")
 
