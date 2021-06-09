@@ -13,7 +13,8 @@ date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 st.write('Selected datetime:', date)
 
 
-st.write('Chose bodies/spacecraft and measured solar wind speeds (vst_list: leave empty for nominal speed of vsw=400 km/s)')
+st.write('Chose bodies/spacecraft and measured solar wind speeds')
+st.write('(vst_list: leave empty for nominal speed of vsw=400 km/s)')
 st.write(print_body_list())
 
 body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
