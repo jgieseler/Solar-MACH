@@ -3,7 +3,7 @@ from backmapping import *
 import datetime
 
 
-st.markdown('*provide date and time*')
+st.markdown('<h3>Provide date and time</h3>')
 # date = '2020-05-01 13:00:00'
 d = st.date_input("Select date", datetime.date.today())
 # st.write('Selected date:', d)
