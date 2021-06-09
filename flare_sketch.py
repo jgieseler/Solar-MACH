@@ -10,12 +10,11 @@ t = st.sidebar.time_input('Select time', datetime.time(16, 45))
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 
-st.sidebar.subheader('Provide a reference longitude in Carrington coordinates\
-                     (e.g. flare longitude)')
+st.sidebar.subheader('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
 reference_long = st.sidebar.slider('Reference longitude:', 0, 360, 20)
 reference_lat = st.sidebar.slider('Reference latitude:', -180, 180, -20)
-# st.write('Selected reference longitude and latituide:', reference_long,
-#           reference_lat)
+# st.write('Selected reference longitude and latituide:',
+#          reference_long, reference_lat)
 
 
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
@@ -23,10 +22,11 @@ st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 #                       vsw=400 km/s')
 full_body_list = \
     st.sidebar.text_area('bodies/spacecraft (scroll down for full list)',
-                         'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter,\
-                          Mars', height=50)
-vsw_list = st.sidebar.text_area('vst_list', '400, 400, 400, 400, 400, 400, \
-                                400, 400', height=50)
+                         'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars',
+                         height=50)
+vsw_list = \
+    st.sidebar.text_area('vst_list', '400, 400, 400, 400, 400, 400, 400, 400',
+                         height=50)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
 body_list = [np.int(body_list[i].lstrip()) for i in range(len(body_list))]
