@@ -4,11 +4,11 @@ import datetime
 
 st.title('Multi-spacecraft longitudinal configuration plotter')
 
-st.header('Provide date and time')
+st.sidebar.subheader('Provide date and time')
 # date = '2020-05-01 13:00:00'
-d = st.date_input("Select date", datetime.date.today())
+d = st.sidebar.date_input("Select date", datetime.date.today())
 # st.write('Selected date:', d)
-t = st.time_input('Select time', datetime.time(16, 45))
+t = st.sidebar.time_input('Select time', datetime.time(16, 45))
 # st.write('Selected time:', t)
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 st.write('Selected datetime:', date)
