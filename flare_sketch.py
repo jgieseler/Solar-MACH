@@ -25,7 +25,7 @@ st.write(print_body_list())
 # vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
 full_body_list = st.sidebar.text_area('SC', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
-vsw_list = st.sidebar.text_input('v', [300, 400, 500, 600, 700, 800, 900, 200])
+vsw_list = st.sidebar.text_input('v', "300, 400, 500, 600, 700, 800, 900, 200")
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
 for i in range(len(body_list)):
