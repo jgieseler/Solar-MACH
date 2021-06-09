@@ -2,6 +2,7 @@ import streamlit as st
 from backmapping import *
 import datetime
 
+st.title('Multi-spacecraft longitudinal configuration plotter')
 
 st.header('Provide date and time')
 # date = '2020-05-01 13:00:00'
