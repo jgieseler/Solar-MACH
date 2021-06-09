@@ -21,15 +21,16 @@ st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 st.sidebar.text('vst_list: leave empty for nominal speed of vsw=400 km/s')
 st.write(print_body_list())
 
-body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter',
-             'Mars']
-vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
+# body_list = ['STEREO-A', 'STEREO-B', 'Earth', 'MPO', 'PSP', 'Solar Orbiter', 'Mars']
+# vsw_list = [300, 400, 500, 600, 700, 800, 900, 200]
 
-full_body_list = st.text_input('SC', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
-vsw_list = st.multiselect('v', [300, 400, 500, 600, 700, 800, 900, 200])
+full_body_list = st.sidebar.text_input('SC', "STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars")
+vsw_list = st.sidebar.text_input('v', [300, 400, 500, 600, 700, 800, 900, 200])
 body_list = full_body_list.split(',')
+vsw_list = vsw_list.split(',')
 for i in range(len(body_list)):
     body_list[i] = body_list[i].lstrip()
+vsw_list = [vsw_list[i].lstrip() for i in range(len(vsw_list))]
 st.write(body_list, vsw_list)
 
 # st.markdown("""---""")
