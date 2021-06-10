@@ -10,7 +10,7 @@ st.title('Multi-spacecraft longitudinal configuration plotter')
 
 # st.sidebar.subheader('Provide date and time')
 d = st.sidebar.date_input("Select date", datetime.date.today())
-t = st.sidebar.time_input('Select time', datetime.time(16, 45))
+t = st.sidebar.time_input('Select time', datetime.time(13, 0))
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 # plotting settings
@@ -34,7 +34,7 @@ full_body_list = \
                          'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars',
                          height=50)
 vsw_list = \
-    st.sidebar.text_area('Solar wind speed per body/spacecraft', '400, 400, 400, 400, 400, 400, 400',
+    st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', '400, 400, 400, 400, 400, 400, 400',
                          height=50)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
@@ -43,6 +43,8 @@ vsw_list = [np.int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
 
 all_bodies = print_body_list()
 st.sidebar.table(all_bodies)
+
+st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
 
 
 # Initialize the Bodies
