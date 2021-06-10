@@ -46,9 +46,9 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
 
 # Make the longitudinal constellation plot
 c.plot(
-    plot_spirals=True,               # plot Parker spirals for each body
-    plot_sun_body_line=True,         # plot straight line between Sun and body
-    show_earth_centered_coord=True,  # display Earth-centered coordinate system
+    plot_spirals=plot_spirals,               # plot Parker spirals for each body
+    plot_sun_body_line=plot_sun_body_line,         # plot straight line between Sun and body
+    show_earth_centered_coord=show_earth_centered_coord,  # display Earth-centered coordinate system
     # outfile='plot.png'               # output file (optional)
 )
 
