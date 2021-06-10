@@ -22,14 +22,14 @@ reference_lat = st.sidebar.slider('Reference latitude:', -180, 180, -20)
 
 
 st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
-# st.sidebar.subheader('vst_list: leave empty for nominal speed of \
+# st.sidebar.subheader('vsw_list: leave empty for nominal speed of \
 #                       vsw=400 km/s')
 full_body_list = \
     st.sidebar.text_area('bodies/spacecraft (scroll down for full list)',
                          'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars',
                          height=50)
 vsw_list = \
-    st.sidebar.text_area('vst_list', '400, 400, 400, 400, 400, 400, 400',
+    st.sidebar.text_area('solar wind speed per body/SC', '400, 400, 400, 400, 400, 400, 400',
                          height=50)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
@@ -49,8 +49,13 @@ c.plot(
     plot_spirals=True,               # plot Parker spirals for each body
     plot_sun_body_line=True,         # plot straight line between Sun and body
     show_earth_centered_coord=True,  # display Earth-centered coordinate system
-    outfile='plot.png'               # output file (optional)
+    # outfile='plot.png'               # output file (optional)
 )
+
+st.text('Plotting options:')
+plot_spirals = st.checkbox('Parker spiral for each body', value=True)
+plot_sun_body_line = st.checkbox('straight line between Sun and body', value=True)
+show_earth_centered_coord  = st.checkbox('display Earth-centered coordinate system', value=True)
 
 # Display coordinates
 st.dataframe(c.coord_table)
