@@ -16,8 +16,8 @@ date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 # plotting settings
 st.sidebar.subheader('Plot options:')
 plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=True)
-plot_sun_body_line = st.sidebar.checkbox('Straight line between Sun and body', value=True)
-show_earth_centered_coord = st.sidebar.checkbox('Earth-centered coordinate system', value=True)
+plot_sun_body_line = st.sidebar.checkbox('Straight line bw. Sun & body', value=True)
+show_earth_centered_coord = st.sidebar.checkbox('Earth-centered coord. system', value=True)
 
 st.sidebar.subheader('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
 reference_long = st.sidebar.slider('Reference longitude:', 0, 360, 20)
