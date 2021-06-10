@@ -44,6 +44,11 @@ st.sidebar.table(all_bodies)
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
 
+# standard plotting settings
+plot_spirals = True
+plot_sun_body_line = True
+show_earth_centered_coord = True
+
 # Make the longitudinal constellation plot
 c.plot(
     plot_spirals=plot_spirals,               # plot Parker spirals for each body
@@ -52,10 +57,11 @@ c.plot(
     # outfile='plot.png'               # output file (optional)
 )
 
+# update plotting settings
 st.text('Plotting options:')
 plot_spirals = st.checkbox('Parker spiral for each body', value=True)
 plot_sun_body_line = st.checkbox('straight line between Sun and body', value=True)
-show_earth_centered_coord  = st.checkbox('display Earth-centered coordinate system', value=True)
+show_earth_centered_coord = st.checkbox('display Earth-centered coordinate system', value=True)
 
 # Display coordinates
 st.dataframe(c.coord_table)
