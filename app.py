@@ -13,6 +13,11 @@ d = st.sidebar.date_input("Select date", datetime.date.today())
 t = st.sidebar.time_input('Select time', datetime.time(16, 45))
 date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
+# plotting settings
+st.sidebar.subheader('Plot options:')
+plot_spirals = st.checkbox('Parker spiral for each body', value=True)
+plot_sun_body_line = st.checkbox('Straight line between Sun and body', value=True)
+show_earth_centered_coord = st.checkbox('Earth-centered coordinate system', value=True)
 
 st.sidebar.subheader('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
 reference_long = st.sidebar.slider('Reference longitude:', 0, 360, 20)
@@ -43,17 +48,6 @@ st.sidebar.table(all_bodies)
 # Initialize the Bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
-
-# standard plotting settings
-# plot_spirals = True
-# plot_sun_body_line = True
-# show_earth_centered_coord = True
-
-# update plotting settings
-st.text('Plotting options:')
-plot_spirals = st.checkbox('Parker spiral for each body', value=True)
-plot_sun_body_line = st.checkbox('straight line between Sun and body', value=True)
-show_earth_centered_coord = st.checkbox('display Earth-centered coordinate system', value=True)
 
 
 # Make the longitudinal constellation plot
