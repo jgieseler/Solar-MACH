@@ -31,7 +31,7 @@ def print_body_list():
     prints a selection of body keys and the corresponding body names which may be provided to the
     HeliosphericConstellation class
     """
-    print('Please visit https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top for a complete list of available bodies')
+    # print('Please visit https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top for a complete list of available bodies')
     data = pd.DataFrame\
         .from_dict(body_dict, orient='index', columns=['ID', 'Body', 'Color'])\
         .drop(['ID', 'Color'], 'columns')\
