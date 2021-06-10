@@ -19,7 +19,7 @@ plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=True)
 plot_sun_body_line = st.sidebar.checkbox('Straight line bw. Sun & body', value=True)
 show_earth_centered_coord = st.sidebar.checkbox('Add Earth-centered coord. system', value=False)
 
-st.sidebar.subheader('Provide a reference longitude in Carrington coordinates (e.g. flare longitude)')
+st.sidebar.subheader('Reference longitude in Carrington coord. (e.g. flare longitude)')
 reference_long = st.sidebar.slider('Reference longitude:', 0, 360, 20)
 reference_lat = st.sidebar.slider('Reference latitude:', -180, 180, -20)
 # st.write('Selected reference longitude and latituide:',
@@ -30,11 +30,11 @@ st.sidebar.subheader('Chose bodies/spacecraft and measured solar wind speeds')
 # st.sidebar.subheader('vsw_list: leave empty for nominal speed of \
 #                       vsw=400 km/s')
 full_body_list = \
-    st.sidebar.text_area('bodies/spacecraft (scroll down for full list)',
+    st.sidebar.text_area('Bodies/spacecraft (scroll down for full list)',
                          'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars',
                          height=50)
 vsw_list = \
-    st.sidebar.text_area('solar wind speed per body/SC', '400, 400, 400, 400, 400, 400, 400',
+    st.sidebar.text_area('Solar wind speed per body/spacecraft', '400, 400, 400, 400, 400, 400, 400',
                          height=50)
 body_list = full_body_list.split(',')
 vsw_list = vsw_list.split(',')
