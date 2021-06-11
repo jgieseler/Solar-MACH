@@ -43,10 +43,10 @@ with st.sidebar.beta_container():
     #                       vsw=400 km/s')
     full_body_list = \
         st.sidebar.text_area('Bodies/spacecraft (scroll down for full list)',
-                            'STEREO-A, STEREO-B, Earth, MPO, PSP, Solar Orbiter, Mars',
+                            'STEREO-A, Earth, BepiColombo, PSP, Solar Orbiter, Mars',
                             height=50)
     vsw_list = \
-        st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', '400, 400, 400, 400, 400, 400, 400',
+        st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', '400, 400, 400, 400, 400, 400',
                             height=50)
     body_list = full_body_list.split(',')
     vsw_list = vsw_list.split(',')
