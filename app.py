@@ -19,7 +19,7 @@ with st.sidebar.beta_container():
     st.sidebar.subheader('Plot options:')
     plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=True)
     plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=True)
-    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-centered coord. system', value=False)
+    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=False)
 
     plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=True)
 
@@ -68,7 +68,7 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
 c.plot(
     plot_spirals=plot_spirals,               # plot Parker spirals for each body
     plot_sun_body_line=plot_sun_body_line,         # plot straight line between Sun and body
-    show_earth_centered_coord=show_earth_centered_coord,  # display Earth-centered coordinate system
+    show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
     # outfile='plot.png'               # output file (optional)
 )
 
