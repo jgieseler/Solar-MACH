@@ -79,15 +79,16 @@ c.plot(
 st.dataframe(c.coord_table)
 
 st.markdown("""---""")
-st.markdown('*Solar MAgnetic Connection Haus tool was originally developed at \
-            Kiel University, Germany and further discussed within the ESA \
-            Heliophysics Archives USer (HAUS) group. It is now opened to \
-            everyone.*')
+st.markdown('*The Solar MAgnetic Connection Haus (Solar-MACH) tool was originally \
+            developed at Kiel University, Germany and further discussed within \
+            the [ESA Heliophysics Archives USer (HAUS)]\
+            (https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
+            group. It is now opened to everyone* ([original code]\
+            (https://github.com/esdc-esac-esa-int/Solar-MACH)).')
 
-st.markdown('[Original code](https://github.com/esdc-esac-esa-int/Solar-MACH). \
-            [Forked](https://github.com/jgieseler/Solar-MACH) and modified by \
-            [Jan Gieseler](https://jgieseler.github.io) \
-            ([SRL](https://srl.utu.fi), University of Turku).')
+st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
+            [J. Gieseler](https://jgieseler.github.io) \
+            (University of Turku, Finland).')
 
 st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg"\
              height="30">](https://sunpy.org)$~~$powered', \
