@@ -1,3 +1,4 @@
+import base64
 import datetime
 
 import astropy.units as u
@@ -46,11 +47,8 @@ with st.sidebar.beta_container():
     if plot_reference is False:
         reference_long = None
         reference_lat = None
-
-
     # st.write('Selected reference longitude and latituide:',
     #          reference_long, reference_lat)
-
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.beta_container():
@@ -73,11 +71,9 @@ with st.sidebar.beta_container():
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
 
-
 # Initialize the Bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
-
 
 # Make the longitudinal constellation plot
 c.plot(
@@ -87,9 +83,14 @@ c.plot(
     # outfile='plot.png'               # output file (optional)
 )
 
-
 # Display coordinates
 st.dataframe(c.coord_table)
+
+# Download coordinates
+csv = c.coord_table.to_csv().encode()
+b64 = base64.b64encode(csv).decode()
+filename = 'table_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
 
 st.markdown("""---""")
 st.markdown('*The Solar MAgnetic Connection Haus (Solar-MACH) tool was originally \
