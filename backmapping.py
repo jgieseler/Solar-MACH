@@ -260,9 +260,12 @@ class HeliosphericConstellation():
                 delta_ref = delta_ref + 360.
             alpha_ref = np.deg2rad(delta_ref) + omega / (400 / AU) * (dist_e / AU - r) - (
                         omega / (400 / AU) * (dist_e / AU))
-            arrow_dist = min([self.max_dist + 0.1, 2.])
-            ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.12, head_length=0.11, edgecolor='black',
-                                facecolor='black', lw=2, zorder=5, overhang=0.2)
+            # arrow_dist = min([self.max_dist + 0.1, 2.])
+            # ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.12, head_length=0.11, edgecolor='black',
+            #                     facecolor='black', lw=2, zorder=5, overhang=0.2)
+            arrow_dist = min([self.max_dist/3.2, 2.])
+            ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.2, head_length=0.07, edgecolor='black',
+                                facecolor='black', lw=1.8, zorder=5, overhang=0.2)
 
             if plot_spirals:
                 ax.plot(alpha_ref, r, '--k', label='field line connecting to\nref. long. (vsw=400 km/s)')
@@ -299,6 +302,9 @@ class HeliosphericConstellation():
             ax2 = self._polar_twin(ax, E_long, pos2)
 
         ax.tick_params(axis='x', pad=6)
+
+        ax.text(0.94, 0.12, 'https://solar-mach.github.io',
+                ha='right', va='bottom', transform=fig.transFigure)
 
         if outfile != '':
             plt.savefig(outfile)
