@@ -36,6 +36,8 @@ with st.sidebar.beta_container():
     # st.write('Selected reference longitude and latituide:',
     #          reference_long, reference_lat)
 
+    # coord_sys = st.sidebar.radio('Coordinate system', ['Carrington', 'Stonyhurst'], index=0)
+
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.beta_container():
@@ -77,5 +79,16 @@ c.plot(
 st.dataframe(c.coord_table)
 
 st.markdown("""---""")
-st.markdown('*Solar MAgnetic Connection Haus tool was originally developed at Kiel University, Germany and further discussed within the ESA Heliophysics Archives USer (HAUS) group. It is now opened to everyone.*')
-st.markdown('[Original code](https://github.com/esdc-esac-esa-int/Solar-MACH). [Forked](https://github.com/jgieseler/Solar-MACH) and modified by [J. Gieseler](https://jgieseler.github.io).')
+st.markdown('*Solar MAgnetic Connection Haus tool was originally developed at \
+            Kiel University, Germany and further discussed within the ESA \
+            Heliophysics Archives USer (HAUS) group. It is now opened to \
+            everyone.*')
+
+st.markdown('[Original code](https://github.com/esdc-esac-esa-int/Solar-MACH). \
+            [Forked](https://github.com/jgieseler/Solar-MACH) and modified by \
+            [Jan Gieseler](https://jgieseler.github.io) \
+            ([SRL](https://srl.utu.fi), University of Turku).')
+
+st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg"\
+             height="30">](https://sunpy.org)$~~$powered', \
+            unsafe_allow_html=True)
