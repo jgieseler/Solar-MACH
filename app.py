@@ -16,7 +16,7 @@ st.title('Multi-spacecraft longitudinal configuration plotter')
 
 # st.sidebar.subheader('Provide date and time')
 with st.sidebar.beta_container():
-    d = st.sidebar.date_input("Select date", datetime.date.today())
+    d = st.sidebar.date_input("Select date", datetime.date.today()-datetime.timedelta(days = 2))
     t = st.sidebar.time_input('Select time', datetime.time(13, 0))
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
