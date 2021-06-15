@@ -1,6 +1,11 @@
-import streamlit as st
-from backmapping import *
 import datetime
+
+import astropy.units as u
+import streamlit as st
+from astropy.coordinates import SkyCoord
+from sunpy.coordinates import frames
+
+from backmapping import *
 
 # -- Set page config
 st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:", 
@@ -23,10 +28,17 @@ with st.sidebar.beta_container():
 
     plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=True)
 
-    with st.sidebar.beta_expander("Reference longitude in Carrington coordinates (e.g. flare longitude)", expanded=plot_reference):
+    with st.sidebar.beta_expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
+        reference_sys = st.radio('Coordinate system:', ['Carrington', 'Stonyhurst'], index=0)
         # st.sidebar.subheader('Reference longitude in Carrington coordinates (e.g. flare longitude)')
-        reference_long = st.slider('Reference longitude:', 0, 360, 20)
-        reference_lat = st.slider('Reference latitude:', -180, 180, -20)
+        reference_long = st.slider('Longitude:', 0, 360, 20)
+        reference_lat = st.slider('Latitude:', -180, 180, 0)
+        # convert Stonyhurst coordinates to Carrington for further use:
+        if reference_sys == 'Stonyhurst':
+            coord = SkyCoord(reference_long*u.deg, reference_lat*u.deg, frame=frames.HeliographicStonyhurst, obstime=date)
+            coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
+            reference_long = coord.lon.value
+            reference_lat = coord.lat.value
     
     if plot_reference is False:
         reference_long = None
@@ -35,8 +47,6 @@ with st.sidebar.beta_container():
 
     # st.write('Selected reference longitude and latituide:',
     #          reference_long, reference_lat)
-
-    # coord_sys = st.sidebar.radio('Coordinate system', ['Carrington', 'Stonyhurst'], index=0)
 
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
