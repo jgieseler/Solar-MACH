@@ -8,13 +8,13 @@ from sunpy.coordinates import frames
 
 from backmapping import *
 
-# -- Set page config
+# set page config
 st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:", 
                    initial_sidebar_state="expanded")
 
 st.title('Multi-spacecraft longitudinal configuration plotter')
 
-# st.sidebar.subheader('Provide date and time')
+# provide date and time
 with st.sidebar.beta_container():
     d = st.sidebar.date_input("Select date", datetime.date.today()-datetime.timedelta(days = 2))
     t = st.sidebar.time_input('Select time', datetime.time(13, 0))
@@ -31,7 +31,6 @@ with st.sidebar.beta_container():
 
     with st.sidebar.beta_expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         reference_sys = st.radio('Coordinate system:', ['Carrington', 'Stonyhurst'], index=0)
-        # st.sidebar.subheader('Reference longitude in Carrington coordinates (e.g. flare longitude)')
         if reference_sys == 'Carrington':
             reference_long = st.slider('Longitude:', 0, 360, 20)
             reference_lat = st.slider('Latitude:', -180, 180, 0)
@@ -43,17 +42,12 @@ with st.sidebar.beta_container():
             coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
             reference_long = coord.lon.value
             reference_lat = coord.lat.value
-    
     if plot_reference is False:
         reference_long = None
         reference_lat = None
-    # st.write('Selected reference longitude and latituide:',
-    #          reference_long, reference_lat)
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.beta_container():
-    # st.sidebar.subheader('vsw_list: leave empty for nominal speed of \
-    #                       vsw=400 km/s')
     full_body_list = \
         st.sidebar.text_area('Bodies/spacecraft (scroll down for full list)',
                             'STEREO-A, Earth, BepiColombo, PSP, Solar Orbiter, Mars',
@@ -71,27 +65,27 @@ with st.sidebar.beta_container():
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
 
-# Initialize the Bodies
+# initialize the bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
 
-# Make the longitudinal constellation plot
+# make the longitudinal constellation plot
 c.plot(
-    plot_spirals=plot_spirals,               # plot Parker spirals for each body
-    plot_sun_body_line=plot_sun_body_line,         # plot straight line between Sun and body
+    plot_spirals=plot_spirals,                            # plot Parker spirals for each body
+    plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
     show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
-    # outfile='plot.png'               # output file (optional)
 )
 
-# Display coordinates
+# display coordinates
 st.dataframe(c.coord_table)
 
-# Download coordinates
+# download coordinates
 csv = c.coord_table.to_csv().encode()
 b64 = base64.b64encode(csv).decode()
 filename = 'table_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
 st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
 
+# footer
 st.markdown("""---""")
 st.markdown('*The Solar MAgnetic Connection Haus (Solar-MACH) tool was originally \
             developed at Kiel University, Germany and further discussed within \
