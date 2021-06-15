@@ -31,10 +31,13 @@ with st.sidebar.beta_container():
     with st.sidebar.beta_expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         reference_sys = st.radio('Coordinate system:', ['Carrington', 'Stonyhurst'], index=0)
         # st.sidebar.subheader('Reference longitude in Carrington coordinates (e.g. flare longitude)')
-        reference_long = st.slider('Longitude:', 0, 360, 20)
-        reference_lat = st.slider('Latitude:', -180, 180, 0)
-        # convert Stonyhurst coordinates to Carrington for further use:
+        if reference_sys == 'Carrington':
+            reference_long = st.slider('Longitude:', 0, 360, 20)
+            reference_lat = st.slider('Latitude:', -180, 180, 0)
         if reference_sys == 'Stonyhurst':
+            reference_long = st.slider('Longitude:', -180, 180, 20)
+            reference_lat = st.slider('Latitude:', -180, 180, 0)
+            # convert Stonyhurst coordinates to Carrington for further use:
             coord = SkyCoord(reference_long*u.deg, reference_lat*u.deg, frame=frames.HeliographicStonyhurst, obstime=date)
             coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
             reference_long = coord.lon.value
