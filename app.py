@@ -101,3 +101,8 @@ st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
 st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg"\
              height="30">](https://sunpy.org)$~~$powered', \
             unsafe_allow_html=True)
+
+import matplotlib.font_manager
+flist = matplotlib.font_manager.get_fontconfig_fonts()
+names = [matplotlib.font_manager.FontProperties(fname=fname).get_name() for fname in flist]
+print names
