@@ -3,3 +3,4 @@ astroquery
 scipy
 numpy
 matplotlib
+streamlit
