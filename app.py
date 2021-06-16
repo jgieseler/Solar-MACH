@@ -111,11 +111,3 @@ st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
 st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg"\
              height="30">](https://sunpy.org)$~~$powered', \
             unsafe_allow_html=True)
-
-st.markdown("""---""")
-import matplotlib.font_manager
-from IPython.core.display import HTML
-def make_html(fontname):
-    return "<p>{font}: <span style='font-family:{font}; font-size: 24px;'>Solar-MACH</p>".format(font=fontname)
-code = "\n".join([make_html(font) for font in sorted(set([f.name for f in matplotlib.font_manager.fontManager.ttflist]))])
-st.markdown("<div style='column-count: 2;'>{}</div>".format(code), unsafe_allow_html=True)

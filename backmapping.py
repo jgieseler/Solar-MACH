@@ -309,8 +309,6 @@ class HeliosphericConstellation():
         ax.text(0.94, 0.12, 'https://solar-mach.github.io',
                 fontfamily='DejaVu Sans', fontsize=18,
                 ha='right', va='bottom', transform=fig.transFigure)
-        # ax.text(0.94, 0.12, 'https://solar-mach.github.io',
-        #         ha='right', va='bottom', transform=fig.transFigure)
 
         if outfile != '':
             plt.savefig(outfile)
