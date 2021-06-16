@@ -103,6 +103,15 @@ st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/maste
             unsafe_allow_html=True)
 
 import matplotlib.font_manager
-flist = matplotlib.font_manager.get_fontconfig_fonts()
-names = [matplotlib.font_manager.FontProperties(fname=fname).get_name() for fname in flist]
-st.write(flist, names)
+from IPython.core.display import HTML
+
+def make_html(fontname):
+    return "<p>{font}: <span style='font-family:{font}; font-size: 24px;'>{font}</p>".format(font=fontname)
+
+code = "\n".join([make_html(font) for font in sorted(set([f.name for f in matplotlib.font_manager.fontManager.ttflist]))])
+
+# HTML("<div style='column-count: 2;'>{}</div>".format(code))
+
+st.write(code)
+st.markdown(code, \
+            unsafe_allow_html=True)
