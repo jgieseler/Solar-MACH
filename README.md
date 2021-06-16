@@ -2,7 +2,7 @@
 
 Adapted from [github.com/esdc-esac-esa-int/Solar-MACH](https://github.com/esdc-esac-esa-int/Solar-MACH) and modified to [run with Streamlit](https://solar-mach.github.io). Slightly extended functionality (provide reference longitude in Stonyhurst coordinates, download bodies coordinates list).
 
-To install start a local server using `streamlit` run the following commands in your terminal:
+To install and start a local server using `streamlit` run the following commands in your terminal:
 
 ```python
 # optional: create and activate virtual environment in python (alternatively use anaconda)
