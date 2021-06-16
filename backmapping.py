@@ -303,11 +303,13 @@ class HeliosphericConstellation():
 
         ax.tick_params(axis='x', pad=6)
 
-        ax.text(0.94, 0.16, 'Solar-MACH', 
-                fontfamily='IBM Plex Serif', fontsize=42,
-                ha='right', va='bottom', transform=fig.transFigure)
+        # ax.text(0.94, 0.16, 'Solar-MACH', 
+        #         fontfamily='IBM Plex Serif', fontsize=42,
+        #         ha='right', va='bottom', transform=fig.transFigure)
+        # ax.text(0.94, 0.12, 'https://solar-mach.github.io',
+        #         fontfamily='IBM Plex Serif', fontsize=28,
+        #         ha='right', va='bottom', transform=fig.transFigure)
         ax.text(0.94, 0.12, 'https://solar-mach.github.io',
-                fontfamily='IBM Plex Serif', fontsize=28,
                 ha='right', va='bottom', transform=fig.transFigure)
 
         if outfile != '':
