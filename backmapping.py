@@ -315,7 +315,6 @@ class HeliosphericConstellation():
         if outfile != '':
             plt.savefig(outfile)
         st.pyplot(fig)
-        return fig
 
     def _polar_twin(self, ax, E_long, position):
         """

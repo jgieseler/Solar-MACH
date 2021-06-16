@@ -1,5 +1,6 @@
 import base64
 import datetime
+import io
 
 import astropy.units as u
 import streamlit as st
@@ -72,7 +73,7 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
 # make the longitudinal constellation plot
 plot_file = 'plot_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
 
-plot = c.plot(
+c.plot(
     plot_spirals=plot_spirals,                            # plot Parker spirals for each body
     plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
     show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
@@ -80,10 +81,10 @@ plot = c.plot(
 )
 
 # download plot
-# b64 = base64.b64encode(plot).decode()
-plt.savefig(plot_file)
-st.markdown(f'<a href="{plot_file}" download="{plot_file}" target="_blank">Download plot as .png file</a>', unsafe_allow_html=True)
-# st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{plot_file}" target="_blank">Download plot as .png file</a>', unsafe_allow_html=True)
+plot2 = io.BytesIO()
+plt.savefig(plot2, format='png', bbox_inches="tight")
+plot2 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
+st.markdown(f'<a href="data:file/png;base64,{plot2}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
 
 # display coordinates
 st.dataframe(c.coord_table)
