@@ -70,11 +70,20 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
 
 # make the longitudinal constellation plot
-c.plot(
+plot_file = 'plot_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
+
+plot = c.plot(
     plot_spirals=plot_spirals,                            # plot Parker spirals for each body
     plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
     show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
+    # outfile=plot_file                                     # output file (optional)
 )
+
+# download plot
+# b64 = base64.b64encode(plot).decode()
+plt.savefig(plot_file)
+st.markdown(f'<a href="{plot_file}" download="{plot_file}" target="_blank">Download plot as .png file</a>', unsafe_allow_html=True)
+# st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{plot_file}" target="_blank">Download plot as .png file</a>', unsafe_allow_html=True)
 
 # display coordinates
 st.dataframe(c.coord_table)
@@ -102,14 +111,10 @@ st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/maste
              height="30">](https://sunpy.org)$~~$powered', \
             unsafe_allow_html=True)
 
+st.markdown("""---""")
 import matplotlib.font_manager
 from IPython.core.display import HTML
-
 def make_html(fontname):
     return "<p>{font}: <span style='font-family:{font}; font-size: 24px;'>Solar-MACH</p>".format(font=fontname)
-
 code = "\n".join([make_html(font) for font in sorted(set([f.name for f in matplotlib.font_manager.fontManager.ttflist]))])
-
-# HTML("<div style='column-count: 2;'>{}</div>".format(code))
-
-st.markdown(code, unsafe_allow_html=True)
+st.markdown("<div style='column-count: 2;'>{}</div>".format(code), unsafe_allow_html=True)
