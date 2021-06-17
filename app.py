@@ -50,7 +50,7 @@ with st.sidebar.beta_container():
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.beta_container():
     full_body_list = \
-        st.sidebar.text_area('Bodies/spacecraft (scroll down for full list)',
+        st.sidebar.text_area('Bodies/spacecraft (scroll down for example list)',
                             'STEREO-A, Earth, BepiColombo, PSP, Solar Orbiter, Mars',
                             height=50)
     vsw_list = \
@@ -62,6 +62,8 @@ with st.sidebar.beta_container():
     vsw_list = [int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
 
     all_bodies = print_body_list()
+    # ugly workaround to not show the index in the table: replace them with empty strings
+    all_bodies.index = [""] * len(all_bodies)
     st.sidebar.table(all_bodies)
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
@@ -106,8 +108,11 @@ st.markdown('*The Solar MAgnetic Connection Haus (Solar-MACH) tool was originall
 
 st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
             [J. Gieseler](https://jgieseler.github.io) \
-            (University of Turku, Finland).')
+            (University of Turku, Finland). [Get in contact](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
-st.markdown('[<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg"\
-             height="30">](https://sunpy.org)$~~$powered', \
+st.markdown("""---""")
+st.markdown('Powered by: \
+            [<img src="https://matplotlib.org/stable/_static/logo2_compressed.svg" height="25">](https://matplotlib.org) \
+            [<img src="https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.svg" height="30">](https://streamlit.io) \
+            [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org)', \
             unsafe_allow_html=True)
