@@ -291,12 +291,14 @@ class HeliosphericConstellation():
                            fill=False, lw=2)
         ax.add_patch(circle)
 
-        # manually plot r-grid lines with different resolution depending on maximum distance body
+        # manually plot r-grid lines with different resolution depending on maximum distance bodyz
         if self.max_dist < 2:
             ax.set_rgrids(np.arange(0, self.max_dist + 0.29, 0.5)[1:], angle=22.5)
+            st.sidebar.info(str(np.arange(0, self.max_dist + 0.29, 0.5)))
         else:
             if self.max_dist < 10:
                 ax.set_rgrids(np.arange(0, self.max_dist + 0.29, 1.0)[1:], angle=22.5)
+                st.sidebar.info(str(np.arange(0, self.max_dist + 0.29, 1.0)))
 
         ax.set_title(self.date + '\n', pad=60)
 
