@@ -52,20 +52,21 @@ st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.beta_container():
     full_body_list = \
         st.sidebar.text_area('Bodies/spacecraft (scroll down for example list)',
-                            'STEREO-A, Earth, BepiColombo, PSP, Solar Orbiter, Mars',
+                            'STEREO A, Earth, BepiColombo, PSP, Solar Orbiter, Mars',
                             height=50)
     vsw_list = \
         st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', '400, 400, 400, 400, 400, 400',
                             height=50)
     body_list = full_body_list.split(',')
     vsw_list = vsw_list.split(',')
-    body_list = [body_list[i].lstrip() for i in range(len(body_list))]
-    vsw_list = [int(vsw_list[i].lstrip()) for i in range(len(vsw_list))]
+    body_list = [body_list[i].strip() for i in range(len(body_list))]
+    vsw_list = [int(vsw_list[i].strip()) for i in range(len(vsw_list))]
 
     all_bodies = print_body_list()
     # ugly workaround to not show the index in the table: replace them with empty strings
+    all_bodies.reset_index(inplace=True)
     all_bodies.index = [""] * len(all_bodies)
-    st.sidebar.table(all_bodies)
+    st.sidebar.table(all_bodies['Key'])
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
 
