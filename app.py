@@ -13,7 +13,8 @@ from backmapping import *
 st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:", 
                    initial_sidebar_state="expanded")
 
-st.title('Multi-spacecraft longitudinal configuration plotter')
+st.title('Solar-MACH')
+st.markdown('## Multi-spacecraft longitudinal configuration plotter')
 
 # provide date and time
 with st.sidebar.beta_container():
