@@ -139,8 +139,8 @@ class HeliosphericConstellation():
             except ValueError:
                 print('')
                 print('!!! No ephemeris for target "' + str(body) + '" for date ' + self.date)
-                body_list.remove(body)
                 st.warning('No ephemeris for target "' + str(body) + '" for date ' + self.date)
+                body_list.remove(body)
 
         body_dict_short = {sel_key: bodies[sel_key] for sel_key in body_list}
         self.body_dict = body_dict_short
@@ -287,7 +287,7 @@ class HeliosphericConstellation():
         ax.set_rmax(self.max_dist + 0.3)
         ax.set_rmin(0.01)
         ax.yaxis.get_major_locator().base.set_params(nbins=4)
-        circle = pl.Circle((0., 0.), self.max_dist + 0.29, transform=ax.transData._b, edgecolor="k", facecolor=None,
+        circle = plt.Circle((0., 0.), self.max_dist + 0.29, transform=ax.transData._b, edgecolor="k", facecolor=None,
                            fill=False, lw=2)
         ax.add_artist(circle)
 
