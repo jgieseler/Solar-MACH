@@ -291,8 +291,6 @@ class HeliosphericConstellation():
                            fill=False, lw=2)
         ax.add_patch(circle)
 
-        fig.canvas.draw()
-
         # manually plot r-grid lines with different resolution depending on maximum distance bodyz
         st.sidebar.info(self.max_dist)
         if self.max_dist < 2:

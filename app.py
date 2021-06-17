@@ -19,7 +19,7 @@ st.markdown('## Multi-spacecraft longitudinal configuration plotter')
 # provide date and time
 with st.sidebar.beta_container():
     d = st.sidebar.date_input("Select date", datetime.date.today()-datetime.timedelta(days = 2))
-    t = st.sidebar.time_input('Select time', datetime.time(13, 0))
+    t = st.sidebar.time_input('Select time', datetime.time(1, 30))
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 # plotting settings
@@ -85,10 +85,10 @@ c.plot(
 )
 
 # download plot
-# plot2 = io.BytesIO()
-# plt.savefig(plot2, format='png', bbox_inches="tight")
-# plot2 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
-# st.markdown(f'<a href="data:file/png;base64,{plot2}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
+plot2 = io.BytesIO()
+plt.savefig(plot2, format='png', bbox_inches="tight")
+plot2 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
+st.markdown(f'<a href="data:file/png;base64,{plot2}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
 
 # display coordinates
 st.dataframe(c.coord_table)
