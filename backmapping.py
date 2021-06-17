@@ -291,9 +291,21 @@ class HeliosphericConstellation():
                            fill=False, lw=2)
         ax.add_patch(circle)
 
+        fig.canvas.draw()
+
+        # manually plot r-grid lines with different resolution depending on maximum distance bodyz
+        st.sidebar.info(self.max_dist)
+        if self.max_dist < 2:
+            ax.set_rgrids(np.arange(0, self.max_dist + 0.29, 0.5)[1:], angle=22.5)
+            st.sidebar.info(str(np.arange(0, self.max_dist + 0.29, 0.5)))
+        else:
+            if self.max_dist < 10:
+                ax.set_rgrids(np.arange(0, self.max_dist + 0.29, 1.0)[1:], angle=22.5)
+                st.sidebar.info(str(np.arange(0, self.max_dist + 0.29, 1.0)))
+
         ax.set_title(self.date + '\n', pad=60)
 
-        # plt.tight_layout()
+        plt.tight_layout()
         plt.subplots_adjust(bottom=0.15)
 
         if show_earth_centered_coord:
@@ -310,16 +322,6 @@ class HeliosphericConstellation():
         ax.text(0.94, 0.12, 'https://solar-mach.github.io',
                 fontfamily='DejaVu Sans', fontsize=18,
                 ha='right', va='bottom', transform=fig.transFigure)
-
-        # manually plot r-grid lines with different resolution depending on maximum distance bodyz
-        st.sidebar.info(self.max_dist)
-        if self.max_dist < 2:
-            ax.set_rgrids(np.arange(0, self.max_dist + 0.29, 0.5)[1:], angle=22.5)
-            st.sidebar.info(str(np.arange(0, self.max_dist + 0.29, 0.5)))
-        else:
-            if self.max_dist < 10:
-                ax.set_rgrids(np.arange(0, self.max_dist + 0.29, 1.0)[1:], angle=22.5)
-                st.sidebar.info(str(np.arange(0, self.max_dist + 0.29, 1.0)))
 
         if outfile != '':
             plt.savefig(outfile)
