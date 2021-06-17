@@ -100,11 +100,12 @@ st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" tar
 
 # footer
 st.markdown("""---""")
-st.markdown('*The Solar MAgnetic Connection Haus (Solar-MACH) tool was originally \
-            developed at Kiel University, Germany and further discussed within \
-            the [ESA Heliophysics Archives USer (HAUS)]\
+st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a \
+            multi-spacecraft longitudinal configuration plotter. It was \
+            originally developed at the University of Kiel, Germany, and further \
+            discussed within the [ESA Heliophysics Archives USer (HAUS)]\
             (https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
-            group. It is now opened to everyone* ([original code]\
+            group. It is now opened to everyone ([original code]\
             (https://github.com/esdc-esac-esa-int/Solar-MACH)).')
 
 st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
