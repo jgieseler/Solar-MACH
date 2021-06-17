@@ -75,7 +75,7 @@ c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
 
 # make the longitudinal constellation plot
-plot_file = 'plot_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
+plot_file = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
 
 c.plot(
     plot_spirals=plot_spirals,                            # plot Parker spirals for each body
@@ -96,7 +96,7 @@ st.dataframe(c.coord_table)
 # download coordinates
 csv = c.coord_table.to_csv().encode()
 b64 = base64.b64encode(csv).decode()
-filename = 'table_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
 st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
 
 # footer
