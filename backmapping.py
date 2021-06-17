@@ -293,7 +293,7 @@ class HeliosphericConstellation():
 
         ax.set_title(self.date + '\n', pad=60)
 
-        plt.tight_layout()
+        # plt.tight_layout()
         plt.subplots_adjust(bottom=0.15)
 
         if show_earth_centered_coord:
