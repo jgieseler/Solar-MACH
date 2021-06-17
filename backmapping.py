@@ -289,7 +289,6 @@ class HeliosphericConstellation():
         ax.yaxis.get_major_locator().base.set_params(nbins=4)
         circle = plt.Circle((0., 0.), self.max_dist + 0.29, transform=ax.transData._b, edgecolor="k", facecolor=None,
                            fill=False, lw=2)
-        ax.add_artist(circle)
 
         ax.set_title(self.date + '\n', pad=60)
 
@@ -303,6 +302,8 @@ class HeliosphericConstellation():
             ax2 = self._polar_twin(ax, E_long, pos2)
 
         ax.tick_params(axis='x', pad=6)
+
+        ax.add_artist(circle)
 
         ax.text(0.94, 0.16, 'Solar-MACH', 
                 fontfamily='DejaVu Serif', fontsize=28,
