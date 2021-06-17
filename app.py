@@ -70,6 +70,10 @@ with st.sidebar.beta_container():
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
 
+    st.sidebar.markdown("""---""")
+    import matplotlib
+    st.sidebar.write('(debug info: backend='+matplotlib.get_backend()+')')
+
 # initialize the bodies
 c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
                               reference_lat)
