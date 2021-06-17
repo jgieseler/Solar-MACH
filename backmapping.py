@@ -140,6 +140,7 @@ class HeliosphericConstellation():
                 print('')
                 print('!!! No ephemeris for target "' + str(body) + '" for date ' + self.date)
                 body_list.remove(body)
+                st.warning('No ephemeris for target "' + str(body) + '" for date ' + self.date)
 
         body_dict_short = {sel_key: bodies[sel_key] for sel_key in body_list}
         self.body_dict = body_dict_short
