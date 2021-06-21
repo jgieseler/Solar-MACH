@@ -1,8 +1,14 @@
 import base64
 import datetime
 import io
+import json
+import os
+import pickle
+import re
+import uuid
 
 import astropy.units as u
+import pandas as pd
 import streamlit as st
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
@@ -15,6 +21,89 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
+
+# Define Download button, from https://discuss.streamlit.io/t/how-to-add-a-download-excel-csv-function-to-a-button/4474/9
+def download_button(object_to_download, download_filename, button_text, pickle_it=False):
+    """
+    Generates a link to download the given object_to_download.
+
+    Params:
+    ------
+    object_to_download:  The object to be downloaded.
+    download_filename (str): filename and extension of file. e.g. mydata.csv,
+    some_txt_output.txt download_link_text (str): Text to display for download
+    link.
+    button_text (str): Text to display on download button (e.g. 'click here to download file')
+    pickle_it (bool): If True, pickle file.
+
+    Returns:
+    -------
+    (str): the anchor tag to download object_to_download
+
+    Examples:
+    --------
+    download_link(your_df, 'YOUR_DF.csv', 'Click to download data!')
+    download_link(your_str, 'YOUR_STRING.txt', 'Click to download text!')
+
+    """
+    if pickle_it:
+        try:
+            object_to_download = pickle.dumps(object_to_download)
+        except pickle.PicklingError as e:
+            st.write(e)
+            return None
+
+    else:
+        if isinstance(object_to_download, bytes):
+            pass
+
+        elif isinstance(object_to_download, pd.DataFrame):
+            object_to_download = object_to_download.to_csv(index=False)
+
+        # Try JSON encode for everything else
+        else:
+            object_to_download = json.dumps(object_to_download)
+
+    try:
+        # some strings <-> bytes conversions necessary here
+        b64 = base64.b64encode(object_to_download.encode()).decode()
+
+    except AttributeError as e:
+        b64 = base64.b64encode(object_to_download).decode()
+
+    button_uuid = str(uuid.uuid4()).replace('-', '')
+    button_id = re.sub('\d+', '', button_uuid)
+
+    custom_css = f""" 
+        <style>
+            #{button_id} {{
+                background-color: rgb(255, 255, 255);
+                color: rgb(38, 39, 48);
+                padding: 0.25em 0.38em;
+                position: relative;
+                text-decoration: none;
+                border-radius: 4px;
+                border-width: 1px;
+                border-style: solid;
+                border-color: rgb(230, 234, 241);
+                border-image: initial;
+
+            }} 
+            #{button_id}:hover {{
+                border-color: rgb(246, 51, 102);
+                color: rgb(246, 51, 102);
+            }}
+            #{button_id}:active {{
+                box-shadow: none;
+                background-color: rgb(246, 51, 102);
+                color: white;
+                }}
+        </style> """
+
+    dl_link = custom_css + f'<a download="{download_filename}" id="{button_id}" href="data:file/txt;base64,{b64}">{button_text}</a><br></br>'
+
+    return dl_link
+
 
 # provide date and time
 with st.sidebar.beta_container():
@@ -88,20 +177,25 @@ c.plot(
 )
 
 # download plot
+filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
 plot2 = io.BytesIO()
 plt.savefig(plot2, format='png', bbox_inches="tight")
-plot2 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
-st.markdown(f'<a href="data:file/png;base64,{plot2}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
+# plot3 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
+# st.markdown(f'<a href="data:file/png;base64,{plot3}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
+
+download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
+st.markdown(download_button_str, unsafe_allow_html=True)
 
 # display coordinates
 st.dataframe(c.coord_table)
 
 # download coordinates
-csv = c.coord_table.to_csv().encode()
-b64 = base64.b64encode(csv).decode()
-filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
-st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
-
+# filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+# csv = c.coord_table.to_csv().encode()
+# b64 = base64.b64encode(csv).decode()
+# st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
+download_button_str = download_button(c.coord_table, filename+'.csv', f'Download table as .csv file', pickle_it=False)
+st.markdown(download_button_str, unsafe_allow_html=True)
 # footer
 st.markdown("""---""")
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a \
