@@ -22,7 +22,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
 
-# Define Download button, from https://discuss.streamlit.io/t/how-to-add-a-download-excel-csv-function-to-a-button/4474/9
+# Define Download button, from https://discuss.streamlit.io/t/a-download-button-with-custom-css/4220
 def download_button(object_to_download, download_filename, button_text, pickle_it=False):
     """
     Generates a link to download the given object_to_download.
@@ -87,8 +87,7 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
                 border-style: solid;
                 border-color: rgb(230, 234, 241);
                 border-image: initial;
-
-            }} 
+            }}             
             #{button_id}:hover {{
                 border-color: rgb(246, 51, 102);
                 color: rgb(246, 51, 102);
@@ -182,7 +181,6 @@ plot2 = io.BytesIO()
 plt.savefig(plot2, format='png', bbox_inches="tight")
 # plot3 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
 # st.markdown(f'<a href="data:file/png;base64,{plot3}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
-
 download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
 st.markdown(download_button_str, unsafe_allow_html=True)
 
