@@ -35,15 +35,17 @@ with st.sidebar.beta_container():
         reference_sys = st.radio('Coordinate system:', ['Carrington', 'Stonyhurst'], index=0)
         if reference_sys == 'Carrington':
             reference_long = st.slider('Longitude:', 0, 360, 20)
-            reference_lat = st.slider('Latitude:', -180, 180, 0)
+            reference_lat = st.slider('Latitude:', -90, 90, 0)
         if reference_sys == 'Stonyhurst':
             reference_long = st.slider('Longitude:', -180, 180, 20)
-            reference_lat = st.slider('Latitude:', -180, 180, 0)
+            reference_lat = st.slider('Latitude:', -90, 90, 0)
             # convert Stonyhurst coordinates to Carrington for further use:
             coord = SkyCoord(reference_long*u.deg, reference_lat*u.deg, frame=frames.HeliographicStonyhurst, obstime=date)
             coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
             reference_long = coord.lon.value
             reference_lat = coord.lat.value
+        import math
+        reference_vsw = int(float(st.text_input('Solar wind speed for reference', 400)))
     if plot_reference is False:
         reference_long = None
         reference_lat = None
@@ -81,6 +83,7 @@ c.plot(
     plot_spirals=plot_spirals,                            # plot Parker spirals for each body
     plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
     show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
+    reference_vsw=reference_vsw,                          # define solar wind speed at reference
     # outfile=plot_file                                     # output file (optional)
 )
 

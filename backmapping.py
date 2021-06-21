@@ -206,7 +206,7 @@ class HeliosphericConstellation():
 
         return sep, alpha
 
-    def plot(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, outfile=''):
+    def plot(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, reference_vsw=400, outfile=''):
         """
         Make a polar plot showing the Sun in the center (view from North) and the positions of the selected bodies
 
@@ -218,6 +218,8 @@ class HeliosphericConstellation():
                     if True, straight lines connecting the bodies with the Sun are plotted
         show_earth_centered_coord: bool
                     if True, additional longitudinal tickmarks are shown with Earth at longitude 0
+        reference_vsw: int
+                    if defined, defines solar wind speed for reference. if not defined, 400 km/s is used
         outfile: string
                 if provided, the plot is saved with outfile as filename
         """
@@ -259,8 +261,9 @@ class HeliosphericConstellation():
             delta_ref = self.reference_long
             if delta_ref < 0.:
                 delta_ref = delta_ref + 360.
-            alpha_ref = np.deg2rad(delta_ref) + omega / (400 / AU) * (dist_e / AU - r) - (
-                        omega / (400 / AU) * (dist_e / AU))
+            alpha_ref = np.deg2rad(delta_ref) + omega / (reference_vsw / AU) * (dist_e / AU - r) - (
+                        omega / (reference_vsw / AU) * (dist_e / AU))
+            # old arrow style:
             # arrow_dist = min([self.max_dist + 0.1, 2.])
             # ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.12, head_length=0.11, edgecolor='black',
             #                     facecolor='black', lw=2, zorder=5, overhang=0.2)
@@ -269,7 +272,7 @@ class HeliosphericConstellation():
                                 facecolor='black', lw=1.8, zorder=5, overhang=0.2)
 
             if plot_spirals:
-                ax.plot(alpha_ref, r, '--k', label='field line connecting to\nref. long. (vsw=400 km/s)')
+                ax.plot(alpha_ref, r, '--k', label=f'field line connecting to\nref. long. (vsw={reference_vsw} km/s)')
 
         leg1 = ax.legend(loc=(1.2, 0.7), fontsize=13)
         if self.reference_long is not None:
