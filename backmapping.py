@@ -206,7 +206,7 @@ class HeliosphericConstellation():
 
         return sep, alpha
 
-    def plot(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, reference_vsw=400, outfile=''):
+    def plot(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, reference_vsw=400, transparent=False, outfile=''):
         """
         Make a polar plot showing the Sun in the center (view from North) and the positions of the selected bodies
 
@@ -323,6 +323,9 @@ class HeliosphericConstellation():
         ax.text(0.94, 0.12, 'https://solar-mach.github.io',
                 fontfamily='DejaVu Sans', fontsize=18,
                 ha='right', va='bottom', transform=fig.transFigure)
+        
+        if transparent:
+            fig.patch.set_alpha(0.0)
 
         if outfile != '':
             plt.savefig(outfile)

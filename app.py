@@ -116,6 +116,7 @@ with st.sidebar.beta_container():
     plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=True)
     plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=True)
     show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=False)
+    transparent = st.sidebar.checkbox('Transparent background', value=False)
 
     plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=True)
 
@@ -172,6 +173,7 @@ c.plot(
     plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
     show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
     reference_vsw=reference_vsw,                          # define solar wind speed at reference
+    transparent = transparent,
     # outfile=plot_file                                     # output file (optional)
 )
 
