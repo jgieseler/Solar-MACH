@@ -214,9 +214,10 @@ if len(body_list) == len(vsw_list):
     download_button_str = download_button(c.coord_table, filename+'.csv', f'Download table as .csv file', pickle_it=False)
     st.markdown(download_button_str, unsafe_allow_html=True)
 else:
-    st.error(f"ERROR: Number of elements in the bodies/spacecraft list ({len(body_list)}) and \
-              solar wind speed list ({len(vsw_list)}) don't match! Please verify that for each \
-              body there is a solar wind speed provided! ")
+    st.error(f"ERROR: Number of elements in the bodies/spacecraft list \
+               ({len(body_list)}) and solar wind speed list ({len(vsw_list)}) \
+               don't match! Please verify that for each body there is a solar \
+               wind speed provided!")
 
 # footer
 st.markdown("""---""")
