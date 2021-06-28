@@ -161,57 +161,62 @@ with st.sidebar.beta_container():
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
 
-# initialize the bodies
-c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
-                              reference_lat)
+if len(body_list) == len(vsw_list):
+    # initialize the bodies
+    c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
+                                reference_lat)
 
-# make the longitudinal constellation plot
-plot_file = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
+    # make the longitudinal constellation plot
+    plot_file = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
 
-c.plot(
-    plot_spirals=plot_spirals,                            # plot Parker spirals for each body
-    plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
-    show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
-    reference_vsw=reference_vsw,                          # define solar wind speed at reference
-    transparent = transparent,
-    # outfile=plot_file                                     # output file (optional)
-)
+    c.plot(
+        plot_spirals=plot_spirals,                            # plot Parker spirals for each body
+        plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
+        show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
+        reference_vsw=reference_vsw,                          # define solar wind speed at reference
+        transparent = transparent,
+        # outfile=plot_file                                     # output file (optional)
+    )
 
-# download plot
-filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
-plot2 = io.BytesIO()
-plt.savefig(plot2, format='png', bbox_inches="tight")
-# plot3 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
-# st.markdown(f'<a href="data:file/png;base64,{plot3}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
-download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
-st.markdown(download_button_str, unsafe_allow_html=True)
+    # download plot
+    filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+    plot2 = io.BytesIO()
+    plt.savefig(plot2, format='png', bbox_inches="tight")
+    # plot3 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
+    # st.markdown(f'<a href="data:file/png;base64,{plot3}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
+    download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
 
-# display coordinates table
-df = c.coord_table
-df.index = df['Spacecraft/Body']
-df = df.drop(columns=['Spacecraft/Body'])
-df = df.round(0)
-df = df.rename(columns=
-    {"Spacecraft/Body": "Spacecraft / body",
-    "Carrington Longitude (°)": "Carrington longitude",
-    "Latitude (°)": "Carrington latitude",
-    "Heliocentric Distance (AU)": "Heliocent. distance",
-    "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude",
-    "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude", 
-    "Vsw": "Solar wind speed",
-    "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude",
-    "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference",
-    "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference",
-    "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference"})
-st.table(df.T)
+    # display coordinates table
+    df = c.coord_table
+    df.index = df['Spacecraft/Body']
+    df = df.drop(columns=['Spacecraft/Body'])
+    df = df.round(0)
+    df = df.rename(columns=
+        {"Spacecraft/Body": "Spacecraft / body",
+        "Carrington Longitude (°)": "Carrington longitude",
+        "Latitude (°)": "Carrington latitude",
+        "Heliocentric Distance (AU)": "Heliocent. distance",
+        "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude",
+        "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude", 
+        "Vsw": "Solar wind speed",
+        "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude",
+        "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference",
+        "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference",
+        "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference"})
+    st.table(df.T)
 
-# download coordinates
-# filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
-# csv = c.coord_table.to_csv().encode()
-# b64 = base64.b64encode(csv).decode()
-# st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
-download_button_str = download_button(c.coord_table, filename+'.csv', f'Download table as .csv file', pickle_it=False)
-st.markdown(download_button_str, unsafe_allow_html=True)
+    # download coordinates
+    # filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+    # csv = c.coord_table.to_csv().encode()
+    # b64 = base64.b64encode(csv).decode()
+    # st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
+    download_button_str = download_button(c.coord_table, filename+'.csv', f'Download table as .csv file', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
+else:
+    st.error(f"ERROR: Number of elements in the bodies/spacecraft list ({len(body_list)}) and \
+              solar wind speed list ({len(vsw_list)}) don't match! Please verify that for each \
+              body there is a solar wind speed provided! ")
 
 # footer
 st.markdown("""---""")
