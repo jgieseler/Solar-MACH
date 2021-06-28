@@ -151,7 +151,11 @@ with st.sidebar.beta_container():
     body_list = full_body_list.split(',')
     vsw_list = vsw_list.split(',')
     body_list = [body_list[i].strip() for i in range(len(body_list))]
-    vsw_list = [int(vsw_list[i].strip()) for i in range(len(vsw_list))]
+    wrong_vsw = False
+    try: 
+        vsw_list = [int(vsw_list[i].strip()) for i in range(len(vsw_list))]
+    except ValueError:
+        wrong_vsw = True
 
     all_bodies = print_body_list()
     # ugly workaround to not show the index in the table: replace them with empty strings
@@ -160,6 +164,11 @@ with st.sidebar.beta_container():
     st.sidebar.table(all_bodies['Key'])
 
     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
+
+if wrong_vsw:
+    st.error('ERROR: There is something wrong in the solar wind speed list! Maybe some missing or wrong comma?')
+    st.stop()
+
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
