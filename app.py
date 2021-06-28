@@ -186,8 +186,24 @@ plt.savefig(plot2, format='png', bbox_inches="tight")
 download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
 st.markdown(download_button_str, unsafe_allow_html=True)
 
-# display coordinates
-st.dataframe(c.coord_table)
+# display coordinates table
+df = c.coord_table
+df.index = df['Spacecraft/Body']
+df = df.drop(columns=['Spacecraft/Body'])
+df = df.round(0)
+df = df.rename(columns=
+    {"Spacecraft/Body": "Spacecraft / body",
+    "Carrington Longitude (°)": "Carrington longitude",
+    "Latitude (°)": "Carrington latitude",
+    "Heliocentric Distance (AU)": "Heliocent. distance",
+    "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude",
+    "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude", 
+    "Vsw": "Solar wind speed",
+    "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude",
+    "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference",
+    "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference",
+    "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference"})
+st.table(df.T)
 
 # download coordinates
 # filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
