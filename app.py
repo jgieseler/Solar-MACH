@@ -200,7 +200,6 @@ if len(body_list) == len(vsw_list):
     df = c.coord_table
     df.index = df['Spacecraft/Body']
     df = df.drop(columns=['Spacecraft/Body'])
-    df = df.round(0)
     df = df.rename(columns=
         {"Spacecraft/Body": "Spacecraft / body",
         "Carrington Longitude (°)": "Carrington longitude",
@@ -213,6 +212,18 @@ if len(body_list) == len(vsw_list):
         "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference",
         "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference",
         "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference"})
+    df = df.round({ "Spacecraft / body": 1, 
+                    "Carrington longitude": 1, 
+                    "Carrington latitude": 1,
+                    "Heliocent. distance": 2,
+                    "Longitud. separation to Earth longitude": 1,
+                    "Latitud. separation to Earth latitude": 1,
+                    "Solar wind speed": 1,
+                    "Magnetic footpoint Carrington longitude": 1,
+                    "Longitud. separation bw. body & reference": 1,
+                    "Longitud. separation bw. body's magnetic footpoint & reference": 1,
+                    "Latitudinal separation bw. body & reference": 1
+                    }).astype(object)
     st.table(df.T)
 
     # download coordinates
