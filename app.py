@@ -105,13 +105,13 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
 
 
 # provide date and time
-with st.sidebar.beta_container():
+with st.sidebar.container():
     d = st.sidebar.date_input("Select date", datetime.date.today()-datetime.timedelta(days = 2))
     t = st.sidebar.time_input('Select time', datetime.time(1, 30))
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
 # plotting settings
-with st.sidebar.beta_container():
+with st.sidebar.container():
     st.sidebar.subheader('Plot options:')
     plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=True)
     plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=True)
@@ -120,7 +120,7 @@ with st.sidebar.beta_container():
 
     plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=True)
 
-    with st.sidebar.beta_expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
+    with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         reference_sys = st.radio('Coordinate system:', ['Carrington', 'Stonyhurst'], index=0)
         if reference_sys == 'Carrington':
             reference_long = st.slider('Longitude:', 0, 360, 20)
@@ -140,7 +140,7 @@ with st.sidebar.beta_container():
         reference_lat = None
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
-with st.sidebar.beta_container():
+with st.sidebar.container():
     full_body_list = \
         st.sidebar.text_area('Bodies/spacecraft (scroll down for example list)',
                             'STEREO A, Earth, BepiColombo, PSP, Solar Orbiter, Mars',
@@ -202,28 +202,31 @@ if len(body_list) == len(vsw_list):
     df = df.drop(columns=['Spacecraft/Body'])
     df = df.rename(columns=
         {"Spacecraft/Body": "Spacecraft / body",
-        "Carrington Longitude (°)": "Carrington longitude",
-        "Latitude (°)": "Carrington latitude",
-        "Heliocentric Distance (AU)": "Heliocent. distance",
-        "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude",
-        "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude", 
-        "Vsw": "Solar wind speed",
-        "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude",
-        "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference",
-        "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference",
-        "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference"})
-    df = df.round({ "Spacecraft / body": 1, 
-                    "Carrington longitude": 1, 
-                    "Carrington latitude": 1,
-                    "Heliocent. distance": 2,
-                    "Longitud. separation to Earth longitude": 1,
-                    "Latitud. separation to Earth latitude": 1,
-                    "Solar wind speed": 1,
-                    "Magnetic footpoint Carrington longitude": 1,
-                    "Longitud. separation bw. body & reference": 1,
-                    "Longitud. separation bw. body's magnetic footpoint & reference": 1,
-                    "Latitudinal separation bw. body & reference": 1
-                    }).astype(object)
+        "Carrington Longitude (°)": "Carrington longitude [°]",
+        "Latitude (°)": "Carrington latitude [°]",
+        "Heliocentric Distance (AU)": "Heliocent. distance [AU]",
+        "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
+        "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]", 
+        "Vsw": "Solar wind speed [km/s]",
+        "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude [°]",
+        "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
+        "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
+        "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
+    
+    df2 = df.copy()
+    decimals = 0
+    df = df.round({ "Carrington longitude [°]": decimals, 
+                    "Carrington latitude [°]": decimals,
+                    "Longitud. separation to Earth longitude [°]": decimals,
+                    "Latitud. separation to Earth latitude [°]": decimals,
+                    "Solar wind speed [km/s]": decimals,
+                    "Magnetic footpoint Carrington longitude [°]": decimals,
+                    "Longitud. separation bw. body & reference [°]": decimals,
+                    "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
+                    "Latitudinal separation bw. body & reference [°]": decimals
+                    }).astype(np.int64).astype(str) #yes, convert to int64 first and then to str to get rid of ".0"
+    df["Heliocent. distance [AU]"] = df2["Heliocent. distance [AU]"].round(2).astype(str)
+
     st.table(df.T)
 
     # download coordinates
@@ -253,7 +256,7 @@ st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
              [J. Gieseler](https://jgieseler.github.io) (University of Turku, Finland). \
              [**Get in contact**](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
-col1, col2 = st.beta_columns((5,1))
+col1, col2 = st.columns((5,1))
 col1.markdown("The development of the online tool has received funding from the \
              European Union's Horizon 2020 research and innovation programme \
              under grant agreement No 101004159 (SERPENTINE).")
