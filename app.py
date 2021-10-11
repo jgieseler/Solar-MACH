@@ -193,16 +193,13 @@ with st.sidebar.container():
             def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
             # reference_long = st.slider('Longitude:', 0, 360, def_reference_long)
             # reference_lat = st.slider('Latitude:', -90, 90, def_reference_lat)
-            try:
-                reference_long = int(float(st.text_input('Longitude (0 to 360, integer):', def_reference_long)))
-                reference_lat  = int(float(st.text_input('Latitude (-90 to 90, integer):', def_reference_lat)))
-                if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
-                    wrong_ref_coord = True
-                if plot_reference is True:
-                    set_query_params["carr_long"] = [str(int(reference_long))]
-                    set_query_params["carr_lat"] = [str(int(reference_lat))]
-            except ValueError:
-                wrong_ref_coord = True
+            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)
+            reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)
+            # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
+            #     wrong_ref_coord = True
+            if plot_reference is True:
+                set_query_params["carr_long"] = [str(int(reference_long))]
+                set_query_params["carr_lat"] = [str(int(reference_lat))]
 
         if reference_sys == 'Stonyhurst':
             def_reference_long = int(query_params["ston_long"][0]) if "ston_long" in query_params else 90
@@ -216,20 +213,17 @@ with st.sidebar.container():
             # read in coordinates from user
             # reference_long = st.slider('Longitude:', -180, 180, int(def_reference_long))
             # reference_lat = st.slider('Latitude:', -90, 90, int(def_reference_lat))
-            try:
-                reference_long = int(float(st.text_input('Longitude (-180 to 180, integer):', def_reference_long)))
-                reference_lat  = int(float(st.text_input('Latitude (-90 to 90, integer):', def_reference_lat)))
-                if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
-                    wrong_ref_coord = True
-                if plot_reference is True:
-                    set_query_params["ston_long"] = [str(int(reference_long))]
-                    set_query_params["ston_lat"] = [str(int(reference_lat))]
-            except ValueError:
-                wrong_ref_coord = True
+            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long)
+            reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat)
+            # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
+            #     wrong_ref_coord = True
+            if plot_reference is True:
+                set_query_params["ston_long"] = [str(int(reference_long))]
+                set_query_params["ston_lat"] = [str(int(reference_lat))]
         
-        if wrong_ref_coord:
-                st.error('ERROR: There is something wrong in the prodived reference coordinates!')
-                st.stop()
+        # if wrong_ref_coord:
+        #         st.error('ERROR: There is something wrong in the prodived reference coordinates!')
+        #         st.stop()
 
         if reference_sys == 'Stonyhurst':
             # convert Stonyhurst coordinates to Carrington for further use:
@@ -240,7 +234,7 @@ with st.sidebar.container():
 
         import math
         def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
-        reference_vsw = int(float(st.text_input('Solar wind speed for reference', def_reference_vsw)))
+        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw)
 
     if plot_reference is False:
         reference_long = None
