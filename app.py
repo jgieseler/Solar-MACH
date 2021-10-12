@@ -118,7 +118,7 @@ with st.sidebar.container():
     show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=False)
     transparent = st.sidebar.checkbox('Transparent background', value=False)
 
-    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=True)
+    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=False)
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         reference_sys = st.radio('Coordinate system:', ['Carrington', 'Stonyhurst'], index=0)
