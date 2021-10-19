@@ -15,12 +15,39 @@ from sunpy.coordinates import frames
 
 from backmapping import *
 
+
+# modify hamburger menu
+about_info = ''' ## Solar-MACH 
+The *Solar MAgnetic Connection Haus* tool is a multi-spacecraft longitudinal configuration plotter, originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Forked and modified by J. Gieseler (University of Turku, Finland).
+
+The development of the online tool has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 101004159 (SERPENTINE).'''
+get_help_link = "https://github.com/jgieseler/Solar-MACH/discussions"
+report_bug_link = "https://github.com/jgieseler/Solar-MACH/issues/new"
+menu_items = {'About': about_info,
+              'Get help': get_help_link, 
+              'Report a bug': report_bug_link}
+
 # set page config
 st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:", 
-                   initial_sidebar_state="expanded")
+                   initial_sidebar_state="expanded",
+                   menu_items=menu_items)
+
+st.info('Update (Oct 19, 2021): You can now save & share the status of all parameters by clicking on the button "Get shareable URL" in the upper left and then copy the URL from your browser!')
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
+
+
+# Save parameters to URL for sharing and bookmarking
+def make_url(set_query_params):
+    st.experimental_set_query_params(**set_query_params)
+
+# Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit 
+# version 1.0. Will hopefully be fixed in the future. Then all the occurences of
+# "on_change=clear_url" can be removed.
+def clear_url():
+    st.experimental_set_query_params()
+
 
 # Define Download button, from https://discuss.streamlit.io/t/a-download-button-with-custom-css/4220
 def download_button(object_to_download, download_filename, button_text, pickle_it=False):
@@ -107,16 +134,11 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
 query_params = st.experimental_get_query_params()
 set_query_params = {}
 
-# def make_URL():
-#     st.experimental_set_query_params(**set_query_params)
-#     return
-#
-# with st.sidebar.container():   
-#     linked = st.button('Make shareable URL', 
-#              help='Click again to update URL after parameters have been changed.', 
-#              on_click=make_URL)
-#     if not linked: 
-#         st.experimental_set_query_params()
+# con_top = st.sidebar.container()
+col1, col2 = st.sidebar.columns(2)
+
+col1.button('Generate URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
+st.sidebar.write('(Scroll down for long shareable URL)')
 
 # provide date and time
 with st.sidebar.container():
@@ -125,8 +147,8 @@ with st.sidebar.container():
             else datetime.date.today()-datetime.timedelta(days = 2)
     def_t = datetime.datetime.strptime(query_params["time"][0], "%H%M") if "time" in query_params \
             else datetime.time(0, 0)
-    d = st.sidebar.date_input("Select date", def_d)
-    t = st.sidebar.time_input('Select time', def_t)
+    d = st.sidebar.date_input("Select date", def_d, on_change=clear_url)
+    t = st.sidebar.time_input('Select time', def_t, on_change=clear_url)
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
     # save query parameters to URL
@@ -144,7 +166,7 @@ with st.sidebar.container():
         def_plot_spirals = False    
     else:
         def_plot_spirals = True
-    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals)
+    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals, on_change=clear_url)
     if not plot_spirals:
         set_query_params["plot_spirals"] = 0
 
@@ -152,7 +174,7 @@ with st.sidebar.container():
         def_plot_sun_body_line = False    
     else:
         def_plot_sun_body_line = True
-    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line)
+    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line, on_change=clear_url)
     if not plot_sun_body_line:
         set_query_params["plot_sun_body_line"] = 0
 
@@ -160,7 +182,7 @@ with st.sidebar.container():
         def_show_earth_centered_coord = True    
     else:
         def_show_earth_centered_coord = False
-    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=def_show_earth_centered_coord)
+    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=def_show_earth_centered_coord, on_change=clear_url)
     if show_earth_centered_coord:
         set_query_params["plot_ecc"] = 1
 
@@ -168,7 +190,7 @@ with st.sidebar.container():
         def_transparent = True    
     else:
         def_transparent = False
-    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent)
+    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent, on_change=clear_url)
     if transparent:
         set_query_params["plot_trans"] = 1
 
@@ -177,7 +199,7 @@ with st.sidebar.container():
     else:
         def_plot_reference = False
   
-    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference)
+    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference, on_change=clear_url)
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         wrong_ref_coord = False
@@ -193,8 +215,8 @@ with st.sidebar.container():
             def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
             # reference_long = st.slider('Longitude:', 0, 360, def_reference_long)
             # reference_lat = st.slider('Latitude:', -90, 90, def_reference_lat)
-            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)
-            reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)
+            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long, on_change=clear_url)
+            reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat, on_change=clear_url)
             # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
             if plot_reference is True:
@@ -213,8 +235,8 @@ with st.sidebar.container():
             # read in coordinates from user
             # reference_long = st.slider('Longitude:', -180, 180, int(def_reference_long))
             # reference_lat = st.slider('Latitude:', -90, 90, int(def_reference_lat))
-            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long)
-            reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat)
+            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long, on_change=clear_url)
+            reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat, on_change=clear_url)
             # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
             if plot_reference is True:
@@ -234,7 +256,7 @@ with st.sidebar.container():
 
         import math
         def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
-        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw)
+        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, on_change=clear_url)
 
     if plot_reference is False:
         reference_long = None
@@ -246,48 +268,107 @@ with st.sidebar.container():
         set_query_params["reference_vsw"] = [str(int(reference_vsw))]
         set_query_params["plot_reference"] = 1
 
+
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.container():
-    # set starting parameters from URL if available, otherwise use defaults 
-    def_full_body_list = query_params["bodies"][0] if "bodies" in query_params \
-                            else 'STEREO A, Earth, BepiColombo, PSP, Solar Orbiter, Mars'
-    def_vsw_list = query_params["speeds"][0] if "speeds" in query_params \
-                            else '400, 400, 400, 400, 400, 400'
-    full_body_list = \
-        st.sidebar.text_area('Bodies/spacecraft (scroll down for example list)',
-                            def_full_body_list,
-                            height=50)
-    vsw_list = \
-        st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', 
-                            def_vsw_list,
-                            height=50)
-    body_list = full_body_list.split(',')
-    full_vsw_list = vsw_list
-    vsw_list = vsw_list.split(',')
-    body_list = [body_list[i].strip() for i in range(len(body_list))]
-    wrong_vsw = False
-    try: 
-        vsw_list = [int(vsw_list[i].strip()) for i in range(len(vsw_list))]
-    except ValueError:
-        wrong_vsw = True
-
-    # save query parameters to URL
-    set_query_params["bodies"] = full_body_list
-    set_query_params["speeds"] = full_vsw_list
-
     all_bodies = print_body_list()
-    # ugly workaround to not show the index in the table: replace them with empty strings
-    all_bodies.reset_index(inplace=True)
-    all_bodies.index = [""] * len(all_bodies)
-    st.sidebar.table(all_bodies['Key'])
 
-    st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
+    # set starting parameters from URL if available, otherwise use defaults 
+    def_full_body_list = query_params["bodies"] if "bodies" in query_params \
+                            else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
+    def_vsw_list = [np.int(i) for i in query_params["speeds"]] if "speeds" in query_params \
+                            else [400, 400, 400, 400, 400]
+    def_vsw_dict = {}
+    for i in range(len(def_full_body_list)):
+        def_vsw_dict[def_full_body_list[i]] = def_vsw_list[i]
 
-st.experimental_set_query_params(**set_query_params)
+    body_list = st.multiselect(
+        'Bodies/spacecraft',
+        all_bodies,
+        def_full_body_list,
+        on_change=clear_url)
 
-if wrong_vsw:
-    st.error('ERROR: There is something wrong in the solar wind speed list! Maybe some missing or wrong comma?')
-    st.stop()
+    with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
+        vsw_dict = {}
+        for body in body_list:
+            vsw_dict[body] = int(st.number_input(body, min_value=0, 
+                                 value=def_vsw_dict.get(body, 400), 
+                                 step=50,
+                                 on_change=clear_url))
+        vsw_list = [vsw_dict[body] for body in body_list]
+
+    set_query_params["bodies"] = body_list
+    set_query_params["speeds"] = vsw_list
+
+# params_url = st.sidebar.checkbox('Generate URL')
+# if params_url:
+#     st.experimental_set_query_params(**set_query_params)
+# else:
+#     st.experimental_set_query_params()
+
+# col1, col2 = st.sidebar.columns(2)
+
+# col1.button('Make URL', on_click=make_url, args=[set_query_params])
+# col2.button('Clear URL', on_click=clear_url)
+
+# url = 'http://localhost:8501/?'
+url = 'https://share.streamlit.io/jgieseler/solar-mach/testing/app.py?'
+for p in set_query_params:
+    for i in set_query_params[p]:
+        url = url + str(p)+'='+str(i)+'&'
+url = url.replace(' ', '+')
+st.sidebar.write(url)
+
+import pyshorteners
+s = pyshorteners.Shortener()
+
+def get_short_url(url):
+    surl = s.dagd.short(url)
+    st.sidebar.write(surl)
+
+col2.button('Get short URL', on_click=get_short_url, args=[url])
+
+
+# with st.sidebar.container():
+#     # set starting parameters from URL if available, otherwise use defaults 
+#     def_full_body_list = query_params["bodies"][0] if "bodies" in query_params \
+#                             else 'STEREO A, Earth, BepiColombo, PSP, Solar Orbiter, Mars'
+#     def_vsw_list = query_params["speeds"][0] if "speeds" in query_params \
+#                             else '400, 400, 400, 400, 400, 400'
+#     full_body_list = \
+#         st.sidebar.text_area('Bodies/spacecraft (scroll down for example list)',
+#                             def_full_body_list,
+#                             height=50)
+#     vsw_list = \
+#         st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', 
+#                             def_vsw_list,
+#                             height=50)
+
+#     body_list = full_body_list.split(',')
+#     full_vsw_list = vsw_list
+#     vsw_list = vsw_list.split(',')
+#     body_list = [body_list[i].strip() for i in range(len(body_list))]
+#     wrong_vsw = False
+#     try: 
+#         vsw_list = [int(vsw_list[i].strip()) for i in range(len(vsw_list))]
+#     except ValueError:
+#         wrong_vsw = True
+
+#     # save query parameters to URL
+#     set_query_params["bodies"] = full_body_list
+#     set_query_params["speeds"] = full_vsw_list
+
+#     all_bodies = print_body_list()
+#     # ugly workaround to not show the index in the table: replace them with empty strings
+#     all_bodies.reset_index(inplace=True)
+#     all_bodies.index = [""] * len(all_bodies)
+#     st.sidebar.table(all_bodies['Key'])
+
+#     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
+
+# if wrong_vsw:
+#     st.error('ERROR: There is something wrong in the solar wind speed list! Maybe some missing or wrong comma?')
+#     st.stop()
 
 
 if len(body_list) == len(vsw_list):
@@ -389,10 +470,11 @@ st.markdown('Powered by: \
             [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org)', \
             unsafe_allow_html=True)
 
+
 # remove 'Made with Streamlit' footer
+#MainMenu {visibility: hidden;}
 hide_streamlit_style = """
             <style>
-            #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             </style>
             """
