@@ -32,7 +32,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.info('Update (Oct 19, 2021): You can now save & share the status of all parameters by clicking on the button "Get shareable URL" in the upper left and then copy the URL from your browser!')
+st.info('Update (Oct 19, 2021): You can now save & share the status of all parameters by clicking on the button "Get shareable URL" in the upper left and then use the URL from your browser. Or scroll down in the sidebar to get the full URL from there.')
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -135,10 +135,10 @@ query_params = st.experimental_get_query_params()
 set_query_params = {}
 
 # con_top = st.sidebar.container()
-scol1, scol2 = st.sidebar.columns(2)
+# scol1, scol2 = st.sidebar.columns(2)
 
-scol1.button('Generate URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
-scol2.write('(or scroll down)')
+st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
+st.sidebar.write('(or scroll down to copy full URL)')
 
 # provide date and time
 with st.sidebar.container():
@@ -319,17 +319,16 @@ for p in set_query_params:
 url = url.replace(' ', '+')
 st.sidebar.write(url)
 
-"""
-# streamlit can't install pyshorteners; don't know why
-import pyshorteners
-s = pyshorteners.Shortener()
+## streamlit can't install pyshorteners; don't know why
+# import pyshorteners
+# s = pyshorteners.Shortener()
 
-def get_short_url(url):
-    surl = s.dagd.short(url)
-    st.sidebar.write(surl)
+# def get_short_url(url):
+#     surl = s.dagd.short(url)
+#     st.sidebar.write(surl)
 
-scol2.button('Get short URL', on_click=get_short_url, args=[url])
-"""
+# scol2.button('Get short URL', on_click=get_short_url, args=[url])
+
 
 # with st.sidebar.container():
 #     # set starting parameters from URL if available, otherwise use defaults 
