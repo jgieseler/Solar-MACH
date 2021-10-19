@@ -135,10 +135,10 @@ query_params = st.experimental_get_query_params()
 set_query_params = {}
 
 # con_top = st.sidebar.container()
-col1, col2 = st.sidebar.columns(2)
+scol1, scol2 = st.sidebar.columns(2)
 
-col1.button('Generate URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
-st.sidebar.write('(Scroll down for long shareable URL)')
+scol1.button('Generate URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
+scol2.write('(or scroll down)')
 
 # provide date and time
 with st.sidebar.container():
@@ -319,6 +319,8 @@ for p in set_query_params:
 url = url.replace(' ', '+')
 st.sidebar.write(url)
 
+"""
+# streamlit can't install pyshorteners; don't know why
 import pyshorteners
 s = pyshorteners.Shortener()
 
@@ -326,8 +328,8 @@ def get_short_url(url):
     surl = s.dagd.short(url)
     st.sidebar.write(surl)
 
-col2.button('Get short URL', on_click=get_short_url, args=[url])
-
+scol2.button('Get short URL', on_click=get_short_url, args=[url])
+"""
 
 # with st.sidebar.container():
 #     # set starting parameters from URL if available, otherwise use defaults 
