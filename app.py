@@ -168,7 +168,7 @@ with st.sidebar.container():
         def_plot_spirals = True
     plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals, on_change=clear_url)
     if not plot_spirals:
-        set_query_params["plot_spirals"] = 0
+        set_query_params["plot_spirals"] = [0]
 
     if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
         def_plot_sun_body_line = False    
@@ -176,7 +176,7 @@ with st.sidebar.container():
         def_plot_sun_body_line = True
     plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line, on_change=clear_url)
     if not plot_sun_body_line:
-        set_query_params["plot_sun_body_line"] = 0
+        set_query_params["plot_sun_body_line"] = [0]
 
     if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
         def_show_earth_centered_coord = True    
@@ -184,7 +184,7 @@ with st.sidebar.container():
         def_show_earth_centered_coord = False
     show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=def_show_earth_centered_coord, on_change=clear_url)
     if show_earth_centered_coord:
-        set_query_params["plot_ecc"] = 1
+        set_query_params["plot_ecc"] = [1]
 
     if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
         def_transparent = True    
@@ -192,7 +192,7 @@ with st.sidebar.container():
         def_transparent = False
     transparent = st.sidebar.checkbox('Transparent background', value=def_transparent, on_change=clear_url)
     if transparent:
-        set_query_params["plot_trans"] = 1
+        set_query_params["plot_trans"] = [1]
 
     if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
         def_plot_reference = True
@@ -256,7 +256,7 @@ with st.sidebar.container():
 
         import math
         def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
-        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, on_change=clear_url)
+        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50, on_change=clear_url)
 
     if plot_reference is False:
         reference_long = None
