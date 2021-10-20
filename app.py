@@ -32,7 +32,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.info('Update (Oct 19, 2021): You can now save & share the status of all parameters by clicking on the button "Get shareable URL" in the upper left and then use the URL from your browser. Or scroll down in the sidebar to get the full URL from there.')
+st.info('Update (Oct 19, 2021): You can now save or share the status of a given configuration! Either click on the button "Get shareable URL" in the upper left and then use the URL from your browser, or scroll down and get the full URL from the blue box at the bottom of the page.')
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -138,7 +138,7 @@ set_query_params = {}
 # scol1, scol2 = st.sidebar.columns(2)
 
 st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
-st.sidebar.write('(or scroll down to copy full URL)')
+# st.sidebar.write('(or scroll down to copy full URL)')
 
 # provide date and time
 with st.sidebar.container():
@@ -320,7 +320,7 @@ for p in set_query_params:
         # st.write(str(p)+' '+str(i))
         url = url + str(p)+'='+str(i)+'&'
 url = url.replace(' ', '+')
-st.sidebar.write(url)
+# st.sidebar.write(url)
 
 ## streamlit can't install pyshorteners; don't know why
 # import pyshorteners
@@ -446,6 +446,9 @@ else:
                ({len(body_list)}) and solar wind speed list ({len(vsw_list)}) \
                don't match! Please verify that for each body there is a solar \
                wind speed provided!")
+
+st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
+st.info(url)
 
 # footer
 st.markdown("""---""")
