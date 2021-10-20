@@ -22,7 +22,7 @@ The *Solar MAgnetic Connection Haus* tool is a multi-spacecraft longitudinal con
 
 The development of the online tool has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 101004159 (SERPENTINE).'''
 get_help_link = "https://github.com/jgieseler/Solar-MACH/discussions"
-report_bug_link = "https://github.com/jgieseler/Solar-MACH/issues/new"
+report_bug_link = "https://github.com/jgieseler/Solar-MACH/discussions/4"
 menu_items = {'About': about_info,
               'Get help': get_help_link, 
               'Report a bug': report_bug_link}
@@ -266,7 +266,7 @@ with st.sidebar.container():
     if plot_reference is True:
         set_query_params["reference_sys"] = [str(reference_sys_list.index(reference_sys))]
         set_query_params["reference_vsw"] = [str(int(reference_vsw))]
-        set_query_params["plot_reference"] = 1
+        set_query_params["plot_reference"] = [1]
 
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
@@ -311,10 +311,13 @@ with st.sidebar.container():
 # col1.button('Make URL', on_click=make_url, args=[set_query_params])
 # col2.button('Clear URL', on_click=clear_url)
 
+# st.write(set_query_params)
+
 # url = 'http://localhost:8501/?'
 url = 'https://share.streamlit.io/jgieseler/solar-mach/testing/app.py?'
 for p in set_query_params:
     for i in set_query_params[p]:
+        # st.write(str(p)+' '+str(i))
         url = url + str(p)+'='+str(i)+'&'
 url = url.replace(' ', '+')
 st.sidebar.write(url)
