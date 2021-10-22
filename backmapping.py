@@ -284,6 +284,11 @@ class HeliosphericConstellation():
                              handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=legend_arrow), },
                              fontsize=13)
             ax.add_artist(leg1)
+        
+        # replace 'SEMB-L1' in legend with 'L1' if present
+        for text in leg1.get_texts():
+            if text.get_text() == 'SEMB-L1':
+                text.set_text('L1')
 
         ax.set_rlabel_position(E_long + 120)
         ax.set_theta_offset(np.deg2rad(270 - E_long))

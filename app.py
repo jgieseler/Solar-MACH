@@ -273,6 +273,10 @@ st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.container():
     all_bodies = print_body_list()
 
+    # rename L1 point and order body list alphabetically
+    all_bodies = all_bodies.replace('SEMB-L1', 'L1')
+    all_bodies = all_bodies.sort_index()
+
     # set starting parameters from URL if available, otherwise use defaults 
     def_full_body_list = query_params["bodies"] if "bodies" in query_params \
                             else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
