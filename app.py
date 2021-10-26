@@ -137,7 +137,7 @@ set_query_params = {}
 # st.write(query_params)
 for i in query_params:
     st.session_state[i] = query_params[i]
-# st.write('session_state: ', st.session_state)
+st.write('session_state: ', st.session_state)
 
 
 # con_top = st.sidebar.container()
@@ -284,10 +284,14 @@ with st.sidebar.container():
     all_bodies = all_bodies.sort_index()
 
     # set starting parameters from URL if available, otherwise use defaults 
-    def_full_body_list = query_params["bodies"] if "bodies" in query_params \
-                            else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
+    # def_full_body_list = query_params["bodies"] if "bodies" in query_params \
+    #                         else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
     def_vsw_list = [np.int(i) for i in query_params["speeds"]] if "speeds" in query_params \
                             else [400, 400, 400, 400, 400]
+
+    def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state \
+                            else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
+
     def_vsw_dict = {}
     for i in range(len(def_full_body_list)):
         def_vsw_dict[def_full_body_list[i]] = def_vsw_list[i]
@@ -296,6 +300,7 @@ with st.sidebar.container():
         'Bodies/spacecraft',
         all_bodies,
         def_full_body_list) #, on_change=clear_url)
+    st.session_state["bodies"] = body_list
 
     with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
         vsw_dict = {}
