@@ -465,7 +465,7 @@ st.info(url)
 # clear params from URL because Streamlit 1.0 still get some hickups when one 
 # changes the params; it then gets confused with the params in the URL and the 
 # one from the widgets.
-# clear_url()
+clear_url()
 
 # footer
 st.markdown("""---""")
