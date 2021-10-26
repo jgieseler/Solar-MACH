@@ -4,6 +4,7 @@ import io
 import json
 import os
 import pickle
+import pyshorteners
 import re
 import uuid
 
@@ -345,12 +346,13 @@ for p in set_query_params:
         url = url + str(p)+'='+str(i)+'&'
 url = url.replace(' ', '+')
 
-url2 = 'https://share.streamlit.io/jgieseler/solar-mach/testing/app.py?'
-for p in st.session_state:
-    for i in st.session_state[p]:
-        # st.write(str(p)+' '+str(i))
-        url2 = url2 + str(p)+'='+str(i)+'&'
-url2 = url2.replace(' ', '+')
+# possible alternative to using set_query_params dictionary:
+# url2 = 'https://share.streamlit.io/jgieseler/solar-mach/testing/app.py?'
+# for p in st.session_state:
+#     for i in st.session_state[p]:
+#         # st.write(str(p)+' '+str(i))
+#         url2 = url2 + str(p)+'='+str(i)+'&'
+# url2 = url2.replace(' ', '+')
 
 
 if len(body_list) == len(vsw_list):
@@ -430,15 +432,12 @@ else:
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 
 st.info(url)
-# st.success(url2)
 
 cont1 = st.container()
 
-## streamlit can't install pyshorteners; don't know why
-import pyshorteners
-s = pyshorteners.Shortener()
-
+# generate short da.gd URL
 def get_short_url(url):
+    s = pyshorteners.Shortener()
     surl = s.dagd.short(url)
     # cont1.write(surl)
     cont1.info(surl)
