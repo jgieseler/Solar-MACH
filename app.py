@@ -134,11 +134,19 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
 query_params = st.experimental_get_query_params()
 set_query_params = {}
 
+st.write(query_params)
+
+for i in query_params:
+    st.session_state[i] = query_params[i]
+
+st.write('session_state: ', st.session_state)
+
+
 # con_top = st.sidebar.container()
 # scol1, scol2 = st.sidebar.columns(2)
 
-st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
-# st.sidebar.write('(or scroll down to copy full URL)')
+# removed as of now
+# st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
 
 # provide date and time
 with st.sidebar.container():
@@ -147,8 +155,8 @@ with st.sidebar.container():
             else datetime.date.today()-datetime.timedelta(days = 2)
     def_t = datetime.datetime.strptime(query_params["time"][0], "%H%M") if "time" in query_params \
             else datetime.time(0, 0)
-    d = st.sidebar.date_input("Select date", def_d, on_change=clear_url)
-    t = st.sidebar.time_input('Select time', def_t, on_change=clear_url)
+    d = st.sidebar.date_input("Select date", def_d) #, on_change=clear_url)
+    t = st.sidebar.time_input('Select time', def_t) #, on_change=clear_url)
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
     # save query parameters to URL
@@ -166,7 +174,7 @@ with st.sidebar.container():
         def_plot_spirals = False    
     else:
         def_plot_spirals = True
-    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals, on_change=clear_url)
+    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals) #, on_change=clear_url)
     if not plot_spirals:
         set_query_params["plot_spirals"] = [0]
 
@@ -174,7 +182,7 @@ with st.sidebar.container():
         def_plot_sun_body_line = False    
     else:
         def_plot_sun_body_line = True
-    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line, on_change=clear_url)
+    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line) #, on_change=clear_url)
     if not plot_sun_body_line:
         set_query_params["plot_sun_body_line"] = [0]
 
@@ -182,7 +190,7 @@ with st.sidebar.container():
         def_show_earth_centered_coord = True    
     else:
         def_show_earth_centered_coord = False
-    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=def_show_earth_centered_coord, on_change=clear_url)
+    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=def_show_earth_centered_coord) #, on_change=clear_url)
     if show_earth_centered_coord:
         set_query_params["plot_ecc"] = [1]
 
@@ -190,7 +198,7 @@ with st.sidebar.container():
         def_transparent = True    
     else:
         def_transparent = False
-    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent, on_change=clear_url)
+    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent) #, on_change=clear_url)
     if transparent:
         set_query_params["plot_trans"] = [1]
 
@@ -199,7 +207,7 @@ with st.sidebar.container():
     else:
         def_plot_reference = False
   
-    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference, on_change=clear_url)
+    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference) #, on_change=clear_url)
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         wrong_ref_coord = False
@@ -215,8 +223,8 @@ with st.sidebar.container():
             def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
             # reference_long = st.slider('Longitude:', 0, 360, def_reference_long)
             # reference_lat = st.slider('Latitude:', -90, 90, def_reference_lat)
-            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long, on_change=clear_url)
-            reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat, on_change=clear_url)
+            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long) #, on_change=clear_url)
+            reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat) #, on_change=clear_url)
             # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
             if plot_reference is True:
@@ -235,8 +243,8 @@ with st.sidebar.container():
             # read in coordinates from user
             # reference_long = st.slider('Longitude:', -180, 180, int(def_reference_long))
             # reference_lat = st.slider('Latitude:', -90, 90, int(def_reference_lat))
-            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long, on_change=clear_url)
-            reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat, on_change=clear_url)
+            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long) #, on_change=clear_url)
+            reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat) #, on_change=clear_url)
             # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
             if plot_reference is True:
@@ -256,7 +264,7 @@ with st.sidebar.container():
 
         import math
         def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
-        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50, on_change=clear_url)
+        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50) #, on_change=clear_url)
 
     if plot_reference is False:
         reference_long = None
@@ -289,16 +297,14 @@ with st.sidebar.container():
     body_list = st.multiselect(
         'Bodies/spacecraft',
         all_bodies,
-        def_full_body_list,
-        on_change=clear_url)
+        def_full_body_list) #, on_change=clear_url)
 
     with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
         vsw_dict = {}
         for body in body_list:
             vsw_dict[body] = int(st.number_input(body, min_value=0, 
                                  value=def_vsw_dict.get(body, 400), 
-                                 step=50,
-                                 on_change=clear_url))
+                                 step=50)) #, on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
 
     set_query_params["bodies"] = body_list
@@ -451,8 +457,15 @@ else:
                don't match! Please verify that for each body there is a solar \
                wind speed provided!")
 
+
+
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 st.info(url)
+
+# clear params from URL because Streamlit 1.0 still get some hickups when one 
+# changes the params; it then gets confused with the params in the URL and the 
+# one from the widgets.
+# clear_url()
 
 # footer
 st.markdown("""---""")
