@@ -43,11 +43,10 @@ def make_url(set_query_params):
     st.experimental_set_query_params(**set_query_params)
 
 # Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit 
-# version 1.0. Will hopefully be fixed in the future. Then all the occurences of
-# "on_change=clear_url" can be removed.
+# version 1.0. Will hopefully be fixed in the future. Then hopefully all 
+# occurences of "clear_url" can be removed.
 def clear_url():
     st.experimental_set_query_params()
-
 
 # Define Download button, from https://discuss.streamlit.io/t/a-download-button-with-custom-css/4220
 def download_button(object_to_download, download_filename, button_text, pickle_it=False):
@@ -132,16 +131,13 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
 
 # obtain query paramamters from URL
 query_params = st.experimental_get_query_params()
+
+# define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
 
-# st.write(query_params)
+# saved obtained quety params from URL into session_state
 for i in query_params:
     st.session_state[i] = query_params[i]
-st.write('session_state: ', st.session_state)
-
-
-# con_top = st.sidebar.container()
-# scol1, scol2 = st.sidebar.columns(2)
 
 # removed as of now
 # st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
@@ -226,7 +222,6 @@ with st.sidebar.container():
         wrong_ref_coord = False
         reference_sys_list = ['Carrington', 'Stonyhurst']
         # set starting parameters from URL if available, otherwise use defaults
-        # These parameters are deactivated from URL at the moment
         # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
         def_reference_sys = int(st.session_state["reference_sys"][0]) if "reference_sys" in st.session_state else 0
 
@@ -237,10 +232,9 @@ with st.sidebar.container():
             # def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
             def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
             def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
-            # reference_long = st.slider('Longitude:', 0, 360, def_reference_long)
-            # reference_lat = st.slider('Latitude:', -90, 90, def_reference_lat)
             reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long) #, on_change=clear_url)
             reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat) #, on_change=clear_url)
+            # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
             if plot_reference is True:
@@ -261,10 +255,9 @@ with st.sidebar.container():
             # def_reference_lat = coord.lat.value
             
             # read in coordinates from user
-            # reference_long = st.slider('Longitude:', -180, 180, int(def_reference_long))
-            # reference_lat = st.slider('Latitude:', -90, 90, int(def_reference_lat))
             reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long) #, on_change=clear_url)
             reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat) #, on_change=clear_url)
+            # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
             if plot_reference is True:
@@ -273,6 +266,7 @@ with st.sidebar.container():
                 st.session_state["ston_long"] = [str(int(reference_long))]
                 st.session_state["ston_lat"] = [str(int(reference_lat))]
         
+        # outdated check for wrong coordinates (caught by using st.number_input)
         # if wrong_ref_coord:
         #         st.error('ERROR: There is something wrong in the prodived reference coordinates!')
         #         st.stop()
@@ -343,19 +337,6 @@ with st.sidebar.container():
     st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
 
-# params_url = st.sidebar.checkbox('Generate URL')
-# if params_url:
-#     st.experimental_set_query_params(**set_query_params)
-# else:
-#     st.experimental_set_query_params()
-
-# col1, col2 = st.sidebar.columns(2)
-
-# col1.button('Make URL', on_click=make_url, args=[set_query_params])
-# col2.button('Clear URL', on_click=clear_url)
-
-# st.write(set_query_params)
-
 # url = 'http://localhost:8501/?'
 url = 'https://share.streamlit.io/jgieseler/solar-mach/testing/app.py?'
 for p in set_query_params:
@@ -363,7 +344,14 @@ for p in set_query_params:
         # st.write(str(p)+' '+str(i))
         url = url + str(p)+'='+str(i)+'&'
 url = url.replace(' ', '+')
-# st.sidebar.write(url)
+
+url2 = 'https://share.streamlit.io/jgieseler/solar-mach/testing/app.py?'
+for p in st.session_state:
+    for i in st.session_state[p]:
+        # st.write(str(p)+' '+str(i))
+        url2 = url2 + str(p)+'='+str(i)+'&'
+url2 = url2.replace(' ', '+')
+
 
 ## streamlit can't install pyshorteners; don't know why
 # import pyshorteners
@@ -374,48 +362,6 @@ url = url.replace(' ', '+')
 #     st.sidebar.write(surl)
 
 # scol2.button('Get short URL', on_click=get_short_url, args=[url])
-
-
-# with st.sidebar.container():
-#     # set starting parameters from URL if available, otherwise use defaults 
-#     def_full_body_list = query_params["bodies"][0] if "bodies" in query_params \
-#                             else 'STEREO A, Earth, BepiColombo, PSP, Solar Orbiter, Mars'
-#     def_vsw_list = query_params["speeds"][0] if "speeds" in query_params \
-#                             else '400, 400, 400, 400, 400, 400'
-#     full_body_list = \
-#         st.sidebar.text_area('Bodies/spacecraft (scroll down for example list)',
-#                             def_full_body_list,
-#                             height=50)
-#     vsw_list = \
-#         st.sidebar.text_area('Solar wind speed per body/SC (mind the order!)', 
-#                             def_vsw_list,
-#                             height=50)
-
-#     body_list = full_body_list.split(',')
-#     full_vsw_list = vsw_list
-#     vsw_list = vsw_list.split(',')
-#     body_list = [body_list[i].strip() for i in range(len(body_list))]
-#     wrong_vsw = False
-#     try: 
-#         vsw_list = [int(vsw_list[i].strip()) for i in range(len(vsw_list))]
-#     except ValueError:
-#         wrong_vsw = True
-
-#     # save query parameters to URL
-#     set_query_params["bodies"] = full_body_list
-#     set_query_params["speeds"] = full_vsw_list
-
-#     all_bodies = print_body_list()
-#     # ugly workaround to not show the index in the table: replace them with empty strings
-#     all_bodies.reset_index(inplace=True)
-#     all_bodies.index = [""] * len(all_bodies)
-#     st.sidebar.table(all_bodies['Key'])
-
-#     st.sidebar.markdown('[Complete list of available bodies](https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top)')
-
-# if wrong_vsw:
-#     st.error('ERROR: There is something wrong in the solar wind speed list! Maybe some missing or wrong comma?')
-#     st.stop()
 
 
 if len(body_list) == len(vsw_list):
@@ -493,7 +439,10 @@ else:
 
 
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
+
 st.info(url)
+
+st.success(url2)
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one 
 # changes the params; it then gets confused with the params in the URL and the 
