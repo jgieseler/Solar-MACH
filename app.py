@@ -134,12 +134,10 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
 query_params = st.experimental_get_query_params()
 set_query_params = {}
 
-st.write(query_params)
-
+# st.write(query_params)
 for i in query_params:
     st.session_state[i] = query_params[i]
-
-st.write('session_state: ', st.session_state)
+# st.write('session_state: ', st.session_state)
 
 
 # con_top = st.sidebar.container()
