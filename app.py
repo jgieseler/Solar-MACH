@@ -32,7 +32,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.info('Update (Oct 19, 2021): You can now save or share the status of a given configuration! Either click on the button "Get shareable URL" in the upper left and then use the URL from your browser, or scroll down and get the full URL from the blue box at the bottom of the page.')
+st.info('Update (Oct 26, 2021): You can now save or share the status of a given configuration! Scroll down and get the full URL from the blue box at the bottom of the page.')
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -308,11 +308,11 @@ with st.sidebar.container():
     # set starting parameters from URL if available, otherwise use defaults 
     # def_full_body_list = query_params["bodies"] if "bodies" in query_params \
     #                         else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
-    # def_vsw_list = [np.int(i) for i in query_params["speeds"]] if "speeds" in query_params \
+    # def_vsw_list = [int(i) for i in query_params["speeds"]] if "speeds" in query_params \
     #                         else [400, 400, 400, 400, 400]
     def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state \
                             else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
-    def_vsw_list = [np.int(i) for i in st.session_state["speeds"]] if "speeds" in st.session_state \
+    def_vsw_list = [int(i) for i in st.session_state["speeds"]] if "speeds" in st.session_state \
                             else [400, 400, 400, 400, 400]
 
     def_vsw_dict = {}
@@ -351,17 +351,6 @@ for p in st.session_state:
         # st.write(str(p)+' '+str(i))
         url2 = url2 + str(p)+'='+str(i)+'&'
 url2 = url2.replace(' ', '+')
-
-
-## streamlit can't install pyshorteners; don't know why
-# import pyshorteners
-# s = pyshorteners.Shortener()
-
-# def get_short_url(url):
-#     surl = s.dagd.short(url)
-#     st.sidebar.write(surl)
-
-# scol2.button('Get short URL', on_click=get_short_url, args=[url])
 
 
 if len(body_list) == len(vsw_list):
@@ -441,8 +430,20 @@ else:
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 
 st.info(url)
+# st.success(url2)
 
-st.success(url2)
+cont1 = st.container()
+
+## streamlit can't install pyshorteners; don't know why
+import pyshorteners
+s = pyshorteners.Shortener()
+
+def get_short_url(url):
+    surl = s.dagd.short(url)
+    # cont1.write(surl)
+    cont1.info(surl)
+
+cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one 
 # changes the params; it then gets confused with the params in the URL and the 
