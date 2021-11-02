@@ -33,6 +33,8 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
+st.write(st.session_state)
+
 st.info('Update (Oct 26, 2021): You can now save or share the status of a given configuration! Scroll down and get the full URL from the blue box at the bottom of the page.')
 
 st.title('Solar-MACH')
