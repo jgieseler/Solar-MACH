@@ -33,9 +33,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.write(st.session_state)
-
-st.info('Update (Oct 26, 2021): You can now save or share the status of a given configuration! Scroll down and get the full URL from the blue box at the bottom of the page.')
+st.info('Update (Nov 2, 2021): You can now save or share the status of a given configuration! Scroll down and get the full URL from the blue box at the bottom of the page. Newly introduced is also the option to use "numbered symbols" for the bodies. That should help with color vision deficiency issues and if one needs to convert the plot to grayscale.')
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -325,8 +323,6 @@ with st.sidebar.container():
 
     def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state \
                             else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
-
-
     def_vsw_list = [int(i) for i in st.session_state["speeds"]] if "speeds" in st.session_state \
                             else [400, 400, 400, 400, 400]
 
