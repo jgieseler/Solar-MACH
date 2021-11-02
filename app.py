@@ -320,19 +320,26 @@ with st.sidebar.container():
     #                         else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
     # def_vsw_list = [int(i) for i in query_params["speeds"]] if "speeds" in query_params \
     #                         else [400, 400, 400, 400, 400]
-    def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state \
+    if 'key_body_list' in st.session_state:
+        def_full_body_list = st.session_state["key_body_list"]
+    else:
+        def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state \
                             else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
     def_vsw_list = [int(i) for i in st.session_state["speeds"]] if "speeds" in st.session_state \
                             else [400, 400, 400, 400, 400]
 
     def_vsw_dict = {}
     for i in range(len(def_full_body_list)):
-        def_vsw_dict[def_full_body_list[i]] = def_vsw_list[i]
+        try:
+            def_vsw_dict[def_full_body_list[i]] = def_vsw_list[i]
+        except IndexError: 
+            def_vsw_dict[def_full_body_list[i]] = 400
 
     body_list = st.multiselect(
         'Bodies/spacecraft',
         all_bodies,
-        def_full_body_list) #, on_change=clear_url)
+        def_full_body_list,
+        key='key_body_list') #, on_change=clear_url)
     
     with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
         vsw_dict = {}
@@ -341,7 +348,7 @@ with st.sidebar.container():
                                  value=def_vsw_dict.get(body, 400), 
                                  step=50)) #, on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
-
+    
     set_query_params["bodies"] = body_list
     set_query_params["speeds"] = vsw_list
     st.session_state["bodies"] = body_list
