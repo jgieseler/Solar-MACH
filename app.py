@@ -381,6 +381,11 @@ if len(body_list) == len(vsw_list):
     download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
     st.markdown(download_button_str, unsafe_allow_html=True)
 
+    # using new included download_button function (need to uncomment 
+    # "#outfile=plot_file" above!)
+    # with open(plot_file, 'rb') as f:
+    #     st.download_button('Download file', f, file_name=plot_file)
+
     # display coordinates table
     df = c.coord_table
     df.index = df['Spacecraft/Body']
