@@ -211,6 +211,15 @@ with st.sidebar.container():
         set_query_params["plot_trans"] = [1]
         st.session_state["plot_trans"] = [1]
 
+    if ("plot_nr" in st.session_state) and int(st.session_state["plot_nr"][0]) == 1:
+        def_numbered = True    
+    else:
+        def_numbered = False
+    numbered_markers = st.sidebar.checkbox('Numbered symbols', value=def_numbered) #, on_change=clear_url)
+    if transparent:
+        set_query_params["plot_nr"] = [1]
+        st.session_state["plot_nr"] = [1]
+
     # if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
     if ("plot_reference" in st.session_state) and int(st.session_state["plot_reference"][0]) == 1:
         def_plot_reference = True
@@ -369,6 +378,7 @@ if len(body_list) == len(vsw_list):
         show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
         reference_vsw=reference_vsw,                          # define solar wind speed at reference
         transparent = transparent,
+        numbered_markers = numbered_markers,
         # outfile=plot_file                                     # output file (optional)
     )
 

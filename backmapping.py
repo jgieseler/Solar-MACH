@@ -5,6 +5,7 @@ from copy import deepcopy
 
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+import matplotlib.text
 import numpy as np
 import pandas as pd
 import scipy.constants as const
@@ -206,7 +207,13 @@ class HeliosphericConstellation():
 
         return sep, alpha
 
-    def plot(self, plot_spirals=True, plot_sun_body_line=False, show_earth_centered_coord=True, reference_vsw=400, transparent=False, outfile=''):
+    def plot(self, plot_spirals=True, 
+             plot_sun_body_line=False, 
+             show_earth_centered_coord=True, 
+             reference_vsw=400, 
+             transparent=False, 
+             numbered_markers=False,
+             outfile=''):
         """
         Make a polar plot showing the Sun in the center (view from North) and the positions of the selected bodies
 
@@ -226,7 +233,7 @@ class HeliosphericConstellation():
         import pylab as pl
         AU = const.au / 1000  # km
 
-        fig, ax = plt.subplots(subplot_kw=dict(projection='polar'), figsize=(12, 8))
+        fig, ax = plt.subplots(subplot_kw=dict(projection='polar'), figsize=(12, 8), dpi=200)
         self.ax = ax
 
         r = np.arange(0.007, self.max_dist + 0.3, 0.001)
@@ -246,7 +253,15 @@ class HeliosphericConstellation():
             dist_e = self.pos_E.radius.value
 
             # plot body positions
-            ax.plot(np.deg2rad(body_long), dist_body, 's', color=body_color, label=body_lab)
+            if numbered_markers:
+                ax.plot(np.deg2rad(body_long), dist_body, 'o', ms=15, color=body_color, label=body_lab)
+                ax.annotate(i+1,  xy=(np.deg2rad(body_long), dist_body), color='white',
+                            fontsize="small", weight='heavy',
+                            horizontalalignment='center',
+                            verticalalignment='center')
+            else:
+                ax.plot(np.deg2rad(body_long), dist_body, 's', color=body_color, label=body_lab)
+            
             if plot_sun_body_line:
                 # ax.plot(alpha_ref[0], 0.01, 0)
                 ax.plot([np.deg2rad(body_long), np.deg2rad(body_long)], [0.01, dist_body], ':', color=body_color)
@@ -275,6 +290,16 @@ class HeliosphericConstellation():
                 ax.plot(alpha_ref, r, '--k', label=f'field line connecting to\nref. long. (vsw={reference_vsw} km/s)')
 
         leg1 = ax.legend(loc=(1.2, 0.7), fontsize=13)
+
+        if numbered_markers:
+            offset = matplotlib.text.OffsetFrom(leg1, (0.0, 1.0))
+            for i, body_id in enumerate(self.body_dict):
+                yoffset = i*18.7 #18.5 19.5
+                ax.annotate(i+1,  xy=(1,1), xytext=(18.3,-11-yoffset), color='white',
+                            fontsize="small", weight='heavy', textcoords=offset,
+                            horizontalalignment='center',
+                            verticalalignment='center', zorder=100)
+
         if self.reference_long is not None:
             def legend_arrow(width, height, **_):
                 return mpatches.FancyArrow(0, 0.5 * height, width, 0, length_includes_head=True,
@@ -334,7 +359,7 @@ class HeliosphericConstellation():
 
         if outfile != '':
             plt.savefig(outfile)
-        st.pyplot(fig)
+        st.pyplot(fig, dpi=200)
 
     def _polar_twin(self, ax, E_long, position):
         """
