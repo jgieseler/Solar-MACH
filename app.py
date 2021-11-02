@@ -216,7 +216,7 @@ with st.sidebar.container():
     else:
         def_numbered = False
     numbered_markers = st.sidebar.checkbox('Numbered symbols', value=def_numbered) #, on_change=clear_url)
-    if transparent:
+    if numbered_markers:
         set_query_params["plot_nr"] = [1]
         st.session_state["plot_nr"] = [1]
 
