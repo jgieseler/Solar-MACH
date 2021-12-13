@@ -374,6 +374,8 @@ class HeliosphericConstellation():
         ax2.yaxis.set_visible(False)
         ax2.set_theta_zero_location("S")
         ax2.tick_params(axis='x', colors='darkgreen', pad=10)
+        ax2.set_xticks(np.pi/180. * np.linspace(180,  -180, 8, endpoint=False))
+        ax2.set_thetalim(-np.pi, np.pi)
         gridlines = ax2.xaxis.get_gridlines()
         for xax in gridlines:
             xax.set_color('darkgreen')
