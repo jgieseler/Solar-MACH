@@ -33,7 +33,21 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.info('Update (Nov 2, 2021): You can now save or share the status of a given configuration! Scroll down and get the full URL from the blue box at the bottom of the page. Newly introduced is also the option to use "numbered symbols" for the bodies. That should help with color vision deficiency issues and if one needs to convert the plot to grayscale.')
+st.info("""
+
+        📢 **Update December 2021** 📢
+
+        * Added option to save or share the status of a given configuration. Scroll down and get the full URL [from the blue box at the bottom of the page!](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url)
+
+        * Added following **Plot options:**
+
+            *  *Numbered symbols* for the bodies. Should help with color vision deficiency issues and if one needs to convert the plot to grayscale.
+
+            * *Add Stonyhurst coordinate system* as overplotted information.
+
+        """)
+
+
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -196,7 +210,7 @@ with st.sidebar.container():
         def_show_earth_centered_coord = True    
     else:
         def_show_earth_centered_coord = False
-    show_earth_centered_coord = st.sidebar.checkbox('Add Earth-aligned coord. system', value=def_show_earth_centered_coord) #, on_change=clear_url)
+    show_earth_centered_coord = st.sidebar.checkbox('Add Stonyhurst coord. system', value=def_show_earth_centered_coord) #, on_change=clear_url)
     if show_earth_centered_coord:
         set_query_params["plot_ecc"] = [1]
         st.session_state["plot_ecc"] = [1]
@@ -288,7 +302,7 @@ with st.sidebar.container():
             reference_long = coord.lon.value
             reference_lat = coord.lat.value
 
-        import math
+        # import math
         # def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
         def_reference_vsw = int(st.session_state["reference_vsw"][0]) if "reference_vsw" in st.session_state else 400
         reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50) #, on_change=clear_url)
