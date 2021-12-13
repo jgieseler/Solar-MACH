@@ -5,3 +5,4 @@ __pycache__/
 *.png
 env/
 .ipynb_checkpoints/
+tstex_modules/
