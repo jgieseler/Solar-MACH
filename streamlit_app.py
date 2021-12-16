@@ -35,7 +35,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 
 st.info("""
         📢 **Update December 2021** 📢
-        * Added possibility to save or share the status of a given configuration via a specific link. Scroll down and get the full URL [from the blue box at the bottom of the page](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url), then bookmark it or send it to colleagues!
+        * Added possibility to save or share a given configuration via a specific link. Scroll down and get the full URL [from the blue box at the bottom of the page](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url), then bookmark it or send it to colleagues!
         * Updated input methods for selection of spacecraft/bodies and corresponding solar wind speeds. This should ensure correct inputs. (However, note that the page needs to update after each change, so one can't quickly add multiple spacecraft.)
         * Added following **Plot options:**
             *  *Numbered symbols* for spacecraft/bodies. Should help with color vision deficiency issues and if one needs to convert the plot to grayscale.
