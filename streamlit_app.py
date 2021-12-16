@@ -362,7 +362,7 @@ with st.sidebar.container():
     st.session_state["speeds"] = vsw_list
 
 # url = 'http://localhost:8501/?'
-url = 'https://share.streamlit.io/jgieseler/solar-mach/app.py?'
+url = 'https://share.streamlit.io/jgieseler/solar-mach?'
 for p in set_query_params:
     for i in set_query_params[p]:
         # st.write(str(p)+' '+str(i))
