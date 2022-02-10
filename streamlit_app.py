@@ -58,87 +58,6 @@ def make_url(set_query_params):
 def clear_url():
     st.experimental_set_query_params()
 
-# Define Download button, from https://discuss.streamlit.io/t/a-download-button-with-custom-css/4220
-def download_button(object_to_download, download_filename, button_text, pickle_it=False):
-    """
-    Generates a link to download the given object_to_download.
-
-    Params:
-    ------
-    object_to_download:  The object to be downloaded.
-    download_filename (str): filename and extension of file. e.g. mydata.csv,
-    some_txt_output.txt download_link_text (str): Text to display for download
-    link.
-    button_text (str): Text to display on download button (e.g. 'click here to download file')
-    pickle_it (bool): If True, pickle file.
-
-    Returns:
-    -------
-    (str): the anchor tag to download object_to_download
-
-    Examples:
-    --------
-    download_link(your_df, 'YOUR_DF.csv', 'Click to download data!')
-    download_link(your_str, 'YOUR_STRING.txt', 'Click to download text!')
-
-    """
-    if pickle_it:
-        try:
-            object_to_download = pickle.dumps(object_to_download)
-        except pickle.PicklingError as e:
-            st.write(e)
-            return None
-
-    else:
-        if isinstance(object_to_download, bytes):
-            pass
-
-        elif isinstance(object_to_download, pd.DataFrame):
-            object_to_download = object_to_download.to_csv(index=False)
-
-        # Try JSON encode for everything else
-        else:
-            object_to_download = json.dumps(object_to_download)
-
-    try:
-        # some strings <-> bytes conversions necessary here
-        b64 = base64.b64encode(object_to_download.encode()).decode()
-
-    except AttributeError as e:
-        b64 = base64.b64encode(object_to_download).decode()
-
-    button_uuid = str(uuid.uuid4()).replace('-', '')
-    button_id = re.sub('\d+', '', button_uuid)
-
-    custom_css = f""" 
-        <style>
-            #{button_id} {{
-                background-color: rgb(255, 255, 255);
-                color: rgb(38, 39, 48);
-                padding: 0.25em 0.38em;
-                position: relative;
-                text-decoration: none;
-                border-radius: 4px;
-                border-width: 1px;
-                border-style: solid;
-                border-color: rgb(230, 234, 241);
-                border-image: initial;
-            }}             
-            #{button_id}:hover {{
-                border-color: rgb(246, 51, 102);
-                color: rgb(246, 51, 102);
-            }}
-            #{button_id}:active {{
-                box-shadow: none;
-                background-color: rgb(246, 51, 102);
-                color: white;
-                }}
-        </style> """
-
-    dl_link = custom_css + f'<a download="{download_filename}" id="{button_id}" href="data:file/txt;base64,{b64}">{button_text}</a><br></br>'
-
-    return dl_link
-
 # obtain query paramamters from URL
 query_params = st.experimental_get_query_params()
 
@@ -384,8 +303,8 @@ if len(body_list) == len(vsw_list):
                                 reference_lat)
 
     # make the longitudinal constellation plot
-    plot_file = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")+'.png'
-
+    filename =  'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+    
     c.plot(
         plot_spirals=plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
@@ -393,22 +312,22 @@ if len(body_list) == len(vsw_list):
         reference_vsw=reference_vsw,                          # define solar wind speed at reference
         transparent = transparent,
         numbered_markers = numbered_markers,
-        # outfile=plot_file                                     # output file (optional)
+        # outfile=filename+'.png'                               # output file (optional)
     )
 
     # download plot
-    filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
     plot2 = io.BytesIO()
     plt.savefig(plot2, format='png', bbox_inches="tight")
-    # plot3 = base64.b64encode(plot2.getvalue()).decode("utf-8").replace("\n", "")
-    # st.markdown(f'<a href="data:file/png;base64,{plot3}" download="{plot_file}" target="_blank">Download figure as .png file</a>', unsafe_allow_html=True)
-    download_button_str = download_button(plot2.getvalue(), filename+'.png', f'Download figure as .png file', pickle_it=False)
-    st.markdown(download_button_str, unsafe_allow_html=True)
+    st.download_button(
+        label="Download figure as .png file",
+        data=plot2.getvalue(),
+        file_name=filename+'.png',
+        mime="image/png")  
 
-    # using new included download_button function (need to uncomment 
-    # "#outfile=plot_file" above!)
-    # with open(plot_file, 'rb') as f:
-    #     st.download_button('Download file', f, file_name=plot_file)
+    # download plot, alternative. produces actual png image on server. 
+    # needs # outfile=filename+'.png' uncommented above
+    # with open(filename+'.png', 'rb') as f:
+    #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
     # display coordinates table
     df = c.coord_table
@@ -444,12 +363,11 @@ if len(body_list) == len(vsw_list):
     st.table(df.T)
 
     # download coordinates
-    # filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
-    # csv = c.coord_table.to_csv().encode()
-    # b64 = base64.b64encode(csv).decode()
-    # st.markdown(f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv" target="_blank">Download table as .csv file</a>', unsafe_allow_html=True)
-    download_button_str = download_button(c.coord_table, filename+'.csv', f'Download table as .csv file', pickle_it=False)
-    st.markdown(download_button_str, unsafe_allow_html=True)
+    st.download_button(
+        label="Download table as .csv file",
+        data=c.coord_table.to_csv(index=False),
+        file_name=filename+'.csv',
+        mime='text/csv')    
 else:
     st.error(f"ERROR: Number of elements in the bodies/spacecraft list \
                ({len(body_list)}) and solar wind speed list ({len(vsw_list)}) \

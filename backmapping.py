@@ -358,7 +358,7 @@ class HeliosphericConstellation():
             fig.patch.set_alpha(0.0)
 
         if outfile != '':
-            plt.savefig(outfile)
+            plt.savefig(outfile, bbox_inches="tight")
         st.pyplot(fig, dpi=200)
 
     def _polar_twin(self, ax, E_long, position):
