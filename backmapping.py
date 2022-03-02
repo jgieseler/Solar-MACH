@@ -207,11 +207,11 @@ class HeliosphericConstellation():
 
         return sep, alpha
 
-    def plot(self, plot_spirals=True, 
-             plot_sun_body_line=False, 
-             show_earth_centered_coord=True, 
-             reference_vsw=400, 
-             transparent=False, 
+    def plot(self, plot_spirals=True,
+             plot_sun_body_line=False,
+             show_earth_centered_coord=True,
+             reference_vsw=400,
+             transparent=False,
              numbered_markers=False,
              outfile=''):
         """
@@ -255,13 +255,13 @@ class HeliosphericConstellation():
             # plot body positions
             if numbered_markers:
                 ax.plot(np.deg2rad(body_long), dist_body, 'o', ms=15, color=body_color, label=body_lab)
-                ax.annotate(i+1,  xy=(np.deg2rad(body_long), dist_body), color='white',
+                ax.annotate(i+1, xy=(np.deg2rad(body_long), dist_body), color='white',
                             fontsize="small", weight='heavy',
                             horizontalalignment='center',
                             verticalalignment='center')
             else:
                 ax.plot(np.deg2rad(body_long), dist_body, 's', color=body_color, label=body_lab)
-            
+
             if plot_sun_body_line:
                 # ax.plot(alpha_ref[0], 0.01, 0)
                 ax.plot([np.deg2rad(body_long), np.deg2rad(body_long)], [0.01, dist_body], ':', color=body_color)
@@ -276,8 +276,7 @@ class HeliosphericConstellation():
             delta_ref = self.reference_long
             if delta_ref < 0.:
                 delta_ref = delta_ref + 360.
-            alpha_ref = np.deg2rad(delta_ref) + omega / (reference_vsw / AU) * (dist_e / AU - r) - (
-                        omega / (reference_vsw / AU) * (dist_e / AU))
+            alpha_ref = np.deg2rad(delta_ref) + omega / (reference_vsw / AU) * (dist_e / AU - r) - (omega / (reference_vsw / AU) * (dist_e / AU))
             # old arrow style:
             # arrow_dist = min([self.max_dist + 0.1, 2.])
             # ref_arr = plt.arrow(alpha_ref[0], 0.01, 0, arrow_dist, head_width=0.12, head_length=0.11, edgecolor='black',
@@ -294,8 +293,8 @@ class HeliosphericConstellation():
         if numbered_markers:
             offset = matplotlib.text.OffsetFrom(leg1, (0.0, 1.0))
             for i, body_id in enumerate(self.body_dict):
-                yoffset = i*18.7 #18.5 19.5
-                ax.annotate(i+1,  xy=(1,1), xytext=(18.3,-11-yoffset), color='white',
+                yoffset = i*18.7  # 18.5 19.5
+                ax.annotate(i+1, xy=(1, 1), xytext=(18.3, -11-yoffset), color='white',
                             fontsize="small", weight='heavy', textcoords=offset,
                             horizontalalignment='center',
                             verticalalignment='center', zorder=100)
@@ -309,7 +308,7 @@ class HeliosphericConstellation():
                              handler_map={mpatches.FancyArrow: HandlerPatch(patch_func=legend_arrow), },
                              fontsize=13)
             ax.add_artist(leg1)
-        
+
         # replace 'SEMB-L1' in legend with 'L1' if present
         for text in leg1.get_texts():
             if text.get_text() == 'SEMB-L1':
@@ -320,8 +319,12 @@ class HeliosphericConstellation():
         ax.set_rmax(self.max_dist + 0.3)
         ax.set_rmin(0.01)
         ax.yaxis.get_major_locator().base.set_params(nbins=4)
-        circle = plt.Circle((0., 0.), self.max_dist + 0.29, transform=ax.transData._b, edgecolor="k", facecolor=None,
-                           fill=False, lw=2)
+        circle = plt.Circle((0., 0.),
+                            self.max_dist + 0.29,
+                            transform=ax.transData._b,
+                            edgecolor="k",
+                            facecolor=None,
+                            fill=False, lw=2)
         ax.add_patch(circle)
 
         # manually plot r-grid lines with different resolution depending on maximum distance bodyz
@@ -347,13 +350,13 @@ class HeliosphericConstellation():
 
         ax.tick_params(axis='x', pad=10)
 
-        ax.text(0.94, 0.16, 'Solar-MACH', 
+        ax.text(0.94, 0.16, 'Solar-MACH',
                 fontfamily='DejaVu Serif', fontsize=28,
                 ha='right', va='bottom', transform=fig.transFigure)
         ax.text(0.94, 0.12, 'https://solar-mach.github.io',
                 fontfamily='DejaVu Sans', fontsize=18,
                 ha='right', va='bottom', transform=fig.transFigure)
-        
+
         if transparent:
             fig.patch.set_alpha(0.0)
 
@@ -374,7 +377,7 @@ class HeliosphericConstellation():
         ax2.yaxis.set_visible(False)
         ax2.set_theta_zero_location("S")
         ax2.tick_params(axis='x', colors='darkgreen', pad=10)
-        ax2.set_xticks(np.pi/180. * np.linspace(180,  -180, 8, endpoint=False))
+        ax2.set_xticks(np.pi/180. * np.linspace(180, -180, 8, endpoint=False))
         ax2.set_thetalim(-np.pi, np.pi)
         gridlines = ax2.xaxis.get_gridlines()
         for xax in gridlines:

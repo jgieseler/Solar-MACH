@@ -1,48 +1,48 @@
-import base64
+# import base64
 import datetime
 import io
-import json
-import os
-import pickle
+# import json
+# import os
+# import pickle
 import pyshorteners
-import re
-import uuid
+# import re
+# import uuid
 
 import astropy.units as u
-import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+# import pandas as pd
 import streamlit as st
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 
-from backmapping import *
+from backmapping import HeliosphericConstellation, print_body_list
 
 
 # modify hamburger menu
-about_info = ''' ## Solar-MACH 
+about_info = '''## Solar-MACH
 The *Solar MAgnetic Connection Haus* tool is a multi-spacecraft longitudinal configuration plotter, originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Forked and modified by J. Gieseler (University of Turku, Finland).
 
 The development of the online tool has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 101004159 (SERPENTINE).'''
 get_help_link = "https://github.com/jgieseler/Solar-MACH/discussions"
 report_bug_link = "https://github.com/jgieseler/Solar-MACH/discussions/4"
 menu_items = {'About': about_info,
-              'Get help': get_help_link, 
+              'Get help': get_help_link,
               'Report a bug': report_bug_link}
 
 # set page config
-st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:", 
+st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
 st.info("""
         📢 **Update December 2021** 📢
         * Added possibility to save or share a given configuration via a specific link. Scroll down and get the full URL [from the blue box at the bottom of the page](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url), then bookmark it or send it to colleagues!
-        * Updated input methods for selection of spacecraft/bodies and corresponding solar wind speeds. 
+        * Updated input methods for selection of spacecraft/bodies and corresponding solar wind speeds.
         * Added following **Plot options:**
             *  *Numbered symbols* for spacecraft/bodies. Should help with color vision deficiency issues and if one needs to convert the plot to grayscale.
             * *Add Stonyhurst coordinate system* as overplotted information.
         """)
-
-
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -52,11 +52,15 @@ st.markdown('## Multi-spacecraft longitudinal configuration plotter')
 def make_url(set_query_params):
     st.experimental_set_query_params(**set_query_params)
 
-# Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit 
-# version 1.0. Will hopefully be fixed in the future. Then hopefully all 
-# occurences of "clear_url" can be removed.
+
 def clear_url():
+    """
+    Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit
+    version 1.0. Will hopefully be fixed in the future. Then hopefully all
+    occurences of "clear_url" can be removed.
+    """
     st.experimental_set_query_params()
+
 
 # obtain query paramamters from URL
 query_params = st.experimental_get_query_params()
@@ -73,17 +77,15 @@ for i in query_params:
 
 # provide date and time
 with st.sidebar.container():
-    # set starting parameters from URL if available, otherwise use defaults 
+    # set starting parameters from URL if available, otherwise use defaults
     # def_d = datetime.datetime.strptime(query_params["date"][0], "%Y%m%d") if "date" in query_params \
     #         else datetime.date.today()-datetime.timedelta(days = 2)
     # def_t = datetime.datetime.strptime(query_params["time"][0], "%H%M") if "time" in query_params \
     #         else datetime.time(0, 0)
-    def_d = datetime.datetime.strptime(st.session_state["date"][0], "%Y%m%d") if "date" in st.session_state \
-            else datetime.date.today()-datetime.timedelta(days = 2)
-    def_t = datetime.datetime.strptime(st.session_state["time"][0], "%H%M") if "time" in st.session_state \
-            else datetime.time(0, 0)
-    d = st.sidebar.date_input("Select date", def_d) #, on_change=clear_url)
-    t = st.sidebar.time_input('Select time', def_t) #, on_change=clear_url)
+    def_d = datetime.datetime.strptime(st.session_state["date"][0], "%Y%m%d") if "date" in st.session_state else datetime.date.today()-datetime.timedelta(days=2)
+    def_t = datetime.datetime.strptime(st.session_state["time"][0], "%H%M") if "time" in st.session_state else datetime.time(0, 0)
+    d = st.sidebar.date_input("Select date", def_d)  # , on_change=clear_url)
+    t = st.sidebar.time_input('Select time', def_t)  # , on_change=clear_url)
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
     # save query parameters to URL
@@ -101,49 +103,49 @@ with st.sidebar.container():
 
     # if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
     if ("plot_spirals" in st.session_state) and int(st.session_state["plot_spirals"][0]) == 0:
-        def_plot_spirals = False    
+        def_plot_spirals = False
     else:
         def_plot_spirals = True
-    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals) #, on_change=clear_url)
+    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals)  # , on_change=clear_url)
     if not plot_spirals:
         set_query_params["plot_spirals"] = [0]
         st.session_state["plot_spirals"] = [0]
 
     # if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
     if ("plot_sun_body_line" in st.session_state) and int(st.session_state["plot_sun_body_line"][0]) == 0:
-        def_plot_sun_body_line = False    
+        def_plot_sun_body_line = False
     else:
         def_plot_sun_body_line = True
-    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line) #, on_change=clear_url)
+    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line)  # , on_change=clear_url)
     if not plot_sun_body_line:
         set_query_params["plot_sun_body_line"] = [0]
         st.session_state["plot_sun_body_line"] = [0]
 
     # if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
     if ("plot_ecc" in st.session_state) and int(st.session_state["plot_ecc"][0]) == 1:
-        def_show_earth_centered_coord = True    
+        def_show_earth_centered_coord = True
     else:
         def_show_earth_centered_coord = False
-    show_earth_centered_coord = st.sidebar.checkbox('Add Stonyhurst coord. system', value=def_show_earth_centered_coord) #, on_change=clear_url)
+    show_earth_centered_coord = st.sidebar.checkbox('Add Stonyhurst coord. system', value=def_show_earth_centered_coord)  # , on_change=clear_url)
     if show_earth_centered_coord:
         set_query_params["plot_ecc"] = [1]
         st.session_state["plot_ecc"] = [1]
 
     # if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
     if ("plot_trans" in st.session_state) and int(st.session_state["plot_trans"][0]) == 1:
-        def_transparent = True    
+        def_transparent = True
     else:
         def_transparent = False
-    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent) #, on_change=clear_url)
+    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent)  # , on_change=clear_url)
     if transparent:
         set_query_params["plot_trans"] = [1]
         st.session_state["plot_trans"] = [1]
 
     if ("plot_nr" in st.session_state) and int(st.session_state["plot_nr"][0]) == 1:
-        def_numbered = True    
+        def_numbered = True
     else:
         def_numbered = False
-    numbered_markers = st.sidebar.checkbox('Numbered symbols', value=def_numbered) #, on_change=clear_url)
+    numbered_markers = st.sidebar.checkbox('Numbered symbols', value=def_numbered)  # , on_change=clear_url)
     if numbered_markers:
         set_query_params["plot_nr"] = [1]
         st.session_state["plot_nr"] = [1]
@@ -153,8 +155,8 @@ with st.sidebar.container():
         def_plot_reference = True
     else:
         def_plot_reference = False
-  
-    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference) #, on_change=clear_url)
+
+    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference)  # , on_change=clear_url)
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         wrong_ref_coord = False
@@ -170,8 +172,8 @@ with st.sidebar.container():
             # def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
             def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
             def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
-            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long) #, on_change=clear_url)
-            reference_lat  = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat) #, on_change=clear_url)
+            reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)  # , on_change=clear_url)
+            reference_lat = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
             # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
@@ -191,10 +193,10 @@ with st.sidebar.container():
             # coord = coord.transform_to(frames.HeliographicStonyhurst)
             # def_reference_long = coord.lon.value
             # def_reference_lat = coord.lat.value
-            
+
             # read in coordinates from user
-            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long) #, on_change=clear_url)
-            reference_lat  = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat) #, on_change=clear_url)
+            reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long)  # , on_change=clear_url)
+            reference_lat = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
             # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
@@ -203,7 +205,7 @@ with st.sidebar.container():
                 set_query_params["ston_lat"] = [str(int(reference_lat))]
                 st.session_state["ston_long"] = [str(int(reference_long))]
                 st.session_state["ston_lat"] = [str(int(reference_lat))]
-        
+
         # outdated check for wrong coordinates (caught by using st.number_input)
         # if wrong_ref_coord:
         #         st.error('ERROR: There is something wrong in the prodived reference coordinates!')
@@ -219,7 +221,7 @@ with st.sidebar.container():
         # import math
         # def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
         def_reference_vsw = int(st.session_state["reference_vsw"][0]) if "reference_vsw" in st.session_state else 400
-        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50) #, on_change=clear_url)
+        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50)  # , on_change=clear_url)
 
     if plot_reference is False:
         reference_long = None
@@ -243,38 +245,34 @@ with st.sidebar.container():
     all_bodies = all_bodies.replace('SEMB-L1', 'L1')
     all_bodies = all_bodies.sort_index()
 
-    # set starting parameters from URL if available, otherwise use defaults 
-    # def_full_body_list = query_params["bodies"] if "bodies" in query_params \
-    #                         else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
-    # def_vsw_list = [int(i) for i in query_params["speeds"]] if "speeds" in query_params \
-    #                         else [400, 400, 400, 400, 400]
+    # set starting parameters from URL if available, otherwise use defaults
+    # def_full_body_list = query_params["bodies"] if "bodies" in query_params else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
+    # def_vsw_list = [int(i) for i in query_params["speeds"]] if "speeds" in query_params else [400, 400, 400, 400, 400]
 
-    def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state \
-                            else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
-    def_vsw_list = [int(i) for i in st.session_state["speeds"]] if "speeds" in st.session_state \
-                            else [400, 400, 400, 400, 400]
+    def_full_body_list = st.session_state["bodies"] if "bodies" in st.session_state else ['STEREO A', 'Earth', 'BepiColombo', 'Parker Solar Probe', 'Solar Orbiter']
+    def_vsw_list = [int(i) for i in st.session_state["speeds"]] if "speeds" in st.session_state else [400, 400, 400, 400, 400]
 
     def_vsw_dict = {}
     for i in range(len(def_full_body_list)):
         try:
             def_vsw_dict[def_full_body_list[i]] = def_vsw_list[i]
-        except IndexError: 
+        except IndexError:
             def_vsw_dict[def_full_body_list[i]] = 400
 
     body_list = st.multiselect(
         'Bodies/spacecraft',
         all_bodies,
         def_full_body_list,
-        key='bodies') #, on_change=clear_url)
-    
+        key='bodies')  # , on_change=clear_url)
+
     with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
         vsw_dict = {}
         for body in body_list:
-            vsw_dict[body] = int(st.number_input(body, min_value=0, 
-                                 value=def_vsw_dict.get(body, 400), 
-                                 step=50)) #, on_change=clear_url))
+            vsw_dict[body] = int(st.number_input(body, min_value=0,
+                                 value=def_vsw_dict.get(body, 400),
+                                 step=50))  # , on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
-    
+
     set_query_params["bodies"] = body_list
     set_query_params["speeds"] = vsw_list
     # st.session_state["bodies"] = body_list
@@ -300,18 +298,18 @@ url = url.replace(' ', '+')
 if len(body_list) == len(vsw_list):
     # initialize the bodies
     c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
-                                reference_lat)
+                                  reference_lat)
 
     # make the longitudinal constellation plot
-    filename =  'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
-    
+    filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+
     c.plot(
         plot_spirals=plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
         show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
         reference_vsw=reference_vsw,                          # define solar wind speed at reference
-        transparent = transparent,
-        numbered_markers = numbered_markers,
+        transparent=transparent,
+        numbered_markers=numbered_markers,
         # outfile=filename+'.png'                               # output file (optional)
     )
 
@@ -322,9 +320,9 @@ if len(body_list) == len(vsw_list):
         label="Download figure as .png file",
         data=plot2.getvalue(),
         file_name=filename+'.png',
-        mime="image/png")  
+        mime="image/png")
 
-    # download plot, alternative. produces actual png image on server. 
+    # download plot, alternative. produces actual png image on server.
     # needs # outfile=filename+'.png' uncommented above
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
@@ -333,31 +331,30 @@ if len(body_list) == len(vsw_list):
     df = c.coord_table
     df.index = df['Spacecraft/Body']
     df = df.drop(columns=['Spacecraft/Body'])
-    df = df.rename(columns=
-        {"Spacecraft/Body": "Spacecraft / body",
-        "Carrington Longitude (°)": "Carrington longitude [°]",
-        "Latitude (°)": "Carrington latitude [°]",
-        "Heliocentric Distance (AU)": "Heliocent. distance [AU]",
-        "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
-        "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]", 
-        "Vsw": "Solar wind speed [km/s]",
-        "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude [°]",
-        "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
-        "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
-        "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
-    
+    df = df.rename(columns={"Spacecraft/Body": "Spacecraft / body",
+                            "Carrington Longitude (°)": "Carrington longitude [°]",
+                            "Latitude (°)": "Carrington latitude [°]",
+                            "Heliocentric Distance (AU)": "Heliocent. distance [AU]",
+                            "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
+                            "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
+                            "Vsw": "Solar wind speed [km/s]",
+                            "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude [°]",
+                            "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
+                            "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
+                            "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
+
     df2 = df.copy()
     decimals = 0
-    df = df.round({ "Carrington longitude [°]": decimals, 
-                    "Carrington latitude [°]": decimals,
-                    "Longitud. separation to Earth longitude [°]": decimals,
-                    "Latitud. separation to Earth latitude [°]": decimals,
-                    "Solar wind speed [km/s]": decimals,
-                    "Magnetic footpoint Carrington longitude [°]": decimals,
-                    "Longitud. separation bw. body & reference [°]": decimals,
-                    "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
-                    "Latitudinal separation bw. body & reference [°]": decimals
-                    }).astype(np.int64).astype(str) #yes, convert to int64 first and then to str to get rid of ".0"
+    df = df.round({"Carrington longitude [°]": decimals,
+                   "Carrington latitude [°]": decimals,
+                   "Longitud. separation to Earth longitude [°]": decimals,
+                   "Latitud. separation to Earth latitude [°]": decimals,
+                   "Solar wind speed [km/s]": decimals,
+                   "Magnetic footpoint Carrington longitude [°]": decimals,
+                   "Longitud. separation bw. body & reference [°]": decimals,
+                   "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
+                   "Latitudinal separation bw. body & reference [°]": decimals
+                   }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0"
     df["Heliocent. distance [AU]"] = df2["Heliocent. distance [AU]"].round(2).astype(str)
 
     st.table(df.T)
@@ -367,14 +364,12 @@ if len(body_list) == len(vsw_list):
         label="Download table as .csv file",
         data=c.coord_table.to_csv(index=False),
         file_name=filename+'.csv',
-        mime='text/csv')    
+        mime='text/csv')
 else:
     st.error(f"ERROR: Number of elements in the bodies/spacecraft list \
                ({len(body_list)}) and solar wind speed list ({len(vsw_list)}) \
                don't match! Please verify that for each body there is a solar \
                wind speed provided!")
-
-
 
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 
@@ -382,53 +377,53 @@ st.info(url)
 
 cont1 = st.container()
 
-# generate short da.gd URL
+
 def get_short_url(url):
+    """
+    generate short da.gd URL
+    """
     s = pyshorteners.Shortener()
     surl = s.dagd.short(url)
     # cont1.write(surl)
     cont1.info(surl)
 
+
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
-# clear params from URL because Streamlit 1.0 still get some hickups when one 
-# changes the params; it then gets confused with the params in the URL and the 
+# clear params from URL because Streamlit 1.0 still get some hickups when one
+# changes the params; it then gets confused with the params in the URL and the
 # one from the widgets.
 clear_url()
 
 # footer
 st.markdown("""---""")
-st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a \
-            multi-spacecraft longitudinal configuration plotter. It was \
-            originally developed at the University of Kiel, Germany, and further \
-            discussed within the [ESA Heliophysics Archives USer (HAUS)]\
-            (https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
-            group. It is now opened to everyone ([original code]\
-            (https://github.com/esdc-esac-esa-int/Solar-MACH)).')
+st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
+            plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
+            [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
+            group. It is now opened to everyone ([original code](https://github.com/esdc-esac-esa-int/Solar-MACH)).')
 
 st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
              [J. Gieseler](https://jgieseler.github.io) (University of Turku, Finland). \
              [**Get in contact**](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
-col1, col2 = st.columns((5,1))
-col1.markdown("The development of the online tool has received funding from the \
-             European Union's Horizon 2020 research and innovation programme \
-             under grant agreement No 101004159 (SERPENTINE).")
+col1, col2 = st.columns((5, 1))
+col1.markdown("The development of the online tool has received funding from the European Union's Horizon 2020 \
+              research and innovation programme under grant agreement No 101004159 (SERPENTINE).")
 col2.markdown('[<img src="https://serpentine-h2020.eu/wp-content/uploads/2021/02/SERPENTINE_logo_new.png" \
                 height="80">](https://serpentine-h2020.eu)', unsafe_allow_html=True)
 
 st.markdown('Powered by: \
             [<img src="https://matplotlib.org/stable/_static/logo2_compressed.svg" height="25">](https://matplotlib.org) \
             [<img src="https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.svg" height="30">](https://streamlit.io) \
-            [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org)', \
+            [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org)',
             unsafe_allow_html=True)
 
 
 # remove 'Made with Streamlit' footer
-#MainMenu {visibility: hidden;}
+# MainMenu {visibility: hidden;}
 hide_streamlit_style = """
             <style>
             footer {visibility: hidden;}
             </style>
             """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
