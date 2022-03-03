@@ -21,7 +21,7 @@ from backmapping import HeliosphericConstellation, print_body_list
 
 # modify hamburger menu
 about_info = '''## Solar-MACH
-The *Solar MAgnetic Connection Haus* tool is a multi-spacecraft longitudinal configuration plotter, originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Forked and modified by J. Gieseler (University of Turku, Finland).
+The *Solar MAgnetic Connection Haus* tool is a multi-spacecraft longitudinal configuration plotter, originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Modified by J. Gieseler (University of Turku, Finland).
 
 The development of the online tool has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 101004159 (SERPENTINE).'''
 get_help_link = "https://github.com/jgieseler/Solar-MACH/discussions"
@@ -402,7 +402,7 @@ st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-s
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
             group. It is now opened to everyone ([original code](https://github.com/esdc-esac-esa-int/Solar-MACH)).')
 
-st.markdown('[Forked and modified](https://github.com/jgieseler/Solar-MACH) by \
+st.markdown('[Modified](https://github.com/jgieseler/Solar-MACH) by \
              [J. Gieseler](https://jgieseler.github.io) (University of Turku, Finland). \
              [**Get in contact**](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
