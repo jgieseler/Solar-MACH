@@ -35,7 +35,7 @@ def print_body_list():
     # print('Please visit https://ssd.jpl.nasa.gov/horizons.cgi?s_target=1#top for a complete list of available bodies')
     data = pd.DataFrame\
         .from_dict(body_dict, orient='index', columns=['ID', 'Body', 'Color'])\
-        .drop(['ID', 'Color'], 'columns')\
+        .drop(columns=['ID', 'Color'])\
         .drop_duplicates()
     data.index.name = 'Key'
     return data
@@ -67,7 +67,7 @@ class HeliosphericConstellation():
         self.reference_long = reference_long
         self.reference_lat = reference_lat
 
-        pos_E = get_horizons_coord(399, self.date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
+        pos_E = get_horizons_coord(399, self.date, None)  # (lon, lat, radius) in (deg, deg, AU)
         self.pos_E = pos_E.transform_to(frames.HeliographicCarrington(observer='Sun'))
 
         if len(vsw_list) == 0:
@@ -99,7 +99,7 @@ class HeliosphericConstellation():
                 bodies.update(dict.fromkeys([body_id], [body_id, body_lab, body_color]))
 
             try:
-                pos = get_horizons_coord(body_id, date, 'id')  # (lon, lat, radius) in (deg, deg, AU)
+                pos = get_horizons_coord(body_id, date, None)  # (lon, lat, radius) in (deg, deg, AU)
                 pos = pos.transform_to(frames.HeliographicCarrington(observer='Sun'))
                 bodies[body_id].append(pos)
                 bodies[body_id].append(vsw_list[i])
@@ -227,6 +227,10 @@ class HeliosphericConstellation():
                     if True, additional longitudinal tickmarks are shown with Earth at longitude 0
         reference_vsw: int
                     if defined, defines solar wind speed for reference. if not defined, 400 km/s is used
+        transparent: bool
+                    if True, output image has transparent background
+        numbered_markers: bool
+                    if True, body markers contain numbers for better identification
         outfile: string
                 if provided, the plot is saved with outfile as filename
         """
