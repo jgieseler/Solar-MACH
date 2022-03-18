@@ -19,3 +19,8 @@ streamlit run app.py
 Afterwards the app should open in your browser.
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solar-mach.github.io)
+
+
+## Python package
+
+In addition, all the functionality is available in a python package (independend of streamlit) at https://github.com/jgieseler/solarmach
