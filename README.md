@@ -13,7 +13,7 @@ source env/bin/activate
 pip3 install -r requirements.txt
 
 # run the actual streamlit app
-streamlit run app.py
+streamlit run streamlit_app.py 
 ```
 
 Afterwards the app should open in your browser.
@@ -23,4 +23,16 @@ Afterwards the app should open in your browser.
 
 ## Python package
 
-In addition, all the functionality is available in a python package (independend of streamlit) at https://github.com/jgieseler/solarmach
+In addition, all the functionality is available in the streamlit-independent python package [**solarmach**](https://github.com/jgieseler/solarmach). It requires python >= 3.6 and can be installed either from [PyPI](https://pypi.org/project/solarmach/) using:
+
+``` bash
+pip install solarmach
+```
+    
+or from [conda](https://anaconda.org/conda-forge/solarmach/) using:
+
+``` bash
+conda install -c conda-forge solarmach
+```
+
+See https://github.com/jgieseler/solarmach for a more detailled description.
