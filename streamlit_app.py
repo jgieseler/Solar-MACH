@@ -398,17 +398,21 @@ clear_url()
 # footer
 st.markdown("""---""")
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
-            plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
+            plotter. It was originally developed at the University of Kiel, Germany, further discussed within the \
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
-            group. It is now opened to everyone ([original code](https://github.com/esdc-esac-esa-int/Solar-MACH)).')
+            group, and [made publically available](https://github.com/esdc-esac-esa-int/Solar-MACH).')
 
-st.markdown('[Modified](https://github.com/jgieseler/Solar-MACH) by \
-             [J. Gieseler](https://jgieseler.github.io) (University of Turku, Finland). \
+st.markdown('[The version used here](https://github.com/jgieseler/Solar-MACH) is maintained by J. Gieseler (University of Turku, Finland). \
              [**Get in contact**](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
+st.markdown('For the streamlit-independent python package of Solar-MACH that runs in a python shell or Jupyter Notebook, \
+             refer to [**solarmach**](https://github.com/jgieseler/solarmach):&nbsp;\
+             [<img src="https://img.shields.io/pypi/v/solarmach?style=flat&logo=pypi" height="20">](https://pypi.org/project/solarmach/) \
+             [<img src="https://img.shields.io/conda/vn/conda-forge/solarmach?style=flat&logo=anaconda" height="20">](https://anaconda.org/conda-forge/solarmach/)', unsafe_allow_html=True)
+
 col1, col2 = st.columns((5, 1))
-col1.markdown("The development of the online tool has received funding from the European Union's Horizon 2020 \
-              research and innovation programme under grant agreement No 101004159 (SERPENTINE).")
+col1.markdown("*The development of the online tool has received funding from the European Union's Horizon 2020 \
+              research and innovation programme under grant agreement No 101004159 (SERPENTINE).*")
 col2.markdown('[<img src="https://serpentine-h2020.eu/wp-content/uploads/2021/02/SERPENTINE_logo_new.png" \
                 height="80">](https://serpentine-h2020.eu)', unsafe_allow_html=True)
 
