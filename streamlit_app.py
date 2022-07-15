@@ -398,9 +398,9 @@ clear_url()
 # footer
 st.markdown("""---""")
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
-            plotter. It was originally developed at the University of Kiel, Germany, further discussed within the \
+            plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
-            group, and [made publically available](https://github.com/esdc-esac-esa-int/Solar-MACH).')
+            group.')
 
 st.markdown('[The version used here](https://github.com/jgieseler/Solar-MACH) is maintained by J. Gieseler (University of Turku, Finland). \
              [**Get in contact**](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
