@@ -1,6 +1,6 @@
 # Solar MAgnetic Connection Haus tool
 
-Adapted from [github.com/esdc-esac-esa-int/Solar-MACH](https://github.com/esdc-esac-esa-int/Solar-MACH) and modified to [run with Streamlit](https://solar-mach.github.io). Slightly extended functionality (provide reference longitude in Stonyhurst coordinates, download bodies coordinates list).
+Modified version of [github.com/jgieseler/solarmach](https://github.com/jgieseler/solarmach) to [run with Streamlit](https://solar-mach.github.io).
 
 To install and start a local server using `streamlit` run the following commands in your terminal:
 
