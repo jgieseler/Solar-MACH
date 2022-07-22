@@ -391,7 +391,7 @@ def get_short_url(url):
 
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
-st.error('NOTE: Because of changes to Streamlit, the URL format has changed in July 2022. If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&" (both without quotation marks). Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).')
+st.error('⚠️ NOTE: Because of changes to Streamlit, the URL format has changed in July 2022. If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&" (both without quotation marks). In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above. Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent). ⚠️')
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one
 # changes the params; it then gets confused with the params in the URL and the
