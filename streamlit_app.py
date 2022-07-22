@@ -279,7 +279,8 @@ with st.sidebar.container():
     st.session_state["speeds"] = vsw_list
 
 # url = 'http://localhost:8501/?'
-url = 'https://share.streamlit.io/jgieseler/solar-mach?'
+# url = 'https://share.streamlit.io/jgieseler/solar-mach?'
+url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
 for p in set_query_params:
     for i in set_query_params[p]:
         # st.write(str(p)+' '+str(i))
@@ -385,10 +386,12 @@ def get_short_url(url):
     s = pyshorteners.Shortener()
     surl = s.dagd.short(url)
     # cont1.write(surl)
-    cont1.info(surl)
+    cont1.success(surl)
 
 
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
+
+st.error('NOTE: Because of changes to Streamlit, the URL format has changed in July 2022. If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&" (both without quotation marks). Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).')
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one
 # changes the params; it then gets confused with the params in the URL and the
