@@ -35,6 +35,9 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
+st.warning('If your browser repeatedly complains that this page "redirected you too many times", you might for the time being use the URL https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems (as of end of July 2022).')
+
+
 # st.info("""
 #        📢 **Update December 2021** 📢
 #        * Added possibility to save or share a given configuration via a specific link. Scroll down and get the full URL [from the blue box at the bottom of the page](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url), then bookmark it or send it to colleagues!
@@ -391,7 +394,12 @@ def get_short_url(url):
 
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
-st.error('⚠️ NOTE: Because of changes to Streamlit, the URL format has changed in July 2022. If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&" (both without quotation marks). In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above. Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent). ⚠️')
+st.error('''
+    ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
+    * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&" (both without quotation marks).
+    * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
+    * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
+    ''')
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one
 # changes the params; it then gets confused with the params in the URL and the
