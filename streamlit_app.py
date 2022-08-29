@@ -35,7 +35,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.warning('If your browser repeatedly complains that this page "redirected you too many times", you might for the time being use the URL https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems (as of end of July 2022).')
+st.warning('If your browser repeatedly complains that this page "redirected you too many times", you might for the time being use the URL https://solar-mach.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems (as of end of July 2022).')
 
 
 # st.info("""
@@ -283,7 +283,9 @@ with st.sidebar.container():
 
 # url = 'http://localhost:8501/?'
 # url = 'https://share.streamlit.io/jgieseler/solar-mach?'
-url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
+# url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
+url = 'https://solar-mach.streamlitapp.com/?embedded=true&'
+
 for p in set_query_params:
     for i in set_query_params[p]:
         # st.write(str(p)+' '+str(i))
@@ -396,7 +398,7 @@ cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
 st.error('''
     ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
-    * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&" (both without quotation marks).
+    * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://solar-mach.streamlitapp.com/?embedded=true&" (both without quotation marks).
     * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
     * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
     ''')
