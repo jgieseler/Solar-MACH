@@ -1,5 +1,7 @@
 # Solar MAgnetic Connection Haus tool
 
+[![DOI](https://zenodo.org/badge/374606976.svg)](https://zenodo.org/badge/latestdoi/374606976)
+
 Modified version of [github.com/jgieseler/solarmach](https://github.com/jgieseler/solarmach) to [run with Streamlit](https://solar-mach.github.io).
 
 To install and start a local server using `streamlit` run the following commands in your terminal:
