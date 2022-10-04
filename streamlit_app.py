@@ -35,7 +35,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.warning('If your browser repeatedly complains that this page "redirected you too many times", you might for the time being use the URL https://solar-mach.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems (as of end of July 2022).')
+st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use the URL https://solar-mach.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems. (October 2022)")
 
 
 # st.info("""
