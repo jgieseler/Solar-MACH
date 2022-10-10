@@ -415,11 +415,12 @@ st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-s
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
             group.')
 
-st.markdown('[The version used here](https://github.com/jgieseler/Solar-MACH) is maintained by J. Gieseler (University of Turku, Finland). \
-             [**Get in contact**](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
+st.markdown('The version used here is maintained by J. Gieseler (University of Turku, Finland):<br> \
+             [<img src="https://img.shields.io/static/v1?label=GitHub&message=Solar-MACH&color=blue&logo=github" height="20">](https://github.com/jgieseler/Solar-MACH/) \
+             [<img src="https://img.shields.io/static/v1?label=Contact&message=jan.gieseler@utu.fi&color=red&logo=gmail" height="20">](mailto:jan.gieseler@utu.fi?subject=Solar-MACH)', unsafe_allow_html=True)
 
-st.markdown('For the streamlit-independent python package of Solar-MACH that runs in a python shell or Jupyter Notebook, \
-             refer to [**solarmach**](https://github.com/jgieseler/solarmach):&nbsp;\
+st.markdown('For the full python package of Solar-MACH, refer to **solarmach**:<br>\
+             [<img src="https://img.shields.io/static/v1?label=GitHub&message=solarmach&color=blue&logo=github" height="20">](https://github.com/jgieseler/solarmach/) \
              [<img src="https://img.shields.io/pypi/v/solarmach?style=flat&logo=pypi" height="20">](https://pypi.org/project/solarmach/) \
              [<img src="https://img.shields.io/conda/vn/conda-forge/solarmach?style=flat&logo=anaconda" height="20">](https://anaconda.org/conda-forge/solarmach/)', unsafe_allow_html=True)
 
