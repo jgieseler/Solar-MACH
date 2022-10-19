@@ -1,5 +1,5 @@
 {
-    "description": "Streamlit version of the multi-spacecraft longitudinal configuration plotter Solar-MACH used for [solar-mach.github.io](https://solar-mach.github.io)",
+    "description": "Streamlit version of the multi-spacecraft longitudinal configuration plotter Solar-MACH used for solar-mach.github.io",
     "upload_type": "software",
     "creators": [
         {
