@@ -75,6 +75,13 @@ set_query_params = {}
 for i in query_params:
     st.session_state[i] = query_params[i]
 
+# look for old definitions of reference coordinates, and deactivate plotting of reference if found
+if "carr_long" in st.session_state or "carr_lat" in st.session_state or "ston_long" in st.session_state or "ston_lat" in st.session_state:
+    st.error('''
+    ⚠️ **WARNING:** Deprecated parameters have been prodived by the URL. To avoid unexpected behaviour, plotting of the reference has been deactivated! Most probably *carr_long* & *carr_lat* or *ston_long* & *ston_lat* have been provided, which are not supported any more.
+    ''')
+    st.session_state["plot_reference"][0] = 0
+
 # removed as of now
 # st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
 
