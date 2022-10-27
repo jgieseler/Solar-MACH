@@ -102,12 +102,13 @@ with st.sidebar.container():
 
 # plotting settings
 with st.sidebar.container():
-    reference_sys_list = ['Carrington', 'Stonyhurst']
+    coord_sys_list = ['Carrington', 'Stonyhurst']
     # set starting parameters from URL if available, otherwise use defaults
     # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
-    def_reference_sys = int(st.session_state["reference_sys"][0]) if "reference_sys" in st.session_state else 0
-    reference_sys = st.sidebar.radio('Coordinate system:', reference_sys_list, index=def_reference_sys, horizontal=True)
-    coord_sys = reference_sys
+    def_coord_sys = int(st.session_state["coord_sys"][0]) if "coord_sys" in st.session_state else 0
+    coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)
+    set_query_params["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
+    st.session_state["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
 
     st.sidebar.subheader('Plot options:')
 
@@ -160,7 +161,10 @@ with st.sidebar.container():
         set_query_params["plot_nr"] = [1]
         st.session_state["plot_nr"] = [1]
 
-    long_offset = int(st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):', min_value=0, max_value=360, value=270, step=90))
+    def_long_offset = int(st.session_state["long_offset"][0]) if "long_offset" in st.session_state else 270
+    long_offset = int(st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):', min_value=0, max_value=360, value=def_long_offset, step=90))
+    set_query_params["long_offset"] = [str(int(long_offset))]
+    st.session_state["long_offset"] = [str(int(long_offset))]
 
     # if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
     if ("plot_reference" in st.session_state) and int(st.session_state["plot_reference"][0]) == 1:
@@ -178,27 +182,30 @@ with st.sidebar.container():
         # def_reference_sys = int(st.session_state["reference_sys"][0]) if "reference_sys" in st.session_state else 0
         # reference_sys = st.radio('Coordinate system:', reference_sys_list, index=def_reference_sys)
 
-        if reference_sys == 'Carrington':
+        def_reference_long = int(st.session_state["reference_long"][0]) if "reference_long" in st.session_state else 90
+        def_reference_lat = int(st.session_state["reference_lat"][0]) if "reference_lat" in st.session_state else 0
+
+        if coord_sys == 'Carrington':
             # def_reference_long = int(query_params["carr_long"][0]) if "carr_long" in query_params else 20
             # def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
-            def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
-            def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
+            # def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
+            # def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
             reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)  # , on_change=clear_url)
             reference_lat = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
             # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
-            if plot_reference is True:
-                set_query_params["carr_long"] = [str(int(reference_long))]
-                set_query_params["carr_lat"] = [str(int(reference_lat))]
-                st.session_state["carr_long"] = [str(int(reference_long))]
-                st.session_state["carr_lat"] = [str(int(reference_lat))]
+            # if plot_reference is True:
+            #     set_query_params["carr_long"] = [str(int(reference_long))]
+            #     set_query_params["carr_lat"] = [str(int(reference_lat))]
+            #     st.session_state["carr_long"] = [str(int(reference_long))]
+            #     st.session_state["carr_lat"] = [str(int(reference_lat))]
 
-        if reference_sys == 'Stonyhurst':
+        if coord_sys == 'Stonyhurst':
             # def_reference_long = int(query_params["ston_long"][0]) if "ston_long" in query_params else 90
             # def_reference_lat = int(query_params["ston_lat"][0]) if "ston_lat" in query_params else 0
-            def_reference_long = int(st.session_state["ston_long"][0]) if "ston_long" in st.session_state else 90
-            def_reference_lat = int(st.session_state["ston_lat"][0]) if "ston_lat" in st.session_state else 0
+            # def_reference_long = int(st.session_state["ston_long"][0]) if "ston_long" in st.session_state else 90
+            # def_reference_lat = int(st.session_state["ston_lat"][0]) if "ston_lat" in st.session_state else 0
             # convert query coordinates (always Carrington) to Stonyhurst for input widget:
             # coord = SkyCoord(def_reference_long*u.deg, def_reference_lat*u.deg, frame=frames.HeliographicCarrington(observer='Sun', obstime=date))
             # coord = coord.transform_to(frames.HeliographicStonyhurst)
@@ -211,12 +218,17 @@ with st.sidebar.container():
             # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
-            if plot_reference is True:
-                set_query_params["ston_long"] = [str(int(reference_long))]
-                set_query_params["ston_lat"] = [str(int(reference_lat))]
-                st.session_state["ston_long"] = [str(int(reference_long))]
-                st.session_state["ston_lat"] = [str(int(reference_lat))]
+            # if plot_reference is True:
+            #     set_query_params["ston_long"] = [str(int(reference_long))]
+            #     set_query_params["ston_lat"] = [str(int(reference_lat))]
+            #     st.session_state["ston_long"] = [str(int(reference_long))]
+            #     st.session_state["ston_lat"] = [str(int(reference_lat))]
 
+        if plot_reference is True:
+            set_query_params["reference_long"] = [str(int(reference_long))]
+            set_query_params["reference_lat"] = [str(int(reference_lat))]
+            st.session_state["reference_long"] = [str(int(reference_long))]
+            st.session_state["reference_lat"] = [str(int(reference_lat))]
         # outdated check for wrong coordinates (caught by using st.number_input)
         # if wrong_ref_coord:
         #         st.error('ERROR: There is something wrong in the prodived reference coordinates!')
@@ -240,10 +252,8 @@ with st.sidebar.container():
 
     # save query parameters to URL
     if plot_reference is True:
-        set_query_params["reference_sys"] = [str(reference_sys_list.index(reference_sys))]
         set_query_params["reference_vsw"] = [str(int(reference_vsw))]
         set_query_params["plot_reference"] = [1]
-        st.session_state["reference_sys"] = [str(reference_sys_list.index(reference_sys))]
         st.session_state["reference_vsw"] = [str(int(reference_vsw))]
         st.session_state["plot_reference"] = [1]
 
