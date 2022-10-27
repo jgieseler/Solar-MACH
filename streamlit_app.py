@@ -16,7 +16,7 @@ import streamlit as st
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 
-from backmapping import HeliosphericConstellation, print_body_list
+from solarmach import SolarMACH, print_body_list
 
 
 # modify hamburger menu
@@ -303,8 +303,7 @@ url = url.replace(' ', '+')
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
-    c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
-                                  reference_lat)
+    c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat)
 
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
