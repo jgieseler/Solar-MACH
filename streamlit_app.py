@@ -63,12 +63,14 @@ set_query_params = {}
 if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
     if "coord_sys" not in query_params:
         if "carr_long" in query_params and "carr_lat" in query_params and "reference_sys" in query_params:
+            st.write(query_params)
             if int(query_params["reference_sys"][0]) == 0:
                 query_params["reference_long"] = query_params.pop("carr_long")
                 query_params["reference_lat"] = query_params.pop("carr_lat")
                 query_params["coord_sys"] = query_params.pop("reference_sys")
                 # query_params["coord_sys"] = ["0"]  # select Carrington coordinates
         if "ston_long" in query_params and "ston_lat" in query_params and "reference_sys" in query_params:
+            st.write(query_params)
             if int(query_params["reference_sys"][0]) == 1:
                 query_params["reference_long"] = query_params.pop("ston_long")
                 query_params["reference_lat"] = query_params.pop("ston_lat")
