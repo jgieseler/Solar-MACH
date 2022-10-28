@@ -1,21 +1,12 @@
-# import base64
 import datetime
 import io
-# import json
-# import os
-# import pickle
 import pyshorteners
-# import re
-# import uuid
-
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
-# import pandas as pd
 import streamlit as st
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
-
 from solarmach import SolarMACH, print_body_list
 
 
@@ -72,16 +63,18 @@ set_query_params = {}
 if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
     if "coord_sys" not in query_params:
         if "carr_long" in query_params and "carr_lat" in query_params and "reference_sys" in query_params:
-            query_params["reference_long"] = query_params.pop("carr_long")
-            query_params["reference_lat"] = query_params.pop("carr_lat")
-            query_params["coord_sys"] = query_params.pop("reference_sys")
-            # query_params["coord_sys"] = ["0"]  # select Carrington coordinates
+            if int(query_params["reference_sys"][0]) == 0:
+                query_params["reference_long"] = query_params.pop("carr_long")
+                query_params["reference_lat"] = query_params.pop("carr_lat")
+                query_params["coord_sys"] = query_params.pop("reference_sys")
+                # query_params["coord_sys"] = ["0"]  # select Carrington coordinates
         if "ston_long" in query_params and "ston_lat" in query_params and "reference_sys" in query_params:
-            query_params["reference_long"] = query_params.pop("ston_long")
-            query_params["reference_lat"] = query_params.pop("ston_lat")
-            query_params["coord_sys"] = query_params.pop("reference_sys")
-            # query_params["coord_sys"] = ["1"]  # select Stonyhurst coordinates
-    else:
+            if int(query_params["reference_sys"][0]) == 1:
+                query_params["reference_long"] = query_params.pop("ston_long")
+                query_params["reference_lat"] = query_params.pop("ston_lat")
+                query_params["coord_sys"] = query_params.pop("reference_sys")
+                # query_params["coord_sys"] = ["1"]  # select Stonyhurst coordinates
+    else:  # if "coord_sys" in query_params
         if "carr_long" in query_params or "carr_lat" in query_params or "ston_long" in query_params or "ston_lat" in query_params:
             st.error('⚠️ **WARNING:** Deprecated parameters have been prodived by the URL. To avoid unexpected behaviour, plotting of the reference has been deactivated!')
             st.session_state["plot_reference"][0] = 0
@@ -451,7 +444,7 @@ st.success('''
            *Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. Frontiers in Astronomy and Space Physics (submitted).*
            *[arXiv:2210.00819](https://arxiv.org/abs/2210.00819)*
            ''')
-           
+
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
             plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
