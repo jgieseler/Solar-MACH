@@ -35,17 +35,14 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use the URL https://solar-mach.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems. (October 2022)")
+st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
-
-# st.info("""
-#        📢 **Update December 2021** 📢
-#        * Added possibility to save or share a given configuration via a specific link. Scroll down and get the full URL [from the blue box at the bottom of the page](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url), then bookmark it or send it to colleagues!
-#        * Updated input methods for selection of spacecraft/bodies and corresponding solar wind speeds.
-#        * Added following **Plot options:**
-#            *  *Numbered symbols* for spacecraft/bodies. Should help with color vision deficiency issues and if one needs to convert the plot to grayscale.
-#            * *Add Stonyhurst coordinate system* as overplotted information.
-#        """)
+st.info("""
+       📢 **Update 28 October 2022** 📢
+       * Solar-MACH paper (preprint) available at [arXiv](https://arxiv.org/abs/2210.00819). Please cite this if you use Solar-MACH!
+       * Added option to change between Carrington and Stonyhurst coordinates for the whole tool (deprecates overplotting of Earth-centered coordinate system)
+       * Added option to change Earth position in the plot
+       """)
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -431,20 +428,30 @@ def get_short_url(url):
 
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
-st.error('''
-    ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
-    * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://solar-mach.streamlitapp.com/?embedded=true&" (both without quotation marks).
-    * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
-    * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
-    ''')
+st.warning('''
+           ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
+           * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://solar-mach.streamlitapp.com/?embedded=true&" (both without quotation marks).
+           * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
+           * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
+           ''')
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one
 # changes the params; it then gets confused with the params in the URL and the
 # one from the widgets.
 clear_url()
 
+
 # footer
 st.markdown("""---""")
+
+st.success('''
+           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
+
+           *Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).*
+           *Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. Frontiers in Astronomy and Space Physics (submitted).*
+           *[arXiv:2210.00819](https://arxiv.org/abs/2210.00819)*
+           ''')
+           
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
             plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
