@@ -62,19 +62,16 @@ set_query_params = {}
 # catch old URL parameters and replace with current ones
 if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
     if "carr_long" in query_params and "carr_lat" in query_params and "reference_sys" in query_params and "coord_sys" not in query_params and int(query_params["reference_sys"][0]) == 0:
-        st.write('if')
         query_params["reference_long"] = query_params.pop("carr_long")
         query_params["reference_lat"] = query_params.pop("carr_lat")
         query_params["coord_sys"] = query_params.pop("reference_sys")
         # query_params["coord_sys"] = ["0"]  # select Carrington coordinates
     elif "ston_long" in query_params and "ston_lat" in query_params and "reference_sys" in query_params and "coord_sys" not in query_params and int(query_params["reference_sys"][0]) == 1:
-        st.write('elif')
         query_params["reference_long"] = query_params.pop("ston_long")
         query_params["reference_lat"] = query_params.pop("ston_lat")
         query_params["coord_sys"] = query_params.pop("reference_sys")
         # query_params["coord_sys"] = ["1"]  # select Stonyhurst coordinates
     else:
-        st.write('else!')
         if "carr_long" in query_params or "carr_lat" in query_params or "ston_long" in query_params or "ston_lat" in query_params or "reference_sys" in query_params:
             st.error('⚠️ **WARNING:** Deprecated parameters have been prodived by the URL. To avoid unexpected behaviour, plotting of the reference has been deactivated!')
             query_params["plot_reference"][0] = 0
