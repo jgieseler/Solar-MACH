@@ -363,8 +363,8 @@ if len(body_list) == len(vsw_list):
     df.index = df['Spacecraft/Body']
     df = df.drop(columns=['Spacecraft/Body'])
     df = df.rename(columns={"Spacecraft/Body": "Spacecraft / body",
-                            "Carrington Longitude (°)": "Carrington longitude [°]",
-                            "Latitude (°)": "Carrington latitude [°]",
+                            # "Carrington Longitude (°)": "Carrington longitude [°]",
+                            # "Latitude (°)": "Carrington latitude [°]",
                             "Heliocentric Distance (AU)": "Heliocent. distance [AU]",
                             "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
                             "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
