@@ -29,10 +29,12 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
 st.info("""
-       📢 **Update 28 October 2022** 📢
+       📢 **Update 4 November 2022** 📢
        * Solar-MACH paper (preprint) available at [arXiv](https://arxiv.org/abs/2210.00819). Please cite this if you use Solar-MACH!
        * Added option to change between Carrington and Stonyhurst coordinates for the whole tool (deprecates overplotting of Earth-centered coordinate system)
        * Added option to change Earth position in the plot
+       * Take into account solar differential rotation wrt. latitude (see [#21](https://github.com/jgieseler/solarmach/issues/21))
+       * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
        """)
 
 st.title('Solar-MACH')
@@ -383,7 +385,7 @@ if len(body_list) == len(vsw_list):
                    "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
                    "Latitudinal separation bw. body & reference [°]": decimals
                    }).astype(str)
-                   # }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0" if using decimals=0
+    #               }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0" if using decimals=0
     df["Heliocent. distance [AU]"] = df2["Heliocent. distance [AU]"].round(2).astype(str)
 
     st.table(df.T)
