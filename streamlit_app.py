@@ -363,29 +363,30 @@ if len(body_list) == len(vsw_list):
     df.index = df['Spacecraft/Body']
     df = df.drop(columns=['Spacecraft/Body'])
     df = df.rename(columns={"Spacecraft/Body": "Spacecraft / body",
-                            "Carrington Longitude (°)": "Carrington longitude [°]",
-                            "Latitude (°)": "Carrington latitude [°]",
-                            "Heliocentric Distance (AU)": "Heliocent. distance [AU]",
+                            f"{coord_sys} longitude (°)": f"{coord_sys} longitude [°]",
+                            f"{coord_sys} latitude (°)": f"{coord_sys} latitude [°]",
+                            "Heliocentric distance (AU)": "Heliocent. distance [AU]",
                             "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
                             "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
                             "Vsw": "Solar wind speed [km/s]",
-                            "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude [°]",
+                            f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
                             "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
                             "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
                             "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
 
     df2 = df.copy()
-    decimals = 0
-    df = df.round({"Carrington longitude [°]": decimals,
-                   "Carrington latitude [°]": decimals,
+    decimals = 1
+    df = df.round({f"{coord_sys} longitude [°]": decimals,
+                   f"{coord_sys} latitude [°]": decimals,
                    "Longitud. separation to Earth longitude [°]": decimals,
                    "Latitud. separation to Earth latitude [°]": decimals,
                    "Solar wind speed [km/s]": decimals,
-                   "Magnetic footpoint Carrington longitude [°]": decimals,
+                   f"Magnetic footpoint {coord_sys} longitude [°]": decimals,
                    "Longitud. separation bw. body & reference [°]": decimals,
                    "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
                    "Latitudinal separation bw. body & reference [°]": decimals
-                   }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0"
+                   }).astype(str)
+                   # }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0" if using decimals=0
     df["Heliocent. distance [AU]"] = df2["Heliocent. distance [AU]"].round(2).astype(str)
 
     st.table(df.T)
