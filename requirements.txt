@@ -3,6 +3,6 @@ matplotlib==3.5.3
 numpy
 pyshorteners
 scipy
-git+https://github.com/jgieseler/solarmach/
+solarmach
 streamlit
 sunpy
