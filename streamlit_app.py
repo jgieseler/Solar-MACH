@@ -1,22 +1,13 @@
-# import base64
 import datetime
 import io
-# import json
-# import os
-# import pickle
 import pyshorteners
-# import re
-# import uuid
-
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
-# import pandas as pd
 import streamlit as st
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
-
-from backmapping import HeliosphericConstellation, print_body_list
+from solarmach import SolarMACH, print_body_list
 
 
 # modify hamburger menu
@@ -35,17 +26,16 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
-st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use the URL https://solar-mach.streamlitapp.com (instead of https://solar-mach.github.io). Streamlit has recently changed some settings that still cause some problems. (October 2022)")
+st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
-
-# st.info("""
-#        📢 **Update December 2021** 📢
-#        * Added possibility to save or share a given configuration via a specific link. Scroll down and get the full URL [from the blue box at the bottom of the page](#save-or-share-this-setup-by-bookmarking-or-distributing-the-following-url), then bookmark it or send it to colleagues!
-#        * Updated input methods for selection of spacecraft/bodies and corresponding solar wind speeds.
-#        * Added following **Plot options:**
-#            *  *Numbered symbols* for spacecraft/bodies. Should help with color vision deficiency issues and if one needs to convert the plot to grayscale.
-#            * *Add Stonyhurst coordinate system* as overplotted information.
-#        """)
+st.info("""
+       📢 **Update 4 November 2022** 📢
+       * Solar-MACH paper (preprint) available at [arXiv](https://arxiv.org/abs/2210.00819). Please cite this if you use Solar-MACH!
+       * Added option to change between Carrington and Stonyhurst coordinates for the whole tool (deprecates overplotting of Earth-centered coordinate system)
+       * Added option to change Earth position in the plot
+       * Take into account solar differential rotation wrt. latitude (see [#21](https://github.com/jgieseler/solarmach/issues/21))
+       * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
+       """)
 
 st.title('Solar-MACH')
 st.markdown('## Multi-spacecraft longitudinal configuration plotter')
@@ -70,6 +60,23 @@ query_params = st.experimental_get_query_params()
 
 # define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
+
+# catch old URL parameters and replace with current ones
+if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
+    if "carr_long" in query_params and "carr_lat" in query_params and "reference_sys" in query_params and "coord_sys" not in query_params and int(query_params["reference_sys"][0]) == 0:
+        query_params["reference_long"] = query_params.pop("carr_long")
+        query_params["reference_lat"] = query_params.pop("carr_lat")
+        query_params["coord_sys"] = query_params.pop("reference_sys")
+        # query_params["coord_sys"] = ["0"]  # select Carrington coordinates
+    elif "ston_long" in query_params and "ston_lat" in query_params and "reference_sys" in query_params and "coord_sys" not in query_params and int(query_params["reference_sys"][0]) == 1:
+        query_params["reference_long"] = query_params.pop("ston_long")
+        query_params["reference_lat"] = query_params.pop("ston_lat")
+        query_params["coord_sys"] = query_params.pop("reference_sys")
+        # query_params["coord_sys"] = ["1"]  # select Stonyhurst coordinates
+    else:
+        if "carr_long" in query_params or "carr_lat" in query_params or "ston_long" in query_params or "ston_lat" in query_params or "reference_sys" in query_params:
+            st.error('⚠️ **WARNING:** Deprecated parameters have been prodived by the URL. To avoid unexpected behaviour, plotting of the reference has been deactivated!')
+            query_params["plot_reference"][0] = 0
 
 # saved obtained quety params from URL into session_state
 for i in query_params:
@@ -102,6 +109,14 @@ with st.sidebar.container():
 
 # plotting settings
 with st.sidebar.container():
+    coord_sys_list = ['Carrington', 'Stonyhurst']
+    # set starting parameters from URL if available, otherwise use defaults
+    # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
+    def_coord_sys = int(st.session_state["coord_sys"][0]) if "coord_sys" in st.session_state else 0
+    coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)
+    set_query_params["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
+    st.session_state["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
+
     st.sidebar.subheader('Plot options:')
 
     # if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
@@ -124,15 +139,15 @@ with st.sidebar.container():
         set_query_params["plot_sun_body_line"] = [0]
         st.session_state["plot_sun_body_line"] = [0]
 
-    # if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
-    if ("plot_ecc" in st.session_state) and int(st.session_state["plot_ecc"][0]) == 1:
-        def_show_earth_centered_coord = True
-    else:
-        def_show_earth_centered_coord = False
-    show_earth_centered_coord = st.sidebar.checkbox('Add Stonyhurst coord. system', value=def_show_earth_centered_coord)  # , on_change=clear_url)
-    if show_earth_centered_coord:
-        set_query_params["plot_ecc"] = [1]
-        st.session_state["plot_ecc"] = [1]
+    # # if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
+    # if ("plot_ecc" in st.session_state) and int(st.session_state["plot_ecc"][0]) == 1:
+    #     def_show_earth_centered_coord = True
+    # else:
+    #     def_show_earth_centered_coord = False
+    # show_earth_centered_coord = st.sidebar.checkbox('Add Stonyhurst coord. system', value=def_show_earth_centered_coord)  # , on_change=clear_url)
+    # if show_earth_centered_coord:
+    #     set_query_params["plot_ecc"] = [1]
+    #     st.session_state["plot_ecc"] = [1]
 
     # if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
     if ("plot_trans" in st.session_state) and int(st.session_state["plot_trans"][0]) == 1:
@@ -153,6 +168,11 @@ with st.sidebar.container():
         set_query_params["plot_nr"] = [1]
         st.session_state["plot_nr"] = [1]
 
+    def_long_offset = int(st.session_state["long_offset"][0]) if "long_offset" in st.session_state else 270
+    long_offset = int(st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):', min_value=0, max_value=360, value=def_long_offset, step=90))
+    set_query_params["long_offset"] = [str(int(long_offset))]
+    st.session_state["long_offset"] = [str(int(long_offset))]
+
     # if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
     if ("plot_reference" in st.session_state) and int(st.session_state["plot_reference"][0]) == 1:
         def_plot_reference = True
@@ -163,34 +183,36 @@ with st.sidebar.container():
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
         wrong_ref_coord = False
-        reference_sys_list = ['Carrington', 'Stonyhurst']
-        # set starting parameters from URL if available, otherwise use defaults
-        # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
-        def_reference_sys = int(st.session_state["reference_sys"][0]) if "reference_sys" in st.session_state else 0
+        # reference_sys_list = ['Carrington', 'Stonyhurst']
+        # # set starting parameters from URL if available, otherwise use defaults
+        # # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
+        # def_reference_sys = int(st.session_state["reference_sys"][0]) if "reference_sys" in st.session_state else 0
+        # reference_sys = st.radio('Coordinate system:', reference_sys_list, index=def_reference_sys)
 
-        reference_sys = st.radio('Coordinate system:', reference_sys_list, index=def_reference_sys)
+        def_reference_long = int(st.session_state["reference_long"][0]) if "reference_long" in st.session_state else 90
+        def_reference_lat = int(st.session_state["reference_lat"][0]) if "reference_lat" in st.session_state else 0
 
-        if reference_sys == 'Carrington':
+        if coord_sys == 'Carrington':
             # def_reference_long = int(query_params["carr_long"][0]) if "carr_long" in query_params else 20
             # def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
-            def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
-            def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
+            # def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
+            # def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
             reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)  # , on_change=clear_url)
             reference_lat = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
             # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
-            if plot_reference is True:
-                set_query_params["carr_long"] = [str(int(reference_long))]
-                set_query_params["carr_lat"] = [str(int(reference_lat))]
-                st.session_state["carr_long"] = [str(int(reference_long))]
-                st.session_state["carr_lat"] = [str(int(reference_lat))]
+            # if plot_reference is True:
+            #     set_query_params["carr_long"] = [str(int(reference_long))]
+            #     set_query_params["carr_lat"] = [str(int(reference_lat))]
+            #     st.session_state["carr_long"] = [str(int(reference_long))]
+            #     st.session_state["carr_lat"] = [str(int(reference_lat))]
 
-        if reference_sys == 'Stonyhurst':
+        if coord_sys == 'Stonyhurst':
             # def_reference_long = int(query_params["ston_long"][0]) if "ston_long" in query_params else 90
             # def_reference_lat = int(query_params["ston_lat"][0]) if "ston_lat" in query_params else 0
-            def_reference_long = int(st.session_state["ston_long"][0]) if "ston_long" in st.session_state else 90
-            def_reference_lat = int(st.session_state["ston_lat"][0]) if "ston_lat" in st.session_state else 0
+            # def_reference_long = int(st.session_state["ston_long"][0]) if "ston_long" in st.session_state else 90
+            # def_reference_lat = int(st.session_state["ston_lat"][0]) if "ston_lat" in st.session_state else 0
             # convert query coordinates (always Carrington) to Stonyhurst for input widget:
             # coord = SkyCoord(def_reference_long*u.deg, def_reference_lat*u.deg, frame=frames.HeliographicCarrington(observer='Sun', obstime=date))
             # coord = coord.transform_to(frames.HeliographicStonyhurst)
@@ -203,23 +225,28 @@ with st.sidebar.container():
             # outdated check for wrong coordinates (caught by using st.number_input)
             # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
             #     wrong_ref_coord = True
-            if plot_reference is True:
-                set_query_params["ston_long"] = [str(int(reference_long))]
-                set_query_params["ston_lat"] = [str(int(reference_lat))]
-                st.session_state["ston_long"] = [str(int(reference_long))]
-                st.session_state["ston_lat"] = [str(int(reference_lat))]
+            # if plot_reference is True:
+            #     set_query_params["ston_long"] = [str(int(reference_long))]
+            #     set_query_params["ston_lat"] = [str(int(reference_lat))]
+            #     st.session_state["ston_long"] = [str(int(reference_long))]
+            #     st.session_state["ston_lat"] = [str(int(reference_lat))]
 
+        if plot_reference is True:
+            set_query_params["reference_long"] = [str(int(reference_long))]
+            set_query_params["reference_lat"] = [str(int(reference_lat))]
+            st.session_state["reference_long"] = [str(int(reference_long))]
+            st.session_state["reference_lat"] = [str(int(reference_lat))]
         # outdated check for wrong coordinates (caught by using st.number_input)
         # if wrong_ref_coord:
         #         st.error('ERROR: There is something wrong in the prodived reference coordinates!')
         #         st.stop()
 
-        if reference_sys == 'Stonyhurst':
-            # convert Stonyhurst coordinates to Carrington for further use:
-            coord = SkyCoord(reference_long*u.deg, reference_lat*u.deg, frame=frames.HeliographicStonyhurst, obstime=date)
-            coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
-            reference_long = coord.lon.value
-            reference_lat = coord.lat.value
+        # if reference_sys == 'Stonyhurst':
+        #     # convert Stonyhurst coordinates to Carrington for further use:
+        #     coord = SkyCoord(reference_long*u.deg, reference_lat*u.deg, frame=frames.HeliographicStonyhurst, obstime=date)
+        #     coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
+        #     reference_long = coord.lon.value
+        #     reference_lat = coord.lat.value
 
         # import math
         # def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
@@ -232,10 +259,8 @@ with st.sidebar.container():
 
     # save query parameters to URL
     if plot_reference is True:
-        set_query_params["reference_sys"] = [str(reference_sys_list.index(reference_sys))]
         set_query_params["reference_vsw"] = [str(int(reference_vsw))]
         set_query_params["plot_reference"] = [1]
-        st.session_state["reference_sys"] = [str(reference_sys_list.index(reference_sys))]
         st.session_state["reference_vsw"] = [str(int(reference_vsw))]
         st.session_state["plot_reference"] = [1]
 
@@ -303,8 +328,7 @@ url = url.replace(' ', '+')
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
-    c = HeliosphericConstellation(date, body_list, vsw_list, reference_long,
-                                  reference_lat)
+    c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
 
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
@@ -312,10 +336,10 @@ if len(body_list) == len(vsw_list):
     c.plot(
         plot_spirals=plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
-        show_earth_centered_coord=show_earth_centered_coord,  # display Earth-aligned coordinate system
         reference_vsw=reference_vsw,                          # define solar wind speed at reference
         transparent=transparent,
         numbered_markers=numbered_markers,
+        long_offset=long_offset,
         # outfile=filename+'.png'                               # output file (optional)
     )
 
@@ -338,29 +362,30 @@ if len(body_list) == len(vsw_list):
     df.index = df['Spacecraft/Body']
     df = df.drop(columns=['Spacecraft/Body'])
     df = df.rename(columns={"Spacecraft/Body": "Spacecraft / body",
-                            "Carrington Longitude (°)": "Carrington longitude [°]",
-                            "Latitude (°)": "Carrington latitude [°]",
-                            "Heliocentric Distance (AU)": "Heliocent. distance [AU]",
+                            f"{coord_sys} longitude (°)": f"{coord_sys} longitude [°]",
+                            f"{coord_sys} latitude (°)": f"{coord_sys} latitude [°]",
+                            "Heliocentric distance (AU)": "Heliocent. distance [AU]",
                             "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
                             "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
                             "Vsw": "Solar wind speed [km/s]",
-                            "Magnetic footpoint longitude (Carrington)": "Magnetic footpoint Carrington longitude [°]",
+                            f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
                             "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
                             "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
                             "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
 
     df2 = df.copy()
-    decimals = 0
-    df = df.round({"Carrington longitude [°]": decimals,
-                   "Carrington latitude [°]": decimals,
+    decimals = 1
+    df = df.round({f"{coord_sys} longitude [°]": decimals,
+                   f"{coord_sys} latitude [°]": decimals,
                    "Longitud. separation to Earth longitude [°]": decimals,
                    "Latitud. separation to Earth latitude [°]": decimals,
                    "Solar wind speed [km/s]": decimals,
-                   "Magnetic footpoint Carrington longitude [°]": decimals,
+                   f"Magnetic footpoint {coord_sys} longitude [°]": decimals,
                    "Longitud. separation bw. body & reference [°]": decimals,
                    "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
                    "Latitudinal separation bw. body & reference [°]": decimals
-                   }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0"
+                   }).astype(str)
+    #               }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0" if using decimals=0
     df["Heliocent. distance [AU]"] = df2["Heliocent. distance [AU]"].round(2).astype(str)
 
     st.table(df.T)
@@ -396,20 +421,30 @@ def get_short_url(url):
 
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
-st.error('''
-    ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
-    * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://solar-mach.streamlitapp.com/?embedded=true&" (both without quotation marks).
-    * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
-    * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
-    ''')
+st.warning('''
+           ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
+           * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://solar-mach.streamlitapp.com/?embedded=true&" (both without quotation marks).
+           * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
+           * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
+           ''')
 
 # clear params from URL because Streamlit 1.0 still get some hickups when one
 # changes the params; it then gets confused with the params in the URL and the
 # one from the widgets.
 clear_url()
 
+
 # footer
 st.markdown("""---""")
+
+st.success('''
+           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
+
+           *Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).*
+           *Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. Frontiers in Astronomy and Space Physics (submitted).*
+           *[arXiv:2210.00819](https://arxiv.org/abs/2210.00819)*
+           ''')
+
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
             plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \

@@ -1,7 +1,8 @@
-sunpy==2.0.7
 astroquery
-scipy
+matplotlib==3.5.3
 numpy
-matplotlib
-streamlit
 pyshorteners
+scipy
+solarmach
+streamlit
+sunpy

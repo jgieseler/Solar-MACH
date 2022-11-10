@@ -1,10 +1,10 @@
 # Solar MAgnetic Connection Haus tool
 
-[![DOI](https://zenodo.org/badge/374606976.svg)](https://zenodo.org/badge/latestdoi/374606976)
+[![DOI](https://zenodo.org/badge/374606976.svg)](https://zenodo.org/badge/latestdoi/374606976)  [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solar-mach.github.io)
 
-Modified version of [github.com/jgieseler/solarmach](https://github.com/jgieseler/solarmach) to [run with Streamlit](https://solar-mach.github.io).
+Streamlit frontend to the PyPI package [solarmach](https://pypi.org/project/solarmach/), used for [solar-mach.github.io](https://solar-mach.github.io). 
 
-To install and start a local server using `streamlit` run the following commands in your terminal:
+To install and start a local Streamlit server, run the following commands in your terminal:
 
 ```python
 # optional: create and activate virtual environment in python (alternatively use anaconda)
@@ -20,7 +20,6 @@ streamlit run streamlit_app.py
 
 Afterwards the app should open in your browser.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solar-mach.github.io)
 
 
 ## Python package
