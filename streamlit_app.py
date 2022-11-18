@@ -11,20 +11,23 @@ from solarmach import SolarMACH, print_body_list
 
 
 # modify hamburger menu
-about_info = '''## Solar-MACH
-The *Solar MAgnetic Connection Haus* tool is a multi-spacecraft longitudinal configuration plotter, originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Modified by J. Gieseler (University of Turku, Finland).
+about_info = '''
+The *Solar MAgnetic Connection Haus* (**Solar-MACH**) tool is a multi-spacecraft longitudinal configuration plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Development takes now place at the University of Turku, Finland.
 
-The development of the online tool has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 101004159 (SERPENTINE).'''
+'''
 get_help_link = "https://github.com/jgieseler/Solar-MACH/discussions"
 report_bug_link = "https://github.com/jgieseler/Solar-MACH/discussions/4"
 menu_items = {'About': about_info,
               'Get help': get_help_link,
               'Report a bug': report_bug_link}
 
-# set page config
+# set page config - must be the first Streamlit command in the app
 st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
+
+st.title('Solar-MACH')
+st.header('Multi-spacecraft longitudinal configuration plotter')
 
 st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
@@ -36,10 +39,6 @@ st.info("""
        * Take into account solar differential rotation wrt. latitude (see [#21](https://github.com/jgieseler/solarmach/issues/21))
        * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
        """)
-
-st.title('Solar-MACH')
-st.markdown('## Multi-spacecraft longitudinal configuration plotter')
-
 
 # Save parameters to URL for sharing and bookmarking
 def make_url(set_query_params):
@@ -441,23 +440,23 @@ st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
 
            *Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).*
-           *Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. Frontiers in Astronomy and Space Physics (submitted).*
+           *Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. Frontiers in Astronomy and Space Physics (accepted).*
            *[arXiv:2210.00819](https://arxiv.org/abs/2210.00819)*
            ''')
 
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
             plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
             [ESA Heliophysics Archives USer (HAUS)](https://www.cosmos.esa.int/web/esdc/archives-user-groups/heliophysics) \
-            group.')
-
-st.markdown('The version used here is maintained by J. Gieseler (University of Turku, Finland):<br> \
-             [<img src="https://img.shields.io/static/v1?label=GitHub&message=Solar-MACH&color=blue&logo=github" height="20">](https://github.com/jgieseler/Solar-MACH/) \
-             [<img src="https://img.shields.io/static/v1?label=Contact&message=jan.gieseler@utu.fi&color=red&logo=gmail" height="20">](mailto:jan.gieseler@utu.fi?subject=Solar-MACH)', unsafe_allow_html=True)
+            group. Development takes now place at the University of Turku, Finland.')
 
 st.markdown('For the full python package of Solar-MACH, refer to **solarmach**:<br>\
              [<img src="https://img.shields.io/static/v1?label=GitHub&message=solarmach&color=blue&logo=github" height="20">](https://github.com/jgieseler/solarmach/) \
              [<img src="https://img.shields.io/pypi/v/solarmach?style=flat&logo=pypi" height="20">](https://pypi.org/project/solarmach/) \
              [<img src="https://img.shields.io/conda/vn/conda-forge/solarmach?style=flat&logo=anaconda" height="20">](https://anaconda.org/conda-forge/solarmach/)', unsafe_allow_html=True)
+
+st.markdown('For the Streamlit interface to the python package, refer to **Solar-MACH**:<br> \
+             [<img src="https://img.shields.io/static/v1?label=GitHub&message=Solar-MACH&color=blue&logo=github" height="20">](https://github.com/jgieseler/Solar-MACH/) \
+             [<img src="https://img.shields.io/static/v1?label=Contact&message=jan.gieseler@utu.fi&color=red&logo=gmail" height="20">](mailto:jan.gieseler@utu.fi?subject=Solar-MACH)', unsafe_allow_html=True)
 
 col1, col2 = st.columns((5, 1))
 col1.markdown("*The development of the online tool has received funding from the European Union's Horizon 2020 \
