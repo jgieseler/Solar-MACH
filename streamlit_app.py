@@ -51,7 +51,9 @@ def clear_url():
     version 1.0. Will hopefully be fixed in the future. Then hopefully all
     occurences of "clear_url" can be removed.
     """
-    st.experimental_set_query_params({'embedded': 'true'})
+    set_query_params2 = {}
+    set_query_params2["embedded"] = 'true'
+    st.experimental_set_query_params(**set_query_params2)
 
 
 # obtain query paramamters from URL
