@@ -29,7 +29,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 st.title('Solar-MACH')
 st.header('Multi-spacecraft longitudinal configuration plotter')
 
-st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
+# st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
 st.info("""
        📢 **Update 4 November 2022** 📢
@@ -39,6 +39,7 @@ st.info("""
        * Take into account solar differential rotation wrt. latitude (see [#21](https://github.com/jgieseler/solarmach/issues/21))
        * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
        """)
+
 
 # Save parameters to URL for sharing and bookmarking
 def make_url(set_query_params):
