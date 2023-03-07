@@ -5,6 +5,7 @@ import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
+import streamlit_analytics
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list
@@ -430,10 +431,7 @@ st.warning('''
            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
            ''')
 
-# clear params from URL because Streamlit 1.0 still get some hickups when one
-# changes the params; it then gets confused with the params in the URL and the
-# one from the widgets.
-clear_url()
+streamlit_analytics.start_tracking()
 
 
 # footer
@@ -482,3 +480,14 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
+
+# if not in analytics mode, clear params from URL because Streamlit 1.0 still
+# get some hickups when one changes the params; it then gets confused with the
+# params in the URL and the one from the widgets.
+if 'analytics' in query_params.keys():
+    if not query_params['analytics'][0] == 'on':
+        clear_url()
+else:
+    clear_url()

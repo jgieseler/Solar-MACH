@@ -5,4 +5,5 @@ pyshorteners
 scipy
 solarmach
 streamlit
+streamlit_analytics
 sunpy
