@@ -1,5 +1,6 @@
 import datetime
 import io
+import os
 import pyshorteners
 import astropy.units as u
 import matplotlib.pyplot as plt
@@ -481,7 +482,11 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
+if os.path.exists('.streamlit/secrets.toml'):
+    streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
+else:
+    # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
+    streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
 
 # if not in analytics mode, clear params from URL because Streamlit 1.0 still
 # get some hickups when one changes the params; it then gets confused with the
