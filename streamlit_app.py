@@ -31,7 +31,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 st.title('Solar-MACH')
 st.header('Multi-spacecraft longitudinal configuration plotter')
 
-# st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
+#  st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
 st.info("""
        📢 **Update November 2022** 📢
