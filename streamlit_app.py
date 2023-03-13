@@ -98,7 +98,7 @@ with st.sidebar.container():
     #         else datetime.time(0, 0)
     def_d = datetime.datetime.strptime(st.session_state["date"][0], "%Y%m%d") if "date" in st.session_state else datetime.date.today()-datetime.timedelta(days=2)
     def_t = datetime.datetime.strptime(st.session_state["time"][0], "%H%M") if "time" in st.session_state else datetime.time(0, 0)
-    d = st.sidebar.date_input("Select date", def_d)  # , on_change=clear_url)
+    d = st.sidebar.date_input("Select date", def_d, min_value=datetime.date(1970, 1, 1))  # , on_change=clear_url)
     t = st.sidebar.time_input('Select time', def_t)  # , on_change=clear_url)
     date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
