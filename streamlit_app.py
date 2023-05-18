@@ -90,25 +90,22 @@ for i in query_params:
 # st.sidebar.button('Get shareable URL', help='Save parameters to URL, so that it can be saved or shared with others.', on_click=make_url, args=[set_query_params])
 
 # provide date and time
-with st.sidebar.container():
-    # set starting parameters from URL if available, otherwise use defaults
-    # def_d = datetime.datetime.strptime(query_params["date"][0], "%Y%m%d") if "date" in query_params \
-    #         else datetime.date.today()-datetime.timedelta(days = 2)
-    # def_t = datetime.datetime.strptime(query_params["time"][0], "%H%M") if "time" in query_params \
-    #         else datetime.time(0, 0)
-    def_d = datetime.datetime.strptime(st.session_state["date"][0], "%Y%m%d") if "date" in st.session_state else datetime.date.today()-datetime.timedelta(days=2)
-    def_t = datetime.datetime.strptime(st.session_state["time"][0], "%H%M") if "time" in st.session_state else datetime.time(0, 0)
-    d = st.sidebar.date_input("Select date", def_d, min_value=datetime.date(1970, 1, 1))  # , on_change=clear_url)
-    t = st.sidebar.time_input('Select time', def_t)  # , on_change=clear_url)
-    date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
+# set starting parameters from URL if available, otherwise use defaults
+d = st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970,1,1))
+if "date" in st.session_state:
+    st.session_state['d'] = datetime.datetime.strptime(st.session_state["date"][0], "%Y%m%d") 
+t = st.sidebar.time_input('Select time', value=datetime.time(0, 0))
+if "time" in st.session_state:
+    st.session_state['t'] = datetime.datetime.strptime(st.session_state["time"][0], "%H%M")
+date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
 
-    # save query parameters to URL
-    sdate = d.strftime("%Y%m%d")
-    stime = t.strftime("%H%M")
-    set_query_params["date"] = [sdate]
-    set_query_params["time"] = [stime]
-    st.session_state["date"] = [sdate]
-    st.session_state["time"] = [stime]
+# save query parameters to URL
+sdate = d.strftime("%Y%m%d")
+stime = t.strftime("%H%M")
+set_query_params["date"] = [sdate]
+set_query_params["time"] = [stime]
+st.session_state["date"] = [sdate]
+st.session_state["time"] = [stime]
 
 
 # plotting settings
