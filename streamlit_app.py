@@ -91,17 +91,19 @@ for i in query_params:
 
 # provide date and time
 # set starting parameters from URL if available, otherwise use defaults
-d = st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970,1,1))
-if "date" in st.session_state:
-    st.session_state['d'] = datetime.datetime.strptime(st.session_state["date"][0], "%Y%m%d") 
-t = st.sidebar.time_input('Select time', value=datetime.time(0, 0))
-if "time" in st.session_state:
-    st.session_state['t'] = datetime.datetime.strptime(st.session_state["time"][0], "%H%M")
-date = datetime.datetime.combine(d, t).strftime("%Y-%m-%d %H:%M:%S")
+if "date" in query_params:
+    st.session_state.date_input = datetime.datetime.strptime(query_params["date"][0], "%Y%m%d")
+st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970,1,1), key="date_input")
+
+if "time" in query_params:
+    st.session_state.time_input = datetime.datetime.strptime(query_params["time"][0], "%H%M").time()
+st.sidebar.time_input('Select time', value=datetime.time(0, 0), key="time_input")
+
+date = datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d %H:%M:%S")
 
 # save query parameters to URL
-sdate = d.strftime("%Y%m%d")
-stime = t.strftime("%H%M")
+sdate = st.session_state.date_input.strftime("%Y%m%d")
+stime = st.session_state.time_input.strftime("%H%M")
 set_query_params["date"] = [sdate]
 set_query_params["time"] = [stime]
 st.session_state["date"] = [sdate]
@@ -332,7 +334,7 @@ if len(body_list) == len(vsw_list):
     c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
 
     # make the longitudinal constellation plot
-    filename = 'Solar-MACH_'+datetime.datetime.combine(d, t).strftime("%Y-%m-%d_%H-%M-%S")
+    filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
 
     c.plot(
         plot_spirals=plot_spirals,                            # plot Parker spirals for each body
