@@ -6,3 +6,4 @@ __pycache__/
 env/
 .ipynb_checkpoints/
 tstex_modules/
+.streamlit/secrets.toml
