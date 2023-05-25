@@ -12,6 +12,12 @@ from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list
 
 
+def delete_from_state(vars):
+    for var in vars:
+        if var in st.session_state:
+            del st.session_state[var]
+
+
 # modify hamburger menu
 about_info = '''
 The *Solar MAgnetic Connection Haus* (**Solar-MACH**) tool is a multi-spacecraft longitudinal configuration plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the ESA Heliophysics Archives USer (HAUS) group. Development takes now place at the University of Turku, Finland.
@@ -104,8 +110,6 @@ date = datetime.datetime.combine(st.session_state.date_input, st.session_state.t
 # save query parameters to URL
 sdate = st.session_state.date_input.strftime("%Y%m%d")
 stime = st.session_state.time_input.strftime("%H%M")
-set_query_params["date"] = [sdate]
-set_query_params["time"] = [stime]
 st.session_state["date"] = [sdate]
 st.session_state["time"] = [stime]
 
@@ -117,30 +121,19 @@ with st.sidebar.container():
     # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
     def_coord_sys = int(st.session_state["coord_sys"][0]) if "coord_sys" in st.session_state else 0
     coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)
-    set_query_params["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
     st.session_state["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
 
     st.sidebar.subheader('Plot options:')
 
-    # if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
-    if ("plot_spirals" in st.session_state) and int(st.session_state["plot_spirals"][0]) == 0:
-        def_plot_spirals = False
-    else:
-        def_plot_spirals = True
-    plot_spirals = st.sidebar.checkbox('Parker spiral for each body', value=def_plot_spirals)  # , on_change=clear_url)
-    if not plot_spirals:
-        set_query_params["plot_spirals"] = [0]
-        st.session_state["plot_spirals"] = [0]
+    if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
+        st.session_state.def_plot_spirals = False
+    st.sidebar.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
+    st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
 
-    # if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
-    if ("plot_sun_body_line" in st.session_state) and int(st.session_state["plot_sun_body_line"][0]) == 0:
-        def_plot_sun_body_line = False
-    else:
-        def_plot_sun_body_line = True
-    plot_sun_body_line = st.sidebar.checkbox('Straight line from Sun to body', value=def_plot_sun_body_line)  # , on_change=clear_url)
-    if not plot_sun_body_line:
-        set_query_params["plot_sun_body_line"] = [0]
-        st.session_state["plot_sun_body_line"] = [0]
+    if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
+        st.session_state.def_plot_sun_body_line = False
+    st.sidebar.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
+    st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
 
     # # if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
     # if ("plot_ecc" in st.session_state) and int(st.session_state["plot_ecc"][0]) == 1:
@@ -152,39 +145,27 @@ with st.sidebar.container():
     #     set_query_params["plot_ecc"] = [1]
     #     st.session_state["plot_ecc"] = [1]
 
-    # if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
-    if ("plot_trans" in st.session_state) and int(st.session_state["plot_trans"][0]) == 1:
-        def_transparent = True
-    else:
-        def_transparent = False
-    transparent = st.sidebar.checkbox('Transparent background', value=def_transparent)  # , on_change=clear_url)
-    if transparent:
-        set_query_params["plot_trans"] = [1]
-        st.session_state["plot_trans"] = [1]
+    if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
+        st.session_state.def_transparent = True
+    st.sidebar.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
+    st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
 
-    if ("plot_nr" in st.session_state) and int(st.session_state["plot_nr"][0]) == 1:
-        def_numbered = True
-    else:
-        def_numbered = False
-    numbered_markers = st.sidebar.checkbox('Numbered symbols', value=def_numbered)  # , on_change=clear_url)
-    if numbered_markers:
-        set_query_params["plot_nr"] = [1]
-        st.session_state["plot_nr"] = [1]
+    if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
+        st.session_state.def_numbered = True
+    st.sidebar.checkbox('Numbered symbols', value=False, key='def_numbered')  # , on_change=clear_url)
+    st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
 
-    def_long_offset = int(st.session_state["long_offset"][0]) if "long_offset" in st.session_state else 270
-    long_offset = int(st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):', min_value=0, max_value=360, value=def_long_offset, step=90))
-    set_query_params["long_offset"] = [str(int(long_offset))]
-    st.session_state["long_offset"] = [str(int(long_offset))]
+    if ("long_offset" in query_params):
+        st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
+    st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):',
+                            min_value=0, max_value=360, value=270, step=90, key='def_long_offset')
+    st.session_state["long_offset"] = [str(int(st.session_state.def_long_offset))]
 
-    # if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
-    if ("plot_reference" in st.session_state) and int(st.session_state["plot_reference"][0]) == 1:
-        def_plot_reference = True
-    else:
-        def_plot_reference = False
+    if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
+        st.session_state.plot_reference_check = True
+    st.sidebar.checkbox('Plot reference (e.g. flare)', value=True, key='plot_reference_check')  # , on_change=clear_url)
 
-    plot_reference = st.sidebar.checkbox('Plot reference (e.g. flare)', value=def_plot_reference)  # , on_change=clear_url)
-
-    with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=plot_reference):
+    with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=st.session_state.plot_reference_check):
         wrong_ref_coord = False
         # reference_sys_list = ['Carrington', 'Stonyhurst']
         # # set starting parameters from URL if available, otherwise use defaults
@@ -195,77 +176,27 @@ with st.sidebar.container():
         def_reference_long = int(st.session_state["reference_long"][0]) if "reference_long" in st.session_state else 90
         def_reference_lat = int(st.session_state["reference_lat"][0]) if "reference_lat" in st.session_state else 0
 
+        # read in coordinates from user
         if coord_sys == 'Carrington':
-            # def_reference_long = int(query_params["carr_long"][0]) if "carr_long" in query_params else 20
-            # def_reference_lat = int(query_params["carr_lat"][0]) if "carr_lat" in query_params else 0
-            # def_reference_long = int(st.session_state["carr_long"][0]) if "carr_long" in st.session_state else 20
-            # def_reference_lat = int(st.session_state["carr_lat"][0]) if "carr_lat" in st.session_state else 0
             reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)  # , on_change=clear_url)
             reference_lat = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
-            # outdated check for wrong coordinates (caught by using st.number_input)
-            # if (reference_long < 0) or (reference_long > 360) or (reference_lat < -90) or (reference_lat > 90):
-            #     wrong_ref_coord = True
-            # if plot_reference is True:
-            #     set_query_params["carr_long"] = [str(int(reference_long))]
-            #     set_query_params["carr_lat"] = [str(int(reference_lat))]
-            #     st.session_state["carr_long"] = [str(int(reference_long))]
-            #     st.session_state["carr_lat"] = [str(int(reference_lat))]
-
-        if coord_sys == 'Stonyhurst':
-            # def_reference_long = int(query_params["ston_long"][0]) if "ston_long" in query_params else 90
-            # def_reference_lat = int(query_params["ston_lat"][0]) if "ston_lat" in query_params else 0
-            # def_reference_long = int(st.session_state["ston_long"][0]) if "ston_long" in st.session_state else 90
-            # def_reference_lat = int(st.session_state["ston_lat"][0]) if "ston_lat" in st.session_state else 0
-            # convert query coordinates (always Carrington) to Stonyhurst for input widget:
-            # coord = SkyCoord(def_reference_long*u.deg, def_reference_lat*u.deg, frame=frames.HeliographicCarrington(observer='Sun', obstime=date))
-            # coord = coord.transform_to(frames.HeliographicStonyhurst)
-            # def_reference_long = coord.lon.value
-            # def_reference_lat = coord.lat.value
-
-            # read in coordinates from user
+        elif coord_sys == 'Stonyhurst':
             reference_long = st.number_input('Longitude (-180 to 180, integer):', min_value=-180, max_value=180, value=def_reference_long)  # , on_change=clear_url)
             reference_lat = st.number_input('Latitude (-90 to 90, integer):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
-            # outdated check for wrong coordinates (caught by using st.number_input)
-            # if (reference_long < -180) or (reference_long > 180) or (reference_lat < -90) or (reference_lat > 90):
-            #     wrong_ref_coord = True
-            # if plot_reference is True:
-            #     set_query_params["ston_long"] = [str(int(reference_long))]
-            #     set_query_params["ston_lat"] = [str(int(reference_lat))]
-            #     st.session_state["ston_long"] = [str(int(reference_long))]
-            #     st.session_state["ston_lat"] = [str(int(reference_lat))]
 
-        if plot_reference is True:
-            set_query_params["reference_long"] = [str(int(reference_long))]
-            set_query_params["reference_lat"] = [str(int(reference_lat))]
+        if ("reference_vsw" in query_params):
+            st.session_state.def_reference_vsw = int(query_params["reference_vsw"][0])
+        st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=400, step=50, key='def_reference_vsw')  # , on_change=clear_url)
+        
+        if st.session_state.plot_reference_check:
             st.session_state["reference_long"] = [str(int(reference_long))]
             st.session_state["reference_lat"] = [str(int(reference_lat))]
-        # outdated check for wrong coordinates (caught by using st.number_input)
-        # if wrong_ref_coord:
-        #         st.error('ERROR: There is something wrong in the prodived reference coordinates!')
-        #         st.stop()
-
-        # if reference_sys == 'Stonyhurst':
-        #     # convert Stonyhurst coordinates to Carrington for further use:
-        #     coord = SkyCoord(reference_long*u.deg, reference_lat*u.deg, frame=frames.HeliographicStonyhurst, obstime=date)
-        #     coord = coord.transform_to(frames.HeliographicCarrington(observer='Sun'))
-        #     reference_long = coord.lon.value
-        #     reference_lat = coord.lat.value
-
-        # import math
-        # def_reference_vsw = int(query_params["reference_vsw"][0]) if "reference_vsw" in query_params else 400
-        def_reference_vsw = int(st.session_state["reference_vsw"][0]) if "reference_vsw" in st.session_state else 400
-        reference_vsw = st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=def_reference_vsw, step=50)  # , on_change=clear_url)
-
-    if plot_reference is False:
-        reference_long = None
-        reference_lat = None
-
-    # save query parameters to URL
-    if plot_reference is True:
-        set_query_params["reference_vsw"] = [str(int(reference_vsw))]
-        set_query_params["plot_reference"] = [1]
-        st.session_state["reference_vsw"] = [str(int(reference_vsw))]
-        st.session_state["plot_reference"] = [1]
+            st.session_state["reference_vsw"] = [str(int(st.session_state.def_reference_vsw))]
+            st.session_state["plot_reference"] = [1]
+        else:
+            delete_from_state(["reference_long", "reference_lat", "reference_vsw", "plot_reference"])
+            reference_long = None
+            reference_lat = None
 
 
 st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
@@ -304,8 +235,6 @@ with st.sidebar.container():
                                  step=50))  # , on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
 
-    set_query_params["bodies"] = body_list
-    set_query_params["speeds"] = vsw_list
     # st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
 
@@ -313,6 +242,12 @@ with st.sidebar.container():
 # url = 'https://share.streamlit.io/jgieseler/solar-mach?'
 # url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
 url = 'https://solar-mach.streamlitapp.com/?embedded=true&'
+
+# Get all the parameters from st.session_state and store them in set_query_params so you can build the url
+for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr",
+        "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
+    if p in st.session_state:
+        set_query_params[p] = st.session_state[p]
 
 for p in set_query_params:
     for i in set_query_params[p]:
@@ -337,12 +272,12 @@ if len(body_list) == len(vsw_list):
     filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
 
     c.plot(
-        plot_spirals=plot_spirals,                            # plot Parker spirals for each body
-        plot_sun_body_line=plot_sun_body_line,                # plot straight line between Sun and body
-        reference_vsw=reference_vsw,                          # define solar wind speed at reference
-        transparent=transparent,
-        numbered_markers=numbered_markers,
-        long_offset=long_offset,
+        plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
+        plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
+        reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
+        transparent=st.session_state.def_transparent,
+        numbered_markers=st.session_state.def_numbered,
+        long_offset=st.session_state.def_long_offset,
         # outfile=filename+'.png'                               # output file (optional)
     )
 
