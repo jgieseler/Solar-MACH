@@ -161,8 +161,8 @@ with st.sidebar.container():
                             min_value=0, max_value=360, value=270, step=90, key='def_long_offset')
     st.session_state["long_offset"] = [str(int(st.session_state.def_long_offset))]
 
-    if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
-        st.session_state.plot_reference_check = True
+    if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 0:
+        st.session_state.plot_reference_check = False
     st.sidebar.checkbox('Plot reference (e.g. flare)', value=True, key='plot_reference_check')  # , on_change=clear_url)
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=st.session_state.plot_reference_check):
@@ -194,7 +194,8 @@ with st.sidebar.container():
             st.session_state["reference_vsw"] = [str(int(st.session_state.def_reference_vsw))]
             st.session_state["plot_reference"] = [1]
         else:
-            delete_from_state(["reference_long", "reference_lat", "reference_vsw", "plot_reference"])
+            delete_from_state(["reference_long", "reference_lat", "reference_vsw"])
+            st.session_state["plot_reference"] = [0]
             reference_long = None
             reference_lat = None
 
