@@ -163,7 +163,7 @@ with st.sidebar.container():
 
     if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
         st.session_state.plot_reference_check = True
-    st.sidebar.checkbox('Plot reference (e.g. flare)', value=True, key='plot_reference_check')  # , on_change=clear_url)
+    st.sidebar.checkbox('Plot reference (e.g. flare)', value=False, key='plot_reference_check')  # , on_change=clear_url)
 
     with st.sidebar.expander("Reference coordinates (e.g. flare)", expanded=st.session_state.plot_reference_check):
         wrong_ref_coord = False
