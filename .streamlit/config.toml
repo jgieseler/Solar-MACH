@@ -1,5 +1,2 @@
 [theme]
 base="light"
-
-[general]
-disableWidgetStateDuplicationWarning=True
