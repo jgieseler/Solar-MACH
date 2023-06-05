@@ -39,14 +39,22 @@ st.header('Multi-spacecraft longitudinal configuration plotter')
 
 # st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
-st.info("""
-       📢 **Update November 2022** 📢
-       * [Solar-MACH paper available](https://doi.org/10.3389/fspas.2022.1058810). Please cite this if you use Solar-MACH!
-       * Added option to change between Carrington and Stonyhurst coordinates for the whole tool (deprecates overplotting of Earth-centered coordinate system)
-       * Added option to change Earth position in the plot
-       * Take into account solar differential rotation wrt. latitude (see [#21](https://github.com/jgieseler/solarmach/issues/21))
-       * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
-       """)
+# st.info("""
+#        📢 **Update November 2022** 📢
+#        * [Solar-MACH paper available](https://doi.org/10.3389/fspas.2022.1058810). Please cite this if you use Solar-MACH!
+#        * Added option to change between Carrington and Stonyhurst coordinates for the whole tool (deprecates overplotting of Earth-centered coordinate system)
+#        * Added option to change Earth position in the plot
+#        * Take into account solar differential rotation wrt. latitude (see [#21](https://github.com/jgieseler/solarmach/issues/21))
+#        * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
+#        """)
+
+st.success('''
+           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
+
+           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).
+           Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
+           [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
+           ''')
 
 
 # Save parameters to URL for sharing and bookmarking
@@ -371,14 +379,6 @@ streamlit_analytics.start_tracking()
 
 # footer
 st.markdown("""---""")
-
-st.success('''
-           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
-
-           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).
-           Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
-           [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
-           ''')
 
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
             plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
