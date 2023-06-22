@@ -249,7 +249,7 @@ with st.sidebar.container():
 # url = 'http://localhost:8501/?'
 # url = 'https://share.streamlit.io/jgieseler/solar-mach?'
 # url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
-url = 'https://solar-mach.streamlitapp.com/?embedded=true&'
+url = 'https://solar-mach.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
 for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr",
@@ -368,8 +368,8 @@ def get_short_url(url):
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
 st.warning('''
-           ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022.** ⚠️
-           * If you still have old URLs, you can update them by replacing "https://share.streamlit.io/jgieseler/solar-mach?" with "https://solar-mach.streamlitapp.com/?embedded=true&" (both without quotation marks).
+           ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022 and again in June 2023.** ⚠️
+           * If you still have old URLs, you can update them by replacing either "https://share.streamlit.io/jgieseler/solar-mach?" or "https://solar-mach.streamlitapp.com/?embedded=true&" with "https://solar-mach.streamlit.app/?embedded=true&" (everything without quotation marks).
            * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
            ''')
