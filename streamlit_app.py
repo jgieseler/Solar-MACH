@@ -271,6 +271,7 @@ url = url.replace(' ', '+')
 #         url2 = url2 + str(p)+'='+str(i)+'&'
 # url2 = url2.replace(' ', '+')
 
+template = st.selectbox('Set plotly theme 👇', ["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn", "simple_white", "none"])
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
@@ -286,6 +287,8 @@ if len(body_list) == len(vsw_list):
         transparent=st.session_state.def_transparent,
         numbered_markers=st.session_state.def_numbered,
         long_offset=st.session_state.def_long_offset,
+        test_plotly=True,
+        test_plotly_template=template
         # outfile=filename+'.png'                               # output file (optional)
     )
 
