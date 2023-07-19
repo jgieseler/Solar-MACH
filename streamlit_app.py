@@ -271,7 +271,7 @@ url = url.replace(' ', '+')
 #         url2 = url2 + str(p)+'='+str(i)+'&'
 # url2 = url2.replace(' ', '+')
 
-template = st.selectbox('Set plotly theme 👇', ["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn", "simple_white", "none"])
+template = st.radio('Set plotly theme 👇', ["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn", "simple_white", "none"], horizontal=True)
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
