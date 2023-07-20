@@ -107,7 +107,7 @@ for i in query_params:
 # set starting parameters from URL if available, otherwise use defaults
 if "date" in query_params:
     st.session_state.date_input = datetime.datetime.strptime(query_params["date"][0], "%Y%m%d")
-st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970,1,1), key="date_input")
+st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970, 1, 1), key="date_input")
 
 if "time" in query_params:
     st.session_state.time_input = datetime.datetime.strptime(query_params["time"][0], "%H%M").time()
@@ -195,7 +195,7 @@ with st.sidebar.container():
         if ("reference_vsw" in query_params):
             st.session_state.def_reference_vsw = int(query_params["reference_vsw"][0])
         st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=400, step=50, key='def_reference_vsw')  # , on_change=clear_url)
-        
+
         if st.session_state.plot_reference_check:
             st.session_state["reference_long"] = [str(int(reference_long))]
             st.session_state["reference_lat"] = [str(int(reference_lat))]
@@ -253,7 +253,7 @@ url = 'https://solar-mach.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
 for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr",
-        "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
+          "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
     if p in st.session_state:
         set_query_params[p] = st.session_state[p]
 
@@ -273,6 +273,14 @@ url = url.replace(' ', '+')
 
 template = st.radio('Set plotly theme 👇', ["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn", "simple_white", "none"], horizontal=True)
 
+c1, c2 = st.columns(2)
+test_plotly_legend_x = c1.number_input('legend x coord', value=1.0, step=0.1)
+test_plotly_legend_y = c2.number_input('legend y coord', value=1.0, step=0.1)
+test_plotly_legend = (test_plotly_legend_x, test_plotly_legend_y)
+test_plotly_logo_x = c1.number_input('logo x coord', value=1.0, step=0.1)
+test_plotly_logo_y = c2.number_input('logo y coord', value=0.0, step=0.1)
+test_plotly_logo = (test_plotly_logo_x, test_plotly_logo_y)
+
 if len(body_list) == len(vsw_list):
     # initialize the bodies
     c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
@@ -280,7 +288,7 @@ if len(body_list) == len(vsw_list):
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
 
-    c.plot(
+    pfig = c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
         reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
@@ -288,9 +296,20 @@ if len(body_list) == len(vsw_list):
         numbered_markers=st.session_state.def_numbered,
         long_offset=st.session_state.def_long_offset,
         test_plotly=True,
-        test_plotly_template=template
+        test_plotly_template=template,
+        test_plotly_legend=test_plotly_legend,
+        test_plotly_logo=test_plotly_logo,
+        return_plot_object=True
         # outfile=filename+'.png'                               # output file (optional)
     )
+
+    # download plotly
+    pfig.write_image("plotly.png")
+    with open("plotly.png", 'rb') as f:
+        c1.download_button('Download plotly figure as .png file', f, file_name="plotly"+'.png', mime="image/png")
+    pfig.write_image("plotly.pdf")
+    with open("plotly.pdf", 'rb') as f:
+        c2.download_button('Download plotly figure as .pdf file', f, file_name="plotly"+'.pdf', mime="application/pdf")
 
     # download plot
     plot2 = io.BytesIO()
