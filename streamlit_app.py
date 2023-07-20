@@ -277,7 +277,7 @@ c1, c2 = st.columns(2)
 test_plotly_legend_x = c1.number_input('legend x coord', value=1.0, step=0.1)
 test_plotly_legend_y = c2.number_input('legend y coord', value=1.0, step=0.1)
 test_plotly_legend = (test_plotly_legend_x, test_plotly_legend_y)
-test_plotly_logo_x = c1.number_input('logo x coord', value=1.0, step=0.1)
+test_plotly_logo_x = c1.number_input('logo x coord', value=1.20, step=0.1)
 test_plotly_logo_y = c2.number_input('logo y coord', value=0.0, step=0.1)
 test_plotly_logo = (test_plotly_logo_x, test_plotly_logo_y)
 
