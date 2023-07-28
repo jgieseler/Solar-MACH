@@ -9,7 +9,7 @@ import streamlit as st
 import streamlit_analytics
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
-from solarmach import SolarMACH, print_body_list
+from solarmach import SolarMACH, print_body_list, get_sw_speed
 
 
 def delete_from_state(vars):
@@ -71,6 +71,13 @@ def clear_url():
     set_query_params2 = {}
     set_query_params2["embedded"] = 'true'
     st.experimental_set_query_params(**set_query_params2)
+
+
+def obtain_vsw(body_list, date):
+    vsw_list2 = []
+    for body in body_list:
+        vsw_list2.append(get_sw_speed(body, date))
+    st.session_state["speeds"] = vsw_list2
 
 
 # obtain query paramamters from URL
@@ -242,6 +249,7 @@ with st.sidebar.container():
                                  value=def_vsw_dict.get(body, 400),
                                  step=50))  # , on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
+        st.button("Obtain measured speeds", on_click=obtain_vsw, args=[body_list, date])
 
     # st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
