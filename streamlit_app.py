@@ -249,7 +249,7 @@ with st.sidebar.container():
                                  value=def_vsw_dict.get(body, 400),
                                  step=50))  # , on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
-        st.button("Obtain measured speeds", on_click=obtain_vsw, args=[body_list, date])
+        st.button("Obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
 
     # st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
