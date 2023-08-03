@@ -4,7 +4,8 @@ numpy
 parfive==1.5.1  # can be removed if https://github.com/Cadair/parfive/issues/132 is fixed
 pyshorteners
 scipy
-solarmach>=0.2.0
+speasy
+solarmach>=0.2.3
 streamlit
 streamlit-analytics
 sunpy  # set to >=4.1.5 once the streamlit.app has been re-deployed with a newer python version (cf. https://discuss.streamlit.io/t/specifying-python-version/32891)

@@ -9,7 +9,7 @@ import streamlit as st
 import streamlit_analytics
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
-from solarmach import SolarMACH, print_body_list
+from solarmach import SolarMACH, print_body_list, get_sw_speed
 
 
 def delete_from_state(vars):
@@ -73,6 +73,13 @@ def clear_url():
     st.experimental_set_query_params(**set_query_params2)
 
 
+def obtain_vsw(body_list, date):
+    vsw_list2 = []
+    for body in body_list:
+        vsw_list2.append(get_sw_speed(body, date))
+    st.session_state["speeds"] = vsw_list2
+
+
 # obtain query paramamters from URL
 query_params = st.experimental_get_query_params()
 
@@ -107,7 +114,7 @@ for i in query_params:
 # set starting parameters from URL if available, otherwise use defaults
 if "date" in query_params:
     st.session_state.date_input = datetime.datetime.strptime(query_params["date"][0], "%Y%m%d")
-st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970,1,1), key="date_input")
+st.sidebar.date_input("Select date", value=datetime.date.today()-datetime.timedelta(days=2), min_value=datetime.date(1970, 1, 1), key="date_input")
 
 if "time" in query_params:
     st.session_state.time_input = datetime.datetime.strptime(query_params["time"][0], "%H%M").time()
@@ -195,7 +202,7 @@ with st.sidebar.container():
         if ("reference_vsw" in query_params):
             st.session_state.def_reference_vsw = int(query_params["reference_vsw"][0])
         st.number_input('Solar wind speed for reference (km/s)', min_value=0, value=400, step=50, key='def_reference_vsw')  # , on_change=clear_url)
-        
+
         if st.session_state.plot_reference_check:
             st.session_state["reference_long"] = [str(int(reference_long))]
             st.session_state["reference_lat"] = [str(int(reference_lat))]
@@ -237,6 +244,7 @@ with st.sidebar.container():
 
     with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
         vsw_dict = {}
+        st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
         for body in body_list:
             vsw_dict[body] = int(st.number_input(body, min_value=0,
                                  value=def_vsw_dict.get(body, 400),
@@ -253,7 +261,7 @@ url = 'https://solar-mach.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
 for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr",
-        "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
+          "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
     if p in st.session_state:
         set_query_params[p] = st.session_state[p]
 
