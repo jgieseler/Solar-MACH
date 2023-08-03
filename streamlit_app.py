@@ -244,12 +244,12 @@ with st.sidebar.container():
 
     with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
         vsw_dict = {}
+        st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
         for body in body_list:
             vsw_dict[body] = int(st.number_input(body, min_value=0,
                                  value=def_vsw_dict.get(body, 400),
                                  step=50))  # , on_change=clear_url))
         vsw_list = [vsw_dict[body] for body in body_list]
-        st.button("Obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
 
     # st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
