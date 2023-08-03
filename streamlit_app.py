@@ -419,7 +419,9 @@ col2.markdown('[<img src="https://serpentine-h2020.eu/wp-content/uploads/2021/02
 st.markdown('Powered by: \
             [<img src="https://matplotlib.org/stable/_static/logo2_compressed.svg" height="25">](https://matplotlib.org) \
             [<img src="https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.svg" height="30">](https://streamlit.io) \
-            [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org)',
+            [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org) \
+            [<img src="https://raw.githubusercontent.com/SciQLop/speasy/main/logo/logo_speasy.svg" height="30">](https://pypi.org/project/speasy/) \
+            [<img src="app/static/amdaPrint.png" height="30">](http://amda.irap.omp.eu/)',
             unsafe_allow_html=True)
 
 

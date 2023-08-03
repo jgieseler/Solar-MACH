@@ -3,3 +3,6 @@ base="light"
 
 [global]
 disableWidgetStateDuplicationWarning = true
+
+[server]
+enableStaticServing = true
