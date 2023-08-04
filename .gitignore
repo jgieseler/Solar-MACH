@@ -2,7 +2,6 @@
 __pycache__/
 .vscode/
 *.py[cod]
-*.png
 env/
 .ipynb_checkpoints/
 tstex_modules/
