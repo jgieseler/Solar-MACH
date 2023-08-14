@@ -357,9 +357,11 @@ else:
                wind speed provided!")
 
 
+st.markdown("""---""")
 # experimental PFSS extension
-with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
-    # st.subheader("**PFSS model extension**")
+# with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
+with st.container():
+    st.subheader("**PFSS extension (experimental)**")
     form = st.form("PFSS_form")
     # Set the height of the source surface as a boundary condition for pfss extrapolation
     col1, col2 = form.columns((3, 1))
@@ -372,7 +374,9 @@ with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
     col1.write('Number of variation circles per Parker spiral:')
     n_varies = col2.number_input('', value=1, step=1, label_visibility='collapsed')
 
-    if form.form_submit_button('Start PFSS', type='primary'):
+    run_pfss = form.form_submit_button('Start PFSS', type='primary')
+    form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
+    if run_pfss:
         from solarmach import calculate_pfss_solution, get_gong_map
         try:
             gong_map = get_gong_map(time=date, filepath=None)
@@ -398,10 +402,11 @@ with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
                 data=plot2.getvalue(),
                 file_name=filename+'_PFSS'+'.png',
                 mime="image/png")
+            
+            # load 3d plot
+            c.pfss_3d(color_code="object")
         except IndexError:
-            st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️")
-    form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
-    
+            st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️") 
         # import plotly.graph_objects as go
         # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
 
@@ -439,6 +444,7 @@ with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
 #         # import plotly.graph_objects as go
 #         # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
 
+st.markdown("""---""")
 
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 
