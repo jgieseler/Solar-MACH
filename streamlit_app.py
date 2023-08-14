@@ -369,10 +369,10 @@ with st.container():
     rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
     col1, col2 = form.columns((3, 1))
     col1.write('Vary starting position at source surface per Parker spiral:')
-    vary = col2.checkbox('', value=False, label_visibility="collapsed")
+    vary = col2.checkbox('vary', value=False, label_visibility="collapsed")
     col1, col2 = form.columns((3, 1))
     col1.write('Number of variation circles per Parker spiral:')
-    n_varies = col2.number_input('', value=1, step=1, label_visibility='collapsed')
+    n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
 
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
     form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
@@ -419,10 +419,10 @@ with st.container():
 #     rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
 #     col1, col2 = st.columns((3, 1))
 #     col1.write('Vary starting position at source surface per Parker spiral:')
-#     vary = col2.checkbox('', value=True, label_visibility="collapsed")
+#     vary = col2.checkbox('vary', value=True, label_visibility="collapsed")
 #     col1, col2 = st.columns((3, 1))
 #     col1.write('Number of variation circles per Parker spiral:')
-#     n_varies = col2.number_input('', value=1, step=1, label_visibility='collapsed')
+#     n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
 #     if st.button('Start PFSS', type='primary'):
 #         from solarmach import calculate_pfss_solution, get_gong_map
 #         try:
