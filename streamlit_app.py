@@ -356,6 +356,90 @@ else:
                don't match! Please verify that for each body there is a solar \
                wind speed provided!")
 
+
+# experimental PFSS extension
+with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
+    # st.subheader("**PFSS model extension**")
+    form = st.form("PFSS_form")
+    # Set the height of the source surface as a boundary condition for pfss extrapolation
+    col1, col2 = form.columns((3, 1))
+    col1.write('Set source surface height (in solar radii):')
+    rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
+    col1, col2 = form.columns((3, 1))
+    col1.write('Vary starting position at source surface per Parker spiral:')
+    vary = col2.checkbox('', value=False, label_visibility="collapsed")
+    col1, col2 = form.columns((3, 1))
+    col1.write('Number of variation circles per Parker spiral:')
+    n_varies = col2.number_input('', value=1, step=1, label_visibility='collapsed')
+
+    if form.form_submit_button('Start PFSS', type='primary'):
+        from solarmach import calculate_pfss_solution, get_gong_map
+        try:
+            gong_map = get_gong_map(time=date, filepath=None)
+            # Calculate the potential field source surface solution
+            pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss)
+            c.plot_pfss(rss=rss,
+                        pfss_solution=pfss_solution,
+                        vary=vary,
+                        n_varies=n_varies,
+                        long_offset=st.session_state.def_long_offset,
+                        reference_vsw=st.session_state.def_reference_vsw,
+                        numbered_markers=st.session_state.def_numbered,
+                        plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
+                        figsize=(12, 8),
+                        dpi=200,
+                        # outfile=pfss_filename+'.png'
+                        )
+            # download plot
+            plot2 = io.BytesIO()
+            plt.savefig(plot2, format='png', bbox_inches="tight")
+            st.download_button(
+                label="Download figure as .png file",
+                data=plot2.getvalue(),
+                file_name=filename+'_PFSS'+'.png',
+                mime="image/png")
+        except IndexError:
+            st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️")
+    form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
+    
+        # import plotly.graph_objects as go
+        # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
+
+
+# # experimental PFSS extension
+# with st.expander(":red[**PFSS model extension**]", expanded=True):
+#     # Set the height of the source surface as a boundary condition for pfss extrapolation
+#     col1, col2 = st.columns((3, 1))
+#     col1.write('Set source surface height (in solar radii):')
+#     rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
+#     col1, col2 = st.columns((3, 1))
+#     col1.write('Vary starting position at source surface per Parker spiral:')
+#     vary = col2.checkbox('', value=True, label_visibility="collapsed")
+#     col1, col2 = st.columns((3, 1))
+#     col1.write('Number of variation circles per Parker spiral:')
+#     n_varies = col2.number_input('', value=1, step=1, label_visibility='collapsed')
+#     if st.button('Start PFSS', type='primary'):
+#         from solarmach import calculate_pfss_solution, get_gong_map
+#         try:
+#             gong_map = get_gong_map(time=date, filepath=None)
+#             # Calculate the potential field source surface solution
+#             pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss)
+#             c.plot_pfss(rss=rss,
+#                         pfss_solution=pfss_solution,
+#                         vary=vary,
+#                         n_varies=n_varies,
+#                         long_offset=st.session_state.def_long_offset,
+#                         reference_vsw=st.session_state.def_reference_vsw,
+#                         numbered_markers=st.session_state.def_numbered,
+#                         plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
+#                         )
+#         except IndexError:
+#             st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️")
+#     st.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
+#         # import plotly.graph_objects as go
+#         # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
+
+
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 
 st.info(url)
