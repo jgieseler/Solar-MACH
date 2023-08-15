@@ -5,6 +5,7 @@ import pyshorteners
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
+from stqdm import stqdm
 import streamlit as st
 import streamlit_analytics
 from astropy.coordinates import SkyCoord
@@ -75,7 +76,7 @@ def clear_url():
 
 def obtain_vsw(body_list, date):
     vsw_list2 = []
-    for body in body_list:
+    for body in stqdm(body_list, desc="Obtaining solar wind speeds for selected bodies..."):
         vsw_list2.append(get_sw_speed(body, date))
     st.session_state["speeds"] = vsw_list2
 
