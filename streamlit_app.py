@@ -10,7 +10,7 @@ import streamlit as st
 import streamlit_analytics
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
-from solarmach import SolarMACH, print_body_list, get_sw_speed
+from solarmach import SolarMACH, print_body_list, get_sw_speed, calculate_pfss_solution, get_gong_map
 
 
 def delete_from_state(vars):
@@ -74,11 +74,17 @@ def clear_url():
     st.experimental_set_query_params(**set_query_params2)
 
 
+@st.cache_data
 def obtain_vsw(body_list, date):
     vsw_list2 = []
     for body in stqdm(body_list, desc="Obtaining solar wind speeds for selected bodies..."):
         vsw_list2.append(get_sw_speed(body, date))
     st.session_state["speeds"] = vsw_list2
+
+
+@st.cache_data
+def get_gong_map_cached(time, filepath=None):
+    return get_gong_map(time, filepath=filepath)
 
 
 # obtain query paramamters from URL
@@ -379,9 +385,10 @@ with st.container():
     form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
     if run_pfss:
         with st.spinner('Running PFSS analysis, please wait...'):
-            from solarmach import calculate_pfss_solution, get_gong_map
             try:
-                gong_map = get_gong_map(time=date, filepath=None)
+                # gong_map = get_gong_map(time=date, filepath=None)
+                gong_map = get_gong_map_cached(time=date, filepath=None)
+
                 # Calculate the potential field source surface solution
                 pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss)
                 c.plot_pfss(rss=rss,
