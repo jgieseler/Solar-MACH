@@ -5,6 +5,7 @@ import pyshorteners
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
+from stqdm import stqdm
 import streamlit as st
 import streamlit_analytics
 from astropy.coordinates import SkyCoord
@@ -75,7 +76,7 @@ def clear_url():
 
 def obtain_vsw(body_list, date):
     vsw_list2 = []
-    for body in body_list:
+    for body in stqdm(body_list, desc="Obtaining solar wind speeds for selected bodies..."):
         vsw_list2.append(get_sw_speed(body, date))
     st.session_state["speeds"] = vsw_list2
 
@@ -377,38 +378,40 @@ with st.container():
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
     form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
     if run_pfss:
-        from solarmach import calculate_pfss_solution, get_gong_map
-        try:
-            gong_map = get_gong_map(time=date, filepath=None)
-            # Calculate the potential field source surface solution
-            pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss)
-            c.plot_pfss(rss=rss,
-                        pfss_solution=pfss_solution,
-                        vary=vary,
-                        n_varies=n_varies,
-                        long_offset=st.session_state.def_long_offset,
-                        reference_vsw=st.session_state.def_reference_vsw,
-                        numbered_markers=st.session_state.def_numbered,
-                        plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
-                        figsize=(12, 8),
-                        dpi=200,
-                        # outfile=pfss_filename+'.png'
-                        )
-            # download plot
-            plot2 = io.BytesIO()
-            plt.savefig(plot2, format='png', bbox_inches="tight")
-            st.download_button(
-                label="Download figure as .png file",
-                data=plot2.getvalue(),
-                file_name=filename+'_PFSS'+'.png',
-                mime="image/png")
-            
-            # load 3d plot
-            c.pfss_3d(color_code="object")
-        except IndexError:
-            st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️") 
-        # import plotly.graph_objects as go
-        # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
+        with st.spinner('Running PFSS analysis, please wait...'):
+            from solarmach import calculate_pfss_solution, get_gong_map
+            try:
+                gong_map = get_gong_map(time=date, filepath=None)
+                # Calculate the potential field source surface solution
+                pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss)
+                c.plot_pfss(rss=rss,
+                            pfss_solution=pfss_solution,
+                            vary=vary,
+                            n_varies=n_varies,
+                            long_offset=st.session_state.def_long_offset,
+                            reference_vsw=st.session_state.def_reference_vsw,
+                            numbered_markers=st.session_state.def_numbered,
+                            plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
+                            figsize=(12, 8),
+                            dpi=200,
+                            # outfile=pfss_filename+'.png'
+                            )
+                # download plot
+                plot2 = io.BytesIO()
+                plt.savefig(plot2, format='png', bbox_inches="tight")
+                st.download_button(
+                    label="Download figure as .png file",
+                    data=plot2.getvalue(),
+                    file_name=filename+'_PFSS'+'.png',
+                    mime="image/png")
+                
+                # load 3d plot
+                c.pfss_3d(color_code="object")
+                st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+            except IndexError:
+                st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️") 
+            # import plotly.graph_objects as go
+            # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
 
 
 # # experimental PFSS extension
