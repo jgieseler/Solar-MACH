@@ -249,7 +249,7 @@ with st.sidebar.container():
         def_full_body_list,
         key='bodies')  # , on_change=clear_url)
 
-    with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
+    with st.sidebar.expander("Solar wind speed (km/s) per S/C", expanded=True):
         vsw_dict = {}
         st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
         for body in body_list:
