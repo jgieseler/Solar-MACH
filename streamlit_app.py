@@ -318,6 +318,12 @@ if len(body_list) == len(vsw_list):
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
+    # load 3d plot
+    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
+              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+              numbered_markers=st.session_state.def_numbered)
+    st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+
     # display coordinates table
     df = c.coord_table
     df.index = df['Spacecraft/Body']
@@ -375,10 +381,10 @@ with st.container():
     col1.write('Set source surface height (in solar radii):')
     rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
     col1, col2 = form.columns((3, 1))
-    col1.write('Vary starting position at source surface per Parker spiral:')
+    col1.write('Track down a flux tube instead of a single field line:')
     vary = col2.checkbox('vary', value=False, label_visibility="collapsed")
     col1, col2 = form.columns((3, 1))
-    col1.write('Number of variation circles per Parker spiral:')
+    col1.write('Thickness of flux tube (n * 0.03 rad * height_of_ss):')
     n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
 
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
