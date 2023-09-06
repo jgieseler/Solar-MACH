@@ -318,6 +318,12 @@ if len(body_list) == len(vsw_list):
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
+    # load 3d plot
+    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
+              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+              numbered_markers=st.session_state.def_numbered)
+    st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+
     # display coordinates table
     df = c.coord_table
     df.index = df['Spacecraft/Body']
@@ -413,10 +419,11 @@ with st.container():
                     mime="image/png")
                 
                 # load 3d plot
-                c.pfss_3d(color_code="object")
+                c.pfss_3d(color_code="object", rss=rss, zoom_out=False)
+                c.pfss_3d(color_code="object", rss=rss, zoom_out=True)
                 st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
             except IndexError:
-                st.warning("Couldn't obtain input GONG map. Probably too recent date selected.", icon="⚠️") 
+                st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️") 
             # import plotly.graph_objects as go
             # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
 
