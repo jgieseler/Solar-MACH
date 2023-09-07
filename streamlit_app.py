@@ -419,8 +419,16 @@ with st.container():
                     mime="image/png")
                 
                 # load 3d plot
-                c.pfss_3d(color_code="object", rss=rss, zoom_out=False)
-                c.pfss_3d(color_code="object", rss=rss, zoom_out=True)
+                c.pfss_3d(color_code="object", rss=rss, 
+                          plot_spirals=st.session_state.def_plot_spirals,
+                          plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                          numbered_markers=st.session_state.def_numbered,
+                          zoom_out=False)
+                c.pfss_3d(color_code="object", rss=rss, 
+                          plot_spirals=st.session_state.def_plot_spirals,
+                          plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                          numbered_markers=st.session_state.def_numbered,
+                          zoom_out=True)
                 st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
             except IndexError:
                 st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️") 
