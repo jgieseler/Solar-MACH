@@ -321,7 +321,8 @@ if len(body_list) == len(vsw_list):
     # load 3d plot
     c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-              numbered_markers=st.session_state.def_numbered)
+              numbered_markers=st.session_state.def_numbered,
+              reference_vsw=st.session_state.def_reference_vsw)
     st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
 
     # display coordinates table
