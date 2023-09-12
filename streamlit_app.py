@@ -36,7 +36,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    menu_items=menu_items)
 
 st.title('Solar-MACH')
-st.header('Multi-spacecraft longitudinal configuration plotter')
+st.header('Multi-spacecraft :red[~~longitudinal~~] configuration plotter')
 
 # st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
@@ -371,11 +371,11 @@ else:
                wind speed provided!")
 
 
-st.markdown("""---""")
+# st.markdown("""---""")
 # experimental PFSS extension
 # with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
 with st.container():
-    st.subheader("**PFSS extension (experimental)**")
+    st.header("**PFSS extension :red[(experimental)]**", divider='grey')
     form = st.form("PFSS_form")
     # Set the height of the source surface as a boundary condition for pfss extrapolation
     col1, col2 = form.columns((3, 1))
