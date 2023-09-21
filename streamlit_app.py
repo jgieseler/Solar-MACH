@@ -177,6 +177,11 @@ with st.sidebar.container():
     st.sidebar.checkbox('Numbered symbols', value=False, key='def_numbered')  # , on_change=clear_url)
     st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
 
+    if ("plot_eq" in query_params) and int(query_params["plot_eq"][0]) == 1:
+        st.session_state.def_plot_equatorial_plane = True
+    st.sidebar.checkbox(':red[Equatorial plane (only 3d plot)]', value=False, key='def_plot_equatorial_plane')  # , on_change=clear_url)
+    st.session_state["plot_eq"] = [1] if st.session_state.def_plot_equatorial_plane else [0]
+
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
     st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):',
@@ -267,7 +272,7 @@ with st.sidebar.container():
 url = 'https://solar-mach.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
-for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr",
+for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr", "plot_eq",
           "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
     if p in st.session_state:
         set_query_params[p] = st.session_state[p]
@@ -322,7 +327,8 @@ if len(body_list) == len(vsw_list):
     c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
               numbered_markers=st.session_state.def_numbered,
-              reference_vsw=st.session_state.def_reference_vsw)
+              reference_vsw=st.session_state.def_reference_vsw,
+              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
     st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
 
     # display coordinates table
@@ -377,6 +383,8 @@ else:
 with st.container():
     st.header("**PFSS extension :red[(experimental)]**", divider='grey')
     form = st.form("PFSS_form")
+    # form.write("If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)!")
+    form.caption('If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)! Note that for the semi-logarithmic PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
     # Set the height of the source surface as a boundary condition for pfss extrapolation
     col1, col2 = form.columns((3, 1))
     col1.write('Set source surface height (in solar radii):')
@@ -389,7 +397,7 @@ with st.container():
     n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
 
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
-    form.caption('Note that for PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
+    
     if run_pfss:
         with st.spinner('Running PFSS analysis, please wait...'):
             try:
@@ -424,11 +432,15 @@ with st.container():
                           plot_spirals=st.session_state.def_plot_spirals,
                           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
                           numbered_markers=st.session_state.def_numbered,
+                          reference_vsw=st.session_state.def_reference_vsw,
+                          plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                           zoom_out=False)
                 c.pfss_3d(color_code="object", rss=rss, 
                           plot_spirals=st.session_state.def_plot_spirals,
                           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
                           numbered_markers=st.session_state.def_numbered,
+                          reference_vsw=st.session_state.def_reference_vsw,
+                          plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                           zoom_out=True)
                 st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
             except IndexError:
