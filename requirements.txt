@@ -4,8 +4,8 @@ numpy
 parfive==1.5.1  # can be removed if https://github.com/Cadair/parfive/issues/132 is fixed
 pyshorteners
 scipy
-speasy
-solarmach>=0.2.3
+speasy>=1.2.0
+solarmach>=0.3.1
 stqdm
 streamlit
 streamlit-analytics

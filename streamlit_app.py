@@ -168,10 +168,20 @@ with st.sidebar.container():
     st.sidebar.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
     st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
 
+    # catch old URL query parameter plot_nr for numberd_markers:
     if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
-        st.session_state.def_numbered = True
-    st.sidebar.checkbox('Numbered symbols', value=False, key='def_numbered')  # , on_change=clear_url)
-    st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
+        st.session_state.def_markers = "Numbers"
+    if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 0:
+        st.session_state.def_markers = "Squares"
+    #
+    if ("plot_markers" in query_params):
+        st.session_state.def_markers = st.session_state.plot_markers[0].capitalize()
+    # st.sidebar.checkbox('Numbered symbols', value=False, key='def_numbered')
+    st.sidebar.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
+    # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
+    st.session_state["plot_markers"] = [st.session_state.def_markers]
+    
+    
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
@@ -263,7 +273,7 @@ with st.sidebar.container():
 url = 'https://solar-mach.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
-for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_nr",
+for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_markers",
           "long_offset", "reference_long", "reference_lat", "reference_vsw", "plot_reference", "bodies", "speeds"]:
     if p in st.session_state:
         set_query_params[p] = st.session_state[p]
@@ -290,12 +300,18 @@ if len(body_list) == len(vsw_list):
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
 
+    if st.session_state.def_markers.lower()=='squares':
+        markers=False
+    else:
+        markers=st.session_state.def_markers.lower()
+
     c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
         reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
         transparent=st.session_state.def_transparent,
-        numbered_markers=st.session_state.def_numbered,
+        # numbered_markers=st.session_state.def_numbered,
+        markers=markers,
         long_offset=st.session_state.def_long_offset,
         # outfile=filename+'.png'                               # output file (optional)
     )
