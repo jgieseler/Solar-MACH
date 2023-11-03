@@ -38,7 +38,20 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 st.title('Solar-MACH')
 st.header('Multi-spacecraft longitudinal configuration plotter')
 
-st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.7rem; } </style> ", unsafe_allow_html=True)
+# TODO: This doesn't seem to work anymore with streamlit version 1.28.1
+st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.0rem; } </style> ", unsafe_allow_html=True)
+
+# Inject custom CSS to set the width of the sidebar
+st.markdown(
+    """
+    <style>
+        section[data-testid="stSidebar"] {
+            width: 350px !important; # Set the width to your desired value
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
@@ -255,7 +268,7 @@ with st.sidebar.container():
         def_full_body_list,
         key='bodies')  # , on_change=clear_url)
 
-    with st.sidebar.expander("Solar wind speed (kms/s) per S/C", expanded=True):
+    with st.sidebar.expander("Solar wind speed (km/s) per S/C", expanded=True):
         vsw_dict = {}
         st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
         for body in body_list:
