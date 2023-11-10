@@ -407,7 +407,7 @@ with st.container():
                 gong_map = get_gong_map_cached(time=date, filepath=None)
 
                 # Calculate the potential field source surface solution
-                pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss)
+                pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss, coord_sys=coord_sys)
                 c.plot_pfss(rss=rss,
                             pfss_solution=pfss_solution,
                             vary=vary,
