@@ -583,5 +583,5 @@ else:
 
 import solarmach
 import sunpy
-st.write('solarmach version: ', solarmach.__version)
-st.write('sunpy version: ', sunpy.__version)
+st.write('solarmach version: ', solarmach.__version__)
+st.write('sunpy version: ', sunpy.__version__)
