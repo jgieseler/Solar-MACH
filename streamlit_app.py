@@ -579,3 +579,9 @@ if 'analytics' in query_params.keys():
         clear_url()
 else:
     clear_url()
+
+
+import solarmach
+import sunpy
+st.write('solarmach version: ', solarmach.__version)
+st.write('sunpy version: ', sunpy.__version)
