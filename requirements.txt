@@ -1,9 +1,9 @@
 astroquery
 matplotlib==3.5.3
-numpy
+numpy==1.24.4  # TODO: temporary
 parfive==1.5.1  # can be removed if https://github.com/Cadair/parfive/issues/132 is fixed
 pyshorteners
-scipy
+scipy==1.10.1  # TODO: temporary
 speasy
 git+https://github.com/jgieseler/solarmach/
 stqdm
