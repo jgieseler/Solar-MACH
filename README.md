@@ -1,6 +1,7 @@
 # Solar MAgnetic Connection Haus tool
 
-[![DOI](https://zenodo.org/badge/374606976.svg)](https://zenodo.org/badge/latestdoi/374606976)  [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solar-mach.github.io)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solar-mach.github.io)
+  [![DOI](https://zenodo.org/badge/374606976.svg)](https://zenodo.org/badge/latestdoi/374606976)  [![Python](https://img.shields.io/pypi/pyversions/solarmach?style=flat&logo=python)]([https://solar-mach.github.io](https://pypi.org/project/solarmach/))
 
 Streamlit frontend to the PyPI package [solarmach](https://pypi.org/project/solarmach/), used for [solar-mach.github.io](https://solar-mach.github.io). 
 
