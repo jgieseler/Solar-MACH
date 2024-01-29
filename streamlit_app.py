@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from stqdm import stqdm
 import streamlit as st
-import streamlit_analytics
+# import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed
@@ -78,15 +78,17 @@ st.success('''
 #     st.query_params(**set_query_params)
 
 
-# def clear_url():
-#     """
-#     Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit
-#     version 1.0. Will hopefully be fixed in the future. Then hopefully all
-#     occurences of "clear_url" can be removed.
-#     """
-#     set_query_params2 = {}
-#     set_query_params2["embedded"] = 'true'
-#     st.query_params(**set_query_params2)
+def clear_url():
+    """
+    Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit
+    version 1.0. Will hopefully be fixed in the future. Then hopefully all
+    occurences of "clear_url" can be removed.
+    """
+    # set_query_params2 = {}
+    # set_query_params2["embedded"] = 'true'
+    # st.query_params(**set_query_params2)
+    st.query_params.clear()
+    st.query_params["embedded"] = 'true'
 
 
 def obtain_vsw(body_list, date):
@@ -96,8 +98,11 @@ def obtain_vsw(body_list, date):
     st.session_state["speeds"] = vsw_list2
 
 
-# obtain query paramamters from URL
-query_params = st.query_params
+# obtain query paramamters from URL; convert query dictionary to old format
+query_params = {}
+for key in st.query_params.keys():
+    query_params[key] = st.query_params.get_all(key)
+
 
 # define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
@@ -414,7 +419,7 @@ st.warning('''
            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
            ''')
 
-# streamlit_analytics.start_tracking()
+# streamlit_analytics.start_tracking()  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 
 
 # footer
@@ -466,6 +471,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+# TODO: un-comment the following when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 # if os.path.exists('.streamlit/secrets.toml'):
 #     streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
 # else:
@@ -475,8 +481,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # if not in analytics mode, clear params from URL because Streamlit 1.0 still
 # get some hickups when one changes the params; it then gets confused with the
 # params in the URL and the one from the widgets.
-# if 'analytics' in query_params.keys():
-#     if not query_params['analytics'][0] == 'on':
-#         clear_url()
-# else:
-#     clear_url()
+if 'analytics' in query_params.keys():
+    if not query_params['analytics'][0] == 'on':
+        clear_url()
+else:
+    clear_url()
