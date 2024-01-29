@@ -74,19 +74,19 @@ st.success('''
 
 
 # Save parameters to URL for sharing and bookmarking
-def make_url(set_query_params):
-    st.query_params(**set_query_params)
+# def make_url(set_query_params):
+#     st.query_params(**set_query_params)
 
 
-def clear_url():
-    """
-    Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit
-    version 1.0. Will hopefully be fixed in the future. Then hopefully all
-    occurences of "clear_url" can be removed.
-    """
-    set_query_params2 = {}
-    set_query_params2["embedded"] = 'true'
-    st.query_params(**set_query_params2)
+# def clear_url():
+#     """
+#     Clear parameters from URL bc. otherwise input becomes buggy as of Streamlit
+#     version 1.0. Will hopefully be fixed in the future. Then hopefully all
+#     occurences of "clear_url" can be removed.
+#     """
+#     set_query_params2 = {}
+#     set_query_params2["embedded"] = 'true'
+#     st.query_params(**set_query_params2)
 
 
 def obtain_vsw(body_list, date):
@@ -97,7 +97,7 @@ def obtain_vsw(body_list, date):
 
 
 # obtain query paramamters from URL
-query_params = st.query_params()
+query_params = st.query_params
 
 # define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
@@ -475,8 +475,8 @@ else:
 # if not in analytics mode, clear params from URL because Streamlit 1.0 still
 # get some hickups when one changes the params; it then gets confused with the
 # params in the URL and the one from the widgets.
-if 'analytics' in query_params.keys():
-    if not query_params['analytics'][0] == 'on':
-        clear_url()
-else:
-    clear_url()
+# if 'analytics' in query_params.keys():
+#     if not query_params['analytics'][0] == 'on':
+#         clear_url()
+# else:
+#     clear_url()
