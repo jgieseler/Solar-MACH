@@ -283,7 +283,7 @@ with st.sidebar.container():
 # url = 'http://localhost:8501/?'
 # url = 'https://share.streamlit.io/jgieseler/solar-mach?'
 # url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
-url = 'https://solar-mach.streamlit.app/?embedded=true&'
+url = 'https://solar-mach-query.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
 for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_markers",
