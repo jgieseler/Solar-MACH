@@ -75,7 +75,7 @@ st.success('''
 
 # Save parameters to URL for sharing and bookmarking
 def make_url(set_query_params):
-    st.experimental_set_query_params(**set_query_params)
+    st.query_params(**set_query_params)
 
 
 def clear_url():
@@ -86,7 +86,7 @@ def clear_url():
     """
     set_query_params2 = {}
     set_query_params2["embedded"] = 'true'
-    st.experimental_set_query_params(**set_query_params2)
+    st.query_params(**set_query_params2)
 
 
 def obtain_vsw(body_list, date):
@@ -97,7 +97,7 @@ def obtain_vsw(body_list, date):
 
 
 # obtain query paramamters from URL
-query_params = st.experimental_get_query_params()
+query_params = st.query_params()
 
 # define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
