@@ -195,8 +195,6 @@ with st.sidebar.container():
     st.sidebar.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
     # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
     st.session_state["plot_markers"] = [st.session_state.def_markers]
-    
-    
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
