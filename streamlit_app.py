@@ -353,7 +353,7 @@ if len(body_list) == len(vsw_list):
                             "Vsw": "Solar wind speed [km/s]",
                             f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
                             "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
-                            "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
+                            "Longitudinal separation between body's magnetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
                             "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
 
     df2 = df.copy()
