@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from stqdm import stqdm
 import streamlit as st
-import streamlit_analytics
+# import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed
@@ -74,8 +74,8 @@ st.success('''
 
 
 # Save parameters to URL for sharing and bookmarking
-def make_url(set_query_params):
-    st.experimental_set_query_params(**set_query_params)
+# def make_url(set_query_params):
+#     st.query_params(**set_query_params)
 
 
 def clear_url():
@@ -84,9 +84,8 @@ def clear_url():
     version 1.0. Will hopefully be fixed in the future. Then hopefully all
     occurences of "clear_url" can be removed.
     """
-    set_query_params2 = {}
-    set_query_params2["embedded"] = 'true'
-    st.experimental_set_query_params(**set_query_params2)
+    st.query_params.clear()
+    st.query_params["embedded"] = 'true'
 
 
 def obtain_vsw(body_list, date):
@@ -96,8 +95,11 @@ def obtain_vsw(body_list, date):
     st.session_state["speeds"] = vsw_list2
 
 
-# obtain query paramamters from URL
-query_params = st.experimental_get_query_params()
+# obtain query paramamters from URL; convert query dictionary to old format
+query_params = {}
+for key in st.query_params.keys():
+    query_params[key] = st.query_params.get_all(key)
+
 
 # define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
@@ -280,9 +282,6 @@ with st.sidebar.container():
     # st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
 
-# url = 'http://localhost:8501/?'
-# url = 'https://share.streamlit.io/jgieseler/solar-mach?'
-# url = 'https://jgieseler-solar-mach-streamlit-app-aj6zer.streamlitapp.com/?embedded=true&'
 url = 'https://solar-mach.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
@@ -414,7 +413,7 @@ st.warning('''
            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
            ''')
 
-streamlit_analytics.start_tracking()
+# streamlit_analytics.start_tracking()  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 
 
 # footer
@@ -466,11 +465,12 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-if os.path.exists('.streamlit/secrets.toml'):
-    streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
-else:
-    # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
-    streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
+# TODO: un-comment the following when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
+# if os.path.exists('.streamlit/secrets.toml'):
+#     streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
+# else:
+#     # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
+#     streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
 
 # if not in analytics mode, clear params from URL because Streamlit 1.0 still
 # get some hickups when one changes the params; it then gets confused with the
