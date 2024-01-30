@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from stqdm import stqdm
 import streamlit as st
-import streamlit_analytics
+# import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed, calculate_pfss_solution, get_gong_map
@@ -38,7 +38,20 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
 st.title('Solar-MACH')
 st.header('Multi-spacecraft :red[~~longitudinal~~] configuration plotter')
 
-st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.7rem; } </style> ", unsafe_allow_html=True)
+# TODO: This doesn't seem to work anymore with streamlit version 1.28.1
+st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.0rem; } </style> ", unsafe_allow_html=True)
+
+# Inject custom CSS to set the width of the sidebar
+st.markdown(
+    """
+    <style>
+        section[data-testid="stSidebar"] {
+            width: 350px !important; # Set the width to your desired value
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
 
@@ -61,8 +74,8 @@ st.success('''
 
 
 # Save parameters to URL for sharing and bookmarking
-def make_url(set_query_params):
-    st.experimental_set_query_params(**set_query_params)
+# def make_url(set_query_params):
+#     st.query_params(**set_query_params)
 
 
 def clear_url():
@@ -71,9 +84,8 @@ def clear_url():
     version 1.0. Will hopefully be fixed in the future. Then hopefully all
     occurences of "clear_url" can be removed.
     """
-    set_query_params2 = {}
-    set_query_params2["embedded"] = 'true'
-    st.experimental_set_query_params(**set_query_params2)
+    st.query_params.clear()
+    st.query_params["embedded"] = 'true'
 
 
 @st.cache_data
@@ -89,8 +101,11 @@ def get_gong_map_cached(time, filepath=None):
     return get_gong_map(time, filepath=filepath)
 
 
-# obtain query paramamters from URL
-query_params = st.experimental_get_query_params()
+# obtain query paramamters from URL; convert query dictionary to old format
+query_params = {}
+for key in st.query_params.keys():
+    query_params[key] = st.query_params.get_all(key)
+
 
 # define empty dict for new params to put into URL (only in box at the bottom)
 set_query_params = {}
@@ -174,6 +189,7 @@ with st.sidebar.container():
     st.sidebar.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
     st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
 
+    # catch old URL query parameter plot_nr for numberd_markers:
     if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
         st.session_state.def_numbered = True
     st.sidebar.checkbox('Numbered symbols', value=False, key='def_numbered')  # , on_change=clear_url)
@@ -346,7 +362,7 @@ if len(body_list) == len(vsw_list):
                             "Vsw": "Solar wind speed [km/s]",
                             f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
                             "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
-                            "Longitudinal separation between body's mangetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
+                            "Longitudinal separation between body's magnetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
                             "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
 
     df2 = df.copy()
@@ -399,7 +415,7 @@ with st.container():
     n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
 
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
-    
+
     if run_pfss:
         with st.spinner('Running PFSS analysis, please wait...'):
             try:
@@ -428,16 +444,16 @@ with st.container():
                     data=plot2.getvalue(),
                     file_name=filename+'_PFSS'+'.png',
                     mime="image/png")
-                
+
                 # load 3d plot
-                c.pfss_3d(color_code="object", rss=rss, 
+                c.pfss_3d(color_code="object", rss=rss,
                           plot_spirals=st.session_state.def_plot_spirals,
                           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
                           numbered_markers=st.session_state.def_numbered,
                           reference_vsw=st.session_state.def_reference_vsw,
                           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                           zoom_out=False)
-                c.pfss_3d(color_code="object", rss=rss, 
+                c.pfss_3d(color_code="object", rss=rss,
                           plot_spirals=st.session_state.def_plot_spirals,
                           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
                           numbered_markers=st.session_state.def_numbered,
@@ -446,7 +462,7 @@ with st.container():
                           zoom_out=True)
                 st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
             except IndexError:
-                st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️") 
+                st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️")
             # import plotly.graph_objects as go
             # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
 
@@ -512,7 +528,7 @@ st.warning('''
            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
            ''')
 
-streamlit_analytics.start_tracking()
+# streamlit_analytics.start_tracking()  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 
 
 # footer
@@ -565,11 +581,12 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-if os.path.exists('.streamlit/secrets.toml'):
-    streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
-else:
-    # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
-    streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
+# TODO: un-comment the following when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
+# if os.path.exists('.streamlit/secrets.toml'):
+#     streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
+# else:
+#     # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
+#     streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
 
 # if not in analytics mode, clear params from URL because Streamlit 1.0 still
 # get some hickups when one changes the params; it then gets confused with the
