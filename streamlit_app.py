@@ -64,14 +64,6 @@ st.markdown(
 #        * Instead of spherical radius, plot its projection to the heliographic equatorial plane (see [#3](https://github.com/jgieseler/solarmach/issues/3))
 #        """)
 
-st.success('''
-           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
-
-           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).
-           Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
-           [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
-           ''')
-
 
 # Save parameters to URL for sharing and bookmarking
 # def make_url(set_query_params):
@@ -340,6 +332,14 @@ if len(body_list) == len(vsw_list):
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
+    st.success('''
+           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
+
+           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).
+           Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
+           [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
+           ''')
+
     # display coordinates table
     df = c.coord_table
     df.index = df['Spacecraft/Body']
@@ -416,14 +416,6 @@ st.warning('''
 
 # footer
 st.markdown("""---""")
-
-st.success('''
-           📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
-
-           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).
-           Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
-           [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
-           ''')
 
 st.markdown('The *Solar MAgnetic Connection Haus* (Solar-MACH) tool is a multi-spacecraft longitudinal configuration \
             plotter. It was originally developed at the University of Kiel, Germany, and further discussed within the \
