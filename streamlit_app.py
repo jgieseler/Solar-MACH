@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from stqdm import stqdm
 import streamlit as st
-# import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
+import streamlit_analytics2  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed
@@ -456,11 +456,11 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # TODO: un-comment the following when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
-# if os.path.exists('.streamlit/secrets.toml'):
-#     streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
-# else:
-#     # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
-#     streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
+if os.path.exists('.streamlit/secrets.toml'):
+    streamlit_analytics.stop_tracking(unsafe_password=st.secrets["streamlit_analytics_password"])
+else:
+    # Use default password if it is not defined in a streamlit secret. Change this if you want to use it!
+    streamlit_analytics.stop_tracking(unsafe_password='opdskf03i45+0ikfg')
 
 # if not in analytics mode, clear params from URL because Streamlit 1.0 still
 # get some hickups when one changes the params; it then gets confused with the
