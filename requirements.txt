@@ -1,11 +1,11 @@
 astroquery
 matplotlib==3.5.3
 numpy
-parfive==1.5.1  # can be removed if https://github.com/Cadair/parfive/issues/132 is fixed
+parfive==2.0.0  # 1.5.1  # can be removed if https://github.com/Cadair/parfive/issues/132 is fixed
 pyshorteners
 scipy
-speasy>=1.2.0
-solarmach>=0.3.2
+speasy>=1.2.7
+solarmach>=0.3.4
 stqdm
 streamlit
 streamlit-analytics2
