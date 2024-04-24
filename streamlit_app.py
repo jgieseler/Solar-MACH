@@ -473,10 +473,9 @@ if 'analytics' in query_params.keys():
 else:
     clear_url()
 
-
-# goatcounter
-html_string = """
-<script data-goatcounter="https://solar-mach.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-"""
-components.html(html_string)
+# # goatcounter
+# html_string = """
+# <script data-goatcounter="https://solar-mach.goatcounter.com/count"
+#         async src="//gc.zgo.at/count.js"></script>
+# """
+# components.html(html_string)
