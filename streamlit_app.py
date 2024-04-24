@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from stqdm import stqdm
 import streamlit as st
+import streamlit.components.v1 as components
 # import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 import streamlit_analytics2 as streamlit_analytics
 from astropy.coordinates import SkyCoord
@@ -471,3 +472,11 @@ if 'analytics' in query_params.keys():
         clear_url()
 else:
     clear_url()
+
+
+# goatcounter
+html_string = """
+<script data-goatcounter="https://solar-mach.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+"""
+components.html(html_string)
