@@ -164,15 +164,15 @@ with st.sidebar.container():
 
     st.sidebar.subheader('Plot options:')
 
-    if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
-        st.session_state.def_plot_spirals = False
-    st.sidebar.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
-    st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
+    # if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
+    #     st.session_state.def_plot_spirals = False
+    # st.sidebar.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
+    # st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
 
-    if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
-        st.session_state.def_plot_sun_body_line = False
-    st.sidebar.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
-    st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
+    # if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
+    #     st.session_state.def_plot_sun_body_line = False
+    # st.sidebar.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
+    # st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
 
     # # if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
     # if ("plot_ecc" in st.session_state) and int(st.session_state["plot_ecc"][0]) == 1:
@@ -310,6 +310,29 @@ url = url.replace(' ', '+')
 # url2 = url2.replace(' ', '+')
 
 
+@st.experimental_fragment
+def make_plot():
+    if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
+        st.session_state.def_plot_spirals = False
+    st.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
+    st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
+
+    if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
+        st.session_state.def_plot_sun_body_line = False
+    st.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
+    st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
+
+    c.plot(
+    plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
+    plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
+    reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
+    transparent=st.session_state.def_transparent,
+    numbered_markers=st.session_state.def_numbered,
+    long_offset=st.session_state.def_long_offset,
+    # outfile=filename+'.png'                               # output file (optional)
+    )
+
+
 if len(body_list) == len(vsw_list):
     # initialize the bodies
     c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
@@ -317,15 +340,16 @@ if len(body_list) == len(vsw_list):
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
 
-    c.plot(
-        plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
-        plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
-        reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
-        transparent=st.session_state.def_transparent,
-        numbered_markers=st.session_state.def_numbered,
-        long_offset=st.session_state.def_long_offset,
-        # outfile=filename+'.png'                               # output file (optional)
-    )
+    # c.plot(
+    #     plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
+    #     plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
+    #     reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
+    #     transparent=st.session_state.def_transparent,
+    #     numbered_markers=st.session_state.def_numbered,
+    #     long_offset=st.session_state.def_long_offset,
+    #     # outfile=filename+'.png'                               # output file (optional)
+    # )
+    make_plot()
 
     # download plot
     plot2 = io.BytesIO()
