@@ -149,52 +149,6 @@ with st.sidebar.container():
     coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)
     st.session_state["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
 
-    st.sidebar.subheader('Plot options:')
-
-    if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
-        st.session_state.def_plot_spirals = False
-    st.sidebar.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
-    st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
-
-    if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
-        st.session_state.def_plot_sun_body_line = False
-    st.sidebar.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
-    st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
-
-    # # if ("plot_ecc" in query_params) and int(query_params["plot_ecc"][0]) == 1:
-    # if ("plot_ecc" in st.session_state) and int(st.session_state["plot_ecc"][0]) == 1:
-    #     def_show_earth_centered_coord = True
-    # else:
-    #     def_show_earth_centered_coord = False
-    # show_earth_centered_coord = st.sidebar.checkbox('Add Stonyhurst coord. system', value=def_show_earth_centered_coord)  # , on_change=clear_url)
-    # if show_earth_centered_coord:
-    #     set_query_params["plot_ecc"] = [1]
-    #     st.session_state["plot_ecc"] = [1]
-
-    if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
-        st.session_state.def_transparent = True
-    st.sidebar.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
-    st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
-
-    # catch old URL query parameter plot_nr for numberd_markers:
-    if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
-        st.session_state.def_markers = "Numbers"
-    if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 0:
-        st.session_state.def_markers = "Squares"
-    #
-    if ("plot_markers" in query_params):
-        st.session_state.def_markers = st.session_state.plot_markers[0].capitalize()
-    # st.sidebar.checkbox('Numbered symbols', value=False, key='def_numbered')
-    st.sidebar.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
-    # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
-    st.session_state["plot_markers"] = [st.session_state.def_markers]
-
-    if ("long_offset" in query_params):
-        st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
-    st.sidebar.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):',
-                            min_value=0, max_value=360, value=270, step=90, key='def_long_offset')
-    st.session_state["long_offset"] = [str(int(st.session_state.def_long_offset))]
-
     if ("plot_reference" in query_params) and int(query_params["plot_reference"][0]) == 1:
         st.session_state.plot_reference_check = True
     st.sidebar.checkbox('Plot reference (e.g. flare)', value=False, key='plot_reference_check')  # , on_change=clear_url)
@@ -296,12 +250,46 @@ url = url.replace(' ', '+')
 # url2 = url2.replace(' ', '+')
 
 
-if len(body_list) == len(vsw_list):
-    # initialize the bodies
-    c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
+@st.experimental_fragment
+def make_plot():
+    col1, col2 = st.columns(2)
 
-    # make the longitudinal constellation plot
-    filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
+    with col1:
+        st.markdown('**Plot options:**')
+        if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
+            st.session_state.def_plot_spirals = False
+        st.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
+        st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
+
+        if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
+            st.session_state.def_plot_sun_body_line = False
+        st.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
+        st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
+
+        if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
+            st.session_state.def_transparent = True
+        st.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
+        st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
+
+    with col2:
+        # catch old URL query parameter plot_nr for numberd_markers:
+        if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
+            st.session_state.def_markers = "Numbers"
+        if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 0:
+            st.session_state.def_markers = "Squares"
+        #
+        if ("plot_markers" in query_params):
+            st.session_state.def_markers = st.session_state.plot_markers[0].capitalize()
+        # st.checkbox('Numbered symbols', value=False, key='def_numbered')
+        st.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
+        # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
+        st.session_state["plot_markers"] = [st.session_state.def_markers]
+
+        if ("long_offset" in query_params):
+            st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
+        st.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):',
+                                min_value=0, max_value=360, value=270, step=90, key='def_long_offset')
+        st.session_state["long_offset"] = [str(int(st.session_state.def_long_offset))]
 
     if st.session_state.def_markers.lower()=='squares':
         markers=False
@@ -332,6 +320,15 @@ if len(body_list) == len(vsw_list):
     # needs # outfile=filename+'.png' uncommented above
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
+
+if len(body_list) == len(vsw_list):
+    # initialize the bodies
+    c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
+
+    # make the longitudinal constellation plot
+    filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
+
+    make_plot()
 
     st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
