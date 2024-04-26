@@ -38,7 +38,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    menu_items=menu_items)
 
 st.title('Solar-MACH')
-st.header('Multi-spacecraft longitudinal configuration plotter')
+st.header('Multi-spacecraft configuration plotter')
 
 # TODO: This doesn't seem to work anymore with streamlit version 1.28.1
 st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.0rem; } </style> ", unsafe_allow_html=True)
