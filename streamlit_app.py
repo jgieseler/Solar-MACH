@@ -9,6 +9,7 @@ from stqdm import stqdm
 import streamlit as st
 # import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 import streamlit_analytics2 as streamlit_analytics
+from streamlit_extras.stylable_container import stylable_container
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed
@@ -252,49 +253,59 @@ url = url.replace(' ', '+')
 
 @st.experimental_fragment
 def make_plot():
-    col1, col2 = st.columns(2)
+    with stylable_container(
+        key="plot_options",
+        css_styles="""
+            {
+                border: 1px solid rgba(49, 51, 63, 0.2);
+                border-radius: 0.5rem;
+                padding: calc(1em - 1px)
+            }
+            """,
+    ):
+        col1, col2 = st.columns(2)
 
-    with col1:
-        st.markdown('**Plot options:**')
-        if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
-            st.session_state.def_plot_spirals = False
-        st.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
-        st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
+        with col1:
+            st.markdown('**Plot options:**')
+            if ("plot_spirals" in query_params) and int(query_params["plot_spirals"][0]) == 0:
+                st.session_state.def_plot_spirals = False
+            st.checkbox('Parker spiral for each body', value=True, key='def_plot_spirals')  # , on_change=clear_url)
+            st.session_state["plot_spirals"] = [1] if st.session_state.def_plot_spirals else [0]
 
-        if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
-            st.session_state.def_plot_sun_body_line = False
-        st.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
-        st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
+            if ("plot_sun_body_line" in query_params) and int(query_params["plot_sun_body_line"][0]) == 0:
+                st.session_state.def_plot_sun_body_line = False
+            st.checkbox('Straight line from Sun to body', value=True, key='def_plot_sun_body_line')  # , on_change=clear_url)
+            st.session_state["plot_sun_body_line"] = [1] if st.session_state.def_plot_sun_body_line else [0]
 
-        if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
-            st.session_state.def_transparent = True
-        st.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
-        st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
+            if ("plot_trans" in query_params) and int(query_params["plot_trans"][0]) == 1:
+                st.session_state.def_transparent = True
+            st.checkbox('Transparent background', value=False, key='def_transparent')  # , on_change=clear_url)
+            st.session_state["plot_trans"] = [1] if st.session_state.def_transparent else [0]
 
-    with col2:
-        # catch old URL query parameter plot_nr for numberd_markers:
-        if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
-            st.session_state.def_markers = "Numbers"
-        if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 0:
-            st.session_state.def_markers = "Squares"
-        #
-        if ("plot_markers" in query_params):
-            st.session_state.def_markers = st.session_state.plot_markers[0].capitalize()
-        # st.checkbox('Numbered symbols', value=False, key='def_numbered')
-        st.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
-        # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
-        st.session_state["plot_markers"] = [st.session_state.def_markers]
+        with col2:
+            # catch old URL query parameter plot_nr for numberd_markers:
+            if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 1:
+                st.session_state.def_markers = "Numbers"
+            if ("plot_nr" in query_params) and int(query_params["plot_nr"][0]) == 0:
+                st.session_state.def_markers = "Squares"
+            #
+            if ("plot_markers" in query_params):
+                st.session_state.def_markers = st.session_state.plot_markers[0].capitalize()
+            # st.checkbox('Numbered symbols', value=False, key='def_numbered')
+            st.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
+            # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
+            st.session_state["plot_markers"] = [st.session_state.def_markers]
 
-        if ("long_offset" in query_params):
-            st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
-        st.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):',
-                                min_value=0, max_value=360, value=270, step=90, key='def_long_offset')
-        st.session_state["long_offset"] = [str(int(st.session_state.def_long_offset))]
+            if ("long_offset" in query_params):
+                st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
+            st.number_input('Plot Earth at longitude (axis system, 0=3 o`clock):',
+                            min_value=0, max_value=360, value=270, step=90, key='def_long_offset')
+            st.session_state["long_offset"] = [str(int(st.session_state.def_long_offset))]
 
-    if st.session_state.def_markers.lower()=='squares':
-        markers=False
-    else:
-        markers=st.session_state.def_markers.lower()
+        if st.session_state.def_markers.lower()=='squares':
+            markers=False
+        else:
+            markers=st.session_state.def_markers.lower()
 
     c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
@@ -320,6 +331,7 @@ def make_plot():
     # needs # outfile=filename+'.png' uncommented above
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
+
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
