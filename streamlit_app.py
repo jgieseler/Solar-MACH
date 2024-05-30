@@ -479,10 +479,3 @@ else:
 #         async src="//gc.zgo.at/count.js"></script>
 # """
 # components.html(html_string)
-
-import matplotlib
-import solarmach
-import sunpy
-import sys
-st.write(matplotlib.__version__, solarmach.__version__, sunpy.__version__)
-st.write(sys.version)
