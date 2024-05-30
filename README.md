@@ -25,7 +25,7 @@ Afterwards the app should open in your browser.
 
 ## Python package
 
-In addition, all the functionality is available in the streamlit-independent python package [**solarmach**](https://github.com/jgieseler/solarmach). It requires python >= 3.8 and can be installed either from [PyPI](https://pypi.org/project/solarmach/) using:
+In addition, all the functionality is available in the streamlit-independent python package [**solarmach**](https://github.com/jgieseler/solarmach). It requires python >= 3.10 and can be installed either from [PyPI](https://pypi.org/project/solarmach/) using:
 
 ``` bash
 pip install solarmach
