@@ -5,7 +5,7 @@ parfive==2.0.0  # 1.5.1  # can be removed if https://github.com/Cadair/parfive/i
 pyshorteners
 scipy
 speasy>=1.2.7
-solarmach>=0.3.4
+git+https://github.com/jgieseler/solarmach/
 stqdm
 streamlit
 streamlit-analytics2
