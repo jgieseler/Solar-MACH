@@ -1,5 +1,5 @@
 astroquery
-matplotlib==3.5.3
+matplotlib
 numpy
 parfive==2.0.0  # 1.5.1  # can be removed if https://github.com/Cadair/parfive/issues/132 is fixed
 pyshorteners
