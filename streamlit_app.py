@@ -488,5 +488,3 @@ else:
 #         async src="//gc.zgo.at/count.js"></script>
 # """
 # components.html(html_string)
-
-st.write(print_body_list())
