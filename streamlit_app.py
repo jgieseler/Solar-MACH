@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.success("Try out Solar-MACH's **PFSS extension (BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)!")
+st.success("Try out Solar-MACH's **3d view** and **PFSS extension (both BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)!")
 
 # st.info("""
 #        📢 **Update November 2022** 📢
