@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
+st.error("⬇️ **Scroll down for PFSS extension (BETA)!** ⬇️")
 
 # st.info("""
 #        📢 **Update November 2022** 📢
@@ -284,7 +284,7 @@ with st.sidebar.container():
     # st.session_state["bodies"] = body_list
     st.session_state["speeds"] = vsw_list
 
-url = 'https://solar-mach.streamlit.app/?embedded=true&'
+url = 'https://solar-mach-pfss.streamlit.app/?embedded=true&'
 
 # Get all the parameters from st.session_state and store them in set_query_params so you can build the url
 for p in ["date", "time", "coord_sys", "plot_spirals", "plot_sun_body_line", "plot_trans", "plot_markers",
@@ -346,13 +346,13 @@ if len(body_list) == len(vsw_list):
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
-   # load 3d plot
-    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
-              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-              numbered_markers=False,
-              reference_vsw=st.session_state.def_reference_vsw,
-              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
-    st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+   # load 3d plot - TODO: add this at some point
+    # c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
+    #           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+    #           numbered_markers=False,
+    #           reference_vsw=st.session_state.def_reference_vsw,
+    #           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
+    # st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
 
     st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
@@ -412,7 +412,8 @@ else:
 # experimental PFSS extension
 # with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
 with st.container():
-    st.header("**PFSS extension :red[(experimental)]**", divider='grey')
+    st.header("**:red[PFSS extension (BETA)]**", divider='grey')
+    st.error("Be aware that the PFSS extension is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/Solar-MACH/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
     form = st.form("PFSS_form")
     # form.write("If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)!")
     form.caption('If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)! Note that for the semi-logarithmic PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
@@ -458,6 +459,8 @@ with st.container():
                     file_name=filename+'_PFSS'+'.png',
                     mime="image/png")
 
+                st.write("The following two plots show the same content, just at different default zoom levels:")
+
                 # load 3d plot
                 c.pfss_3d(color_code="object", rss=rss,
                           plot_spirals=st.session_state.def_plot_spirals,
@@ -501,12 +504,12 @@ def get_short_url(url):
 
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
-st.warning('''
-           ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022 and again in June 2023.** ⚠️
-           * If you still have old URLs, you can update them by replacing either "https://share.streamlit.io/jgieseler/solar-mach?" or "https://solar-mach.streamlitapp.com/?embedded=true&" with "https://solar-mach.streamlit.app/?embedded=true&" (everything without quotation marks).
-           * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
-           * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
-           ''')
+# st.warning('''
+#            ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022 and again in June 2023.** ⚠️
+#            * If you still have old URLs, you can update them by replacing either "https://share.streamlit.io/jgieseler/solar-mach?" or "https://solar-mach.streamlitapp.com/?embedded=true&" with "https://solar-mach.streamlit.app/?embedded=true&" (everything without quotation marks).
+#            * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
+#            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
+#            ''')
 
 streamlit_analytics.start_tracking()  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 
