@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.success("⬇️ **Scroll down for PFSS extension (BETA)!** ⬇️")
+st.success("⬇️ **Scroll down for new 3d view and PFSS extension (both BETA)!** ⬇️")
 
 # st.info("""
 #        📢 **Update November 2022** 📢
@@ -346,13 +346,14 @@ if len(body_list) == len(vsw_list):
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
-   # load 3d plot - TODO: add this at some point
-    # c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
-    #           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-    #           numbered_markers=False,
-    #           reference_vsw=st.session_state.def_reference_vsw,
-    #           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
-    # st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
+    # load 3d plot
+    st.subheader("**:red[3d view (BETA)]**")
+    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
+              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+              numbered_markers=False,
+              reference_vsw=st.session_state.def_reference_vsw,
+              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
+    st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
 
     st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
