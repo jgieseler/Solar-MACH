@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# st.warning("If your browser repeatedly complains about *redirecting too many times* or *redirecting not properly*, you might for the time being use [solar-mach.streamlitapp.com](https://solar-mach.streamlitapp.com) (instead of [solar-mach.github.io](https://solar-mach.github.io)).")  # Streamlit has recently changed some settings that still cause some problems. (Oct 2022)")
+st.success("Try out Solar-MACH's **PFSS extension (BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)!")
 
 # st.info("""
 #        📢 **Update November 2022** 📢
