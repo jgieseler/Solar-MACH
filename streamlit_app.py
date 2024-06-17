@@ -11,7 +11,7 @@ import streamlit as st
 import streamlit_analytics2 as streamlit_analytics
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
-from solarmach import SolarMACH, print_body_list, get_sw_speed
+from solarmach import SolarMACH, print_body_list, get_sw_speed, calculate_pfss_solution, get_gong_map
 
 
 def delete_from_state(vars):
@@ -37,7 +37,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    menu_items=menu_items)
 
 st.title('Solar-MACH')
-st.header('Multi-spacecraft longitudinal configuration plotter')
+st.header('Multi-spacecraft configuration plotter')
 
 # TODO: This doesn't seem to work anymore with streamlit version 1.28.1
 st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.0rem; } </style> ", unsafe_allow_html=True)
@@ -81,11 +81,17 @@ def clear_url():
     st.query_params["embedded"] = 'true'
 
 
+@st.cache_data
 def obtain_vsw(body_list, date):
     vsw_list2 = []
     for body in stqdm(body_list, desc="Obtaining solar wind speeds for selected bodies..."):
         vsw_list2.append(get_sw_speed(body, date))
     st.session_state["speeds"] = vsw_list2
+
+
+@st.cache_data
+def get_gong_map_cached(time, filepath=None):
+    return get_gong_map(time, filepath=filepath)
 
 
 # obtain query paramamters from URL; convert query dictionary to old format
@@ -188,6 +194,11 @@ with st.sidebar.container():
     st.sidebar.radio("Plot symbol style", ["Letters", "Numbers", "Squares"], index=1, key='def_markers', horizontal=True)
     # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
     st.session_state["plot_markers"] = [st.session_state.def_markers]
+
+    if ("plot_eq" in query_params) and int(query_params["plot_eq"][0]) == 1:
+        st.session_state.def_plot_equatorial_plane = True
+    st.sidebar.checkbox(':red[Equatorial plane (only 3d plot)]', value=False, key='def_plot_equatorial_plane')  # , on_change=clear_url)
+    st.session_state["plot_eq"] = [1] if st.session_state.def_plot_equatorial_plane else [0]
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
@@ -305,8 +316,10 @@ if len(body_list) == len(vsw_list):
 
     if st.session_state.def_markers.lower()=='squares':
         markers=False
+        markers_pfss_3d=False
     else:
         markers=st.session_state.def_markers.lower()
+        markers_pfss_3d=True
 
     c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
@@ -332,6 +345,14 @@ if len(body_list) == len(vsw_list):
     # needs # outfile=filename+'.png' uncommented above
     # with open(filename+'.png', 'rb') as f:
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
+
+   # load 3d plot
+    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
+              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+              numbered_markers=False,
+              reference_vsw=st.session_state.def_reference_vsw,
+              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
+    st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
 
     st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
@@ -385,6 +406,81 @@ else:
                ({len(body_list)}) and solar wind speed list ({len(vsw_list)}) \
                don't match! Please verify that for each body there is a solar \
                wind speed provided!")
+
+
+# st.markdown("""---""")
+# experimental PFSS extension
+# with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
+with st.container():
+    st.header("**PFSS extension :red[(experimental)]**", divider='grey')
+    form = st.form("PFSS_form")
+    # form.write("If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)!")
+    form.caption('If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)! Note that for the semi-logarithmic PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
+    # Set the height of the source surface as a boundary condition for pfss extrapolation
+    col1, col2 = form.columns((3, 1))
+    col1.write('Set source surface height (in solar radii):')
+    rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
+    col1, col2 = form.columns((3, 1))
+    col1.write('Track down a flux tube instead of a single field line:')
+    vary = col2.checkbox('vary', value=False, label_visibility="collapsed")
+    col1, col2 = form.columns((3, 1))
+    col1.write('Thickness of flux tube (n * 0.03 rad * height_of_ss):')
+    n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
+
+    run_pfss = form.form_submit_button('Start PFSS', type='primary')
+
+    if run_pfss:
+        with st.spinner('Running PFSS analysis, please wait...'):
+            try:
+                # gong_map = get_gong_map(time=date, filepath=None)
+                gong_map = get_gong_map_cached(time=date, filepath=None)
+
+                # Calculate the potential field source surface solution
+                pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss, coord_sys=coord_sys)
+                c.plot_pfss(rss=rss,
+                            pfss_solution=pfss_solution,
+                            vary=vary,
+                            n_varies=n_varies,
+                            long_offset=st.session_state.def_long_offset,
+                            reference_vsw=st.session_state.def_reference_vsw,
+                            numbered_markers=markers_pfss_3d,
+                            plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
+                            figsize=(12, 8),
+                            dpi=200,
+                            # outfile=pfss_filename+'.png'
+                            )
+                # download plot
+                plot2 = io.BytesIO()
+                plt.savefig(plot2, format='png', bbox_inches="tight")
+                st.download_button(
+                    label="Download figure as .png file",
+                    data=plot2.getvalue(),
+                    file_name=filename+'_PFSS'+'.png',
+                    mime="image/png")
+
+                # load 3d plot
+                c.pfss_3d(color_code="object", rss=rss,
+                          plot_spirals=st.session_state.def_plot_spirals,
+                          plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                          numbered_markers=False,
+                          reference_vsw=st.session_state.def_reference_vsw,
+                          plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                          zoom_out=False)
+                c.pfss_3d(color_code="object", rss=rss,
+                          plot_spirals=st.session_state.def_plot_spirals,
+                          plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                          numbered_markers=False,
+                          reference_vsw=st.session_state.def_reference_vsw,
+                          plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                          zoom_out=True)
+                st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+            except IndexError:
+                st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️")
+            # import plotly.graph_objects as go
+            # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
+
+
+st.markdown("""---""")
 
 st.markdown('###### Save or share this setup by bookmarking or distributing the following URL:')
 
