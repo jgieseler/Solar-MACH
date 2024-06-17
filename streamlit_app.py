@@ -72,6 +72,14 @@ st.success('''
            [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
            ''')
 
+import solarmach
+import sunpy
+import sys
+st.write('solarmach version: ', solarmach.__version__)
+st.write('streamlit version: ', st.__version__)
+st.write('sunpy version: ', sunpy.__version__)
+st.write('python version: ', sys.version)
+
 
 # Save parameters to URL for sharing and bookmarking
 # def make_url(set_query_params):
@@ -596,11 +604,3 @@ if 'analytics' in query_params.keys():
         clear_url()
 else:
     clear_url()
-
-
-import solarmach
-import sunpy
-import sys
-st.write('solarmach version: ', solarmach.__version__)
-st.write('sunpy version: ', sunpy.__version__)
-st.write('python version: ', sys.version)
