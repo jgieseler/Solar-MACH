@@ -348,6 +348,7 @@ if len(body_list) == len(vsw_list):
 
     # load 3d plot
     st.subheader("**:red[3d view (BETA)]**")
+    st.error("Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
     c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
               numbered_markers=False,
