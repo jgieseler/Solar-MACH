@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.error("⬇️ **Scroll down for PFSS extension (BETA)!** ⬇️")
+st.success("⬇️ **Scroll down for PFSS extension (BETA)!** ⬇️")
 
 # st.info("""
 #        📢 **Update November 2022** 📢
