@@ -37,6 +37,12 @@ conda install -c conda-forge solarmach
 
 See [https://github.com/jgieseler/solarmach](https://github.com/jgieseler/solarmach) for a more detailled description.
 
+## Contributing
+
+Contributions to this project are very much welcome and encouraged! Contributions to the streamlit web-version that is used for [solar-mach.github.io](https://solar-mach.github.io) can take the form of [issues](https://github.com/jgieseler/Solar-MACH/issues) to report bugs and request new features or [pull requests](https://github.com/jgieseler/Solar-MACH/pulls) to submit new code. 
+
+Please make contributions that are general to the [**solarmach**](https://github.com/jgieseler/solarmach) package and not specific to the streamlit web-version in the corresponding repository at [github.com/jgieseler/solarmach](https://github.com/jgieseler/solarmach/).
+
 ## Citation
 
 Please cite the following paper if you use **Solar-MACH** in your publication:
