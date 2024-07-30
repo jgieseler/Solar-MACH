@@ -81,11 +81,31 @@ def clear_url():
     st.query_params["embedded"] = 'true'
 
 
-def obtain_vsw(body_list, date):
+# @st.cache_data
+def obtain_vsw(body_list, date, default_vsw):
     vsw_list2 = []
-    for body in stqdm(body_list, desc="Obtaining solar wind speeds for selected bodies..."):
-        vsw_list2.append(get_sw_speed(body, date))
+    obtained_vsw = {}  #[]
+    for i, body in stqdm(enumerate(body_list), desc="Obtaining solar wind speeds for selected bodies..."):
+        vsw = get_sw_speed(body, date, default_vsw=default_vsw[i])
+        vsw_list2.append(vsw)
+        if vsw==default_vsw[i]:
+            # obtained_vsw.append(-1)
+            obtained_vsw[body] = -1
+        else:
+            # obtained_vsw.append(1)
+            obtained_vsw[body] = 1
+    st.session_state["obtained_vsw"] = obtained_vsw
     st.session_state["speeds"] = vsw_list2
+
+
+def reset_vsw(body_list):
+    delete_from_state(["obtained_vsw"])
+    st.session_state["speeds"] = [400] * len(body_list)
+
+
+@st.cache_data
+def get_gong_map_cached(time, filepath=None):
+    return get_gong_map(time, filepath=filepath)
 
 
 # obtain query paramamters from URL; convert query dictionary to old format
@@ -114,7 +134,7 @@ if ("plot_reference" in query_params) and int(query_params["plot_reference"][0])
             st.error('⚠️ **WARNING:** Deprecated parameters have been prodived by the URL. To avoid unexpected behaviour, plotting of the reference has been deactivated!')
             query_params["plot_reference"][0] = 0
 
-# saved obtained quety params from URL into session_state
+# saved obtained query params from URL into session_state
 for i in query_params:
     st.session_state[i] = query_params[i]
 
@@ -136,6 +156,15 @@ date = datetime.datetime.combine(st.session_state.date_input, st.session_state.t
 # save query parameters to URL
 sdate = st.session_state.date_input.strftime("%Y%m%d")
 stime = st.session_state.time_input.strftime("%H%M")
+
+# if changing datetime, remove obtained_vsw from session_state (bc. new vsw need to be obtained for changed datetime)
+if "date" in st.session_state.keys():
+    if st.session_state["date"] != [sdate]: 
+        delete_from_state(["obtained_vsw"])
+if "time" in st.session_state.keys():
+    if st.session_state["time"] != [stime]: 
+        delete_from_state(["obtained_vsw"])
+
 st.session_state["date"] = [sdate]
 st.session_state["time"] = [stime]
 
@@ -263,11 +292,23 @@ with st.sidebar.container():
 
     with st.sidebar.expander("Solar wind speed (km/s) per S/C", expanded=True):
         vsw_dict = {}
-        st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date], type='primary')
-        for body in body_list:
-            vsw_dict[body] = int(st.number_input(body, min_value=0,
+        st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date, def_vsw_list], type='primary')
+        for i, body in enumerate(body_list):
+            if "obtained_vsw" in st.session_state:
+                if st.session_state["obtained_vsw"][body]==-1:
+                    obtained_vsw_status = '  ❌'
+                if st.session_state["obtained_vsw"][body]==1:
+                    obtained_vsw_status = '  ✅'
+            else:
+                obtained_vsw_status = ''    
+            vsw_dict[body] = int(st.number_input(body+obtained_vsw_status, min_value=0,
                                  value=def_vsw_dict.get(body, 400),
                                  step=50))  # , on_change=clear_url))
+        if "obtained_vsw" in st.session_state:
+            legend = '''✅ - measurement found
+❌ - no measurement found'''
+            st.code(legend, language=None)
+        st.button("Reset all speeds to 400 km/s", on_click=reset_vsw, args=[body_list], type='primary')
         vsw_list = [vsw_dict[body] for body in body_list]
 
     # st.session_state["bodies"] = body_list
@@ -446,6 +487,35 @@ st.markdown('Powered by: \
             [<img src="app/static/amdaPrint.png" height="30">](http://amda.irap.omp.eu/)',
             unsafe_allow_html=True)
 
+if "verbose" in st.session_state.keys():
+    if int(st.session_state["verbose"][0]) == 1:
+        st.markdown("""---""")
+        st.markdown('## Debug Info')
+        st.write(st.session_state)
+
+        os.environ['SPEASY_CORE_DISABLED_PROVIDERS'] = "sscweb,archive,csa"
+        import plotly
+        import solarmach
+        import speasy
+        import sunkit_magex
+        import sunpy
+        import sys
+        from io import StringIO
+        tmp = sys.stdout
+        my_result = StringIO()
+        sys.stdout = my_result
+        sunpy.util.system_info()
+        print('')
+        print('Solar-MACH Dependencies')
+        print('#######################')
+        print(f'plotly: {plotly.__version__}')
+        print(f'solarmach: {solarmach.__version__}')
+        print(f'speasy: {speasy.__version__}')
+        print(f'streamlit: {st.__version__}')
+        print(f'sunkit_magex: {sunkit_magex.__version__}')
+        sys.stdout = tmp
+
+        st.code(my_result.getvalue())
 
 # remove 'Made with Streamlit' footer
 # MainMenu {visibility: hidden;}
