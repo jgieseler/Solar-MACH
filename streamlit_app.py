@@ -354,7 +354,7 @@ if len(body_list) == len(vsw_list):
         markers_pfss_3d=False
     else:
         markers=st.session_state.def_markers.lower()
-        markers_pfss_3d=True
+        markers_pfss_3d=st.session_state.def_markers.lower()
 
     c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
@@ -481,7 +481,7 @@ with st.container():
                             n_varies=n_varies,
                             long_offset=st.session_state.def_long_offset,
                             reference_vsw=st.session_state.def_reference_vsw,
-                            numbered_markers=markers_pfss_3d,
+                            markers=markers_pfss_3d,
                             plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
                             figsize=(12, 8),
                             dpi=200,
