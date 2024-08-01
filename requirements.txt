@@ -4,7 +4,7 @@ parfive>=2.1.0
 pyshorteners
 scipy
 speasy>=1.2.7
-solarmach>=0.3.5
+git+https://github.com/jgieseler/solarmach/
 stqdm
 streamlit
 streamlit-analytics2
