@@ -251,7 +251,7 @@ url = url.replace(' ', '+')
 # url2 = url2.replace(' ', '+')
 
 
-@st.experimental_fragment
+@st.fragment
 def make_plot():
     with stylable_container(
         key="plot_options",
