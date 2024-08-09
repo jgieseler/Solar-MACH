@@ -8,11 +8,11 @@ Streamlit frontend to the PyPI package [solarmach](https://pypi.org/project/sola
 To install and start a local Streamlit server, run the following commands in your terminal:
 
 ```python
-# optional: create and activate virtual environment in python (alternatively use anaconda)
+# optional: create and activate virtual environment in python (alternatively use conda)
 python3 -m venv env
 source env/bin/activate
 
-# install requirements with pip (alternatively use anaconda)
+# install requirements with pip (alternatively use conda)
 pip3 install -r requirements.txt
 
 # run the actual streamlit app
