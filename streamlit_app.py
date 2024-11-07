@@ -292,7 +292,7 @@ with st.sidebar.container():
 
     with st.sidebar.expander("Solar wind speed (km/s) per S/C", expanded=True):
         vsw_dict = {}
-        st.button("Try to obtain measured speeds :mag:", on_click=obtain_vsw, args=[body_list, date, def_vsw_list], type='primary')
+        st.button("Try to obtain measurements :mag:", on_click=obtain_vsw, args=[body_list, date, def_vsw_list], type='primary')
         for i, body in enumerate(body_list):
             if "obtained_vsw" in st.session_state:
                 if st.session_state["obtained_vsw"][body]==-1:
@@ -342,7 +342,7 @@ if len(body_list) == len(vsw_list):
     c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
 
     # make the longitudinal constellation plot
-    filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M-%S")
+    filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M")
 
     if st.session_state.def_markers.lower()=='squares':
         markers=False
