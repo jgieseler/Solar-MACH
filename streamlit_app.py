@@ -351,10 +351,10 @@ if len(body_list) == len(vsw_list):
 
     if st.session_state.def_markers.lower()=='squares':
         markers=False
-        markers_pfss_3d=False
+        # markers_pfss_3d=False
     else:
         markers=st.session_state.def_markers.lower()
-        markers_pfss_3d=st.session_state.def_markers.lower()
+        # markers_pfss_3d=st.session_state.def_markers.lower()
 
     c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
@@ -386,7 +386,7 @@ if len(body_list) == len(vsw_list):
     st.error("Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
     c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-              numbered_markers=False,
+              markers=markers,
               reference_vsw=st.session_state.def_reference_vsw,
               plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
     st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
@@ -481,7 +481,7 @@ with st.container():
                             n_varies=n_varies,
                             long_offset=st.session_state.def_long_offset,
                             reference_vsw=st.session_state.def_reference_vsw,
-                            markers=markers_pfss_3d,
+                            markers=markers,
                             plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
                             figsize=(12, 8),
                             dpi=200,
@@ -502,14 +502,14 @@ with st.container():
                 c.pfss_3d(color_code="object", rss=rss,
                           plot_spirals=st.session_state.def_plot_spirals,
                           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-                          numbered_markers=False,
+                          markers=markers,
                           reference_vsw=st.session_state.def_reference_vsw,
                           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                           zoom_out=False)
                 c.pfss_3d(color_code="object", rss=rss,
                           plot_spirals=st.session_state.def_plot_spirals,
                           plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-                          numbered_markers=False,
+                          markers=markers,
                           reference_vsw=st.session_state.def_reference_vsw,
                           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                           zoom_out=True)
