@@ -394,7 +394,8 @@ if len(body_list) == len(vsw_list):
               markers=markers,
               reference_vsw=st.session_state.def_reference_vsw,
               plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
-              # plot_3d_grid=st.session_state.def_plot_3d_grid)
+              # plot_3d_grid=st.session_state.def_plot_3d_grid,
+              )
     st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
 
     st.success('''
