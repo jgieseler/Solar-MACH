@@ -220,8 +220,13 @@ with st.sidebar.container():
 
     if ("plot_eq" in query_params) and int(query_params["plot_eq"][0]) == 1:
         st.session_state.def_plot_equatorial_plane = True
-    st.sidebar.checkbox(':red[Equatorial plane (only 3d plot)]', value=False, key='def_plot_equatorial_plane')  # , on_change=clear_url)
+    st.sidebar.checkbox(':red[Equatorial plane (only 3d plot)]', value=True, key='def_plot_equatorial_plane')  # , on_change=clear_url)
     st.session_state["plot_eq"] = [1] if st.session_state.def_plot_equatorial_plane else [0]
+
+    # if ("plot_3d_axis" in query_params) and int(query_params["plot_3d_axis"][0]) == 1:
+    #     st.session_state.def_plot_3d_grid = True
+    # st.sidebar.checkbox(':red[x, y, z grid & axis (only 3d plot)]', value=True, key='def_plot_3d_grid')  # , on_change=clear_url)
+    # st.session_state["plot_3d_axis"] = [1] if st.session_state.def_plot_3d_grid else [0]
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
@@ -388,7 +393,8 @@ if len(body_list) == len(vsw_list):
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
               markers=markers,
               reference_vsw=st.session_state.def_reference_vsw,
-              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane)
+              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+              # plot_3d_grid=st.session_state.def_plot_3d_grid)
     st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
 
     st.success('''
@@ -472,9 +478,11 @@ with st.container():
             try:
                 # gong_map = get_gong_map(time=date, filepath=None)
                 gong_map = get_gong_map_cached(time=date, filepath=None)
+                st.toast('GONG map obtained.')
 
                 # Calculate the potential field source surface solution
                 pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss, coord_sys=coord_sys)
+                st.toast('PFSS solution calculated.')
                 c.plot_pfss(rss=rss,
                             pfss_solution=pfss_solution,
                             vary=vary,
@@ -505,6 +513,7 @@ with st.container():
                           markers=markers,
                           reference_vsw=st.session_state.def_reference_vsw,
                           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                          # plot_3d_grid=st.session_state.def_plot_3d_grid,
                           zoom_out=False)
                 c.pfss_3d(color_code="object", rss=rss,
                           plot_spirals=st.session_state.def_plot_spirals,
@@ -512,6 +521,7 @@ with st.container():
                           markers=markers,
                           reference_vsw=st.session_state.def_reference_vsw,
                           plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                          # plot_3d_grid=st.session_state.def_plot_3d_grid,
                           zoom_out=True)
                 st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
             except IndexError:
