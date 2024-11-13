@@ -502,6 +502,8 @@ if __name__ == '__main__':
                     # Wait for result.
                     pfss_solution = ray.get(future)
 
+                    ray.shutdown()
+
                     st.toast('PFSS solution calculated.')
                     c.plot_pfss(rss=rss,
                                 pfss_solution=pfss_solution,
