@@ -488,7 +488,7 @@ if __name__ == '__main__':
 
                     # Pick max number of concurrent processes. Depends on how heavy your computation is, and how
                     # powerful your machine is.
-                    MAX_WORKERS = None  # 50
+                    MAX_WORKERS = 50
 
                     @st.cache_resource
                     def get_executor():
