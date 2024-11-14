@@ -108,6 +108,104 @@ def get_gong_map_cached(time, filepath=None):
     return get_gong_map(time, filepath=filepath)
 
 
+@st.fragment
+def show_classic_plots():
+    """
+    Generates and displays classic 2D and 3D plots using the provided
+    configuration from Streamlit session state and provides options to download
+    them in a way that won't cause the app to re-run.
+    """
+    c.plot(
+        plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
+        plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
+        reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
+        transparent=st.session_state.def_transparent,
+        # numbered_markers=st.session_state.def_numbered,
+        markers=markers,
+        long_offset=st.session_state.def_long_offset,
+        # outfile=filename+'.png'                               # output file (optional)
+    )
+
+    # download plot
+    plot2 = io.BytesIO()
+    plt.savefig(plot2, format='png', bbox_inches="tight")
+    st.download_button(
+        label="Download figure as .png file",
+        data=plot2.getvalue(),
+        file_name=filename+'.png',
+        mime="image/png")
+
+    # download plot, alternative. produces actual png image on server.
+    # needs # outfile=filename+'.png' uncommented above
+    # with open(filename+'.png', 'rb') as f:
+    #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
+
+    # load 3d plot
+    st.subheader("**:red[3d view (BETA)]**")
+    st.error("Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
+    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
+              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+              markers=markers,
+              reference_vsw=st.session_state.def_reference_vsw,
+              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+              plot_3d_grid=st.session_state.def_plot_3d_grid,
+              )
+    st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
+    #
+    return
+
+
+@st.fragment
+def show_pfss_plots():
+    """
+    Generates and displays PFSS plots and provides options to download them in
+    a way that won't cause the app to re-run.
+    """
+    c.plot_pfss(rss=rss,
+                pfss_solution=pfss_solution,
+                vary=vary,
+                n_varies=n_varies,
+                long_offset=st.session_state.def_long_offset,
+                reference_vsw=st.session_state.def_reference_vsw,
+                markers=markers,
+                plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
+                figsize=(12, 8),
+                dpi=200,
+                # outfile=pfss_filename+'.png'
+                )
+    # download plot
+    plot2 = io.BytesIO()
+    plt.savefig(plot2, format='png', bbox_inches="tight")
+    st.download_button(
+        label="Download figure as .png file",
+        data=plot2.getvalue(),
+        file_name=filename+'_PFSS'+'.png',
+        mime="image/png")
+
+    st.write("The following two plots show the same content, just at different default zoom levels:")
+
+    # load 3d plot
+    c.pfss_3d(color_code="object", rss=rss,
+                plot_spirals=st.session_state.def_plot_spirals,
+                plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                markers=markers,
+                reference_vsw=st.session_state.def_reference_vsw,
+                plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                plot_3d_grid=st.session_state.def_plot_3d_grid,
+                zoom_out=False)
+    c.pfss_3d(color_code="object", rss=rss,
+                plot_spirals=st.session_state.def_plot_spirals,
+                plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                markers=markers,
+                reference_vsw=st.session_state.def_reference_vsw,
+                plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                plot_3d_grid=st.session_state.def_plot_3d_grid,
+                zoom_out=True)
+    st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+    #
+    return
+
+
 # obtain query paramamters from URL; convert query dictionary to old format
 query_params = {}
 for key in st.query_params.keys():
@@ -361,42 +459,8 @@ if len(body_list) == len(vsw_list):
         markers=st.session_state.def_markers.lower()
         # markers_pfss_3d=st.session_state.def_markers.lower()
 
-    c.plot(
-        plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
-        plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
-        reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
-        transparent=st.session_state.def_transparent,
-        # numbered_markers=st.session_state.def_numbered,
-        markers=markers,
-        long_offset=st.session_state.def_long_offset,
-        # outfile=filename+'.png'                               # output file (optional)
-    )
-
-    # download plot
-    plot2 = io.BytesIO()
-    plt.savefig(plot2, format='png', bbox_inches="tight")
-    st.download_button(
-        label="Download figure as .png file",
-        data=plot2.getvalue(),
-        file_name=filename+'.png',
-        mime="image/png")
-
-    # download plot, alternative. produces actual png image on server.
-    # needs # outfile=filename+'.png' uncommented above
-    # with open(filename+'.png', 'rb') as f:
-    #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
-
-    # load 3d plot
-    st.subheader("**:red[3d view (BETA)]**")
-    st.error("Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
-    c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
-              plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-              markers=markers,
-              reference_vsw=st.session_state.def_reference_vsw,
-              plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
-              plot_3d_grid=st.session_state.def_plot_3d_grid,
-              )
-    st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
+    # call the classic Solar-MACH plots and download button here with a fragment function so that the app won't re-run while interacting
+    show_classic_plots()
 
     st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
@@ -484,47 +548,10 @@ with st.container():
                 # Calculate the potential field source surface solution
                 pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss, coord_sys=coord_sys)
                 st.toast('PFSS solution calculated.')
-                c.plot_pfss(rss=rss,
-                            pfss_solution=pfss_solution,
-                            vary=vary,
-                            n_varies=n_varies,
-                            long_offset=st.session_state.def_long_offset,
-                            reference_vsw=st.session_state.def_reference_vsw,
-                            markers=markers,
-                            plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
-                            figsize=(12, 8),
-                            dpi=200,
-                            # outfile=pfss_filename+'.png'
-                            )
-                # download plot
-                plot2 = io.BytesIO()
-                plt.savefig(plot2, format='png', bbox_inches="tight")
-                st.download_button(
-                    label="Download figure as .png file",
-                    data=plot2.getvalue(),
-                    file_name=filename+'_PFSS'+'.png',
-                    mime="image/png")
 
-                st.write("The following two plots show the same content, just at different default zoom levels:")
+                # call the PFSS plots and download button here with a fragment function so that the app won't re-run while interacting
+                show_pfss_plots()
 
-                # load 3d plot
-                c.pfss_3d(color_code="object", rss=rss,
-                          plot_spirals=st.session_state.def_plot_spirals,
-                          plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-                          markers=markers,
-                          reference_vsw=st.session_state.def_reference_vsw,
-                          plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
-                          plot_3d_grid=st.session_state.def_plot_3d_grid,
-                          zoom_out=False)
-                c.pfss_3d(color_code="object", rss=rss,
-                          plot_spirals=st.session_state.def_plot_spirals,
-                          plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-                          markers=markers,
-                          reference_vsw=st.session_state.def_reference_vsw,
-                          plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
-                          plot_3d_grid=st.session_state.def_plot_3d_grid,
-                          zoom_out=True)
-                st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
             except IndexError:
                 st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️")
             # import plotly.graph_objects as go
