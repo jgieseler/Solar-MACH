@@ -5,7 +5,6 @@ pyshorteners
 scipy
 speasy>=1.2.7
 git+https://github.com/jgieseler/solarmach/
-ray
 stqdm
 streamlit
 streamlit-analytics2
