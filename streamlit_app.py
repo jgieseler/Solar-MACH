@@ -153,6 +153,7 @@ def show_classic_plots():
               reference_vsw=st.session_state.def_reference_vsw,
               plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
               plot_3d_grid=st.session_state.def_plot_3d_grid,
+              plot_vertical_line=st.session_state.def_plot_vertical_line,
               )
     st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
     #
@@ -196,6 +197,7 @@ def show_pfss_plots():
                 reference_vsw=st.session_state.def_reference_vsw,
                 plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                 plot_3d_grid=st.session_state.def_plot_3d_grid,
+                plot_vertical_line=st.session_state.def_plot_vertical_line,
                 zoom_out=False)
     c.pfss_3d(color_code="object", rss=rss,
                 plot_spirals=st.session_state.def_plot_spirals,
@@ -204,6 +206,7 @@ def show_pfss_plots():
                 reference_vsw=st.session_state.def_reference_vsw,
                 plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
                 plot_3d_grid=st.session_state.def_plot_3d_grid,
+                plot_vertical_line=st.session_state.def_plot_vertical_line,
                 zoom_out=True)
     st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
     #
@@ -327,8 +330,13 @@ with st.sidebar.container():
 
     if ("plot_3d_axis" in query_params) and int(query_params["plot_3d_axis"][0]) == 1:
         st.session_state.def_plot_3d_grid = True
-    st.sidebar.checkbox(':red[x, y, z grid & axis (only 3d plot)]', value=True, key='def_plot_3d_grid')  # , on_change=clear_url)
+    st.sidebar.checkbox(':red[x, y, z axis & grid (only 3d plot)]', value=True, key='def_plot_3d_grid')  # , on_change=clear_url)
     st.session_state["plot_3d_axis"] = [1] if st.session_state.def_plot_3d_grid else [0]
+
+    if ("plot_vertical_line" in query_params) and int(query_params["plot_vertical_line"][0]) == 1:
+        st.session_state.def_plot_vertical_line = True
+    st.sidebar.checkbox(':red[Vertical line from eq. plane to body (only 3d plot)]', value=False, key='def_plot_vertical_line')  # , on_change=clear_url)
+    st.session_state["plot_vertical_line"] = [1] if st.session_state.def_plot_vertical_line else [0]
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
