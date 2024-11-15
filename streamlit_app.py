@@ -142,7 +142,11 @@ def show_classic_plots():
 
     # load 3d plot
     st.subheader("**:red[3d view (BETA)]**")
-    st.error("Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
+    st.error('''
+             Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).
+    
+             Note that at the moment saving the figure will always provide the *default* view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.
+             ''')
     c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
               markers=markers,
@@ -521,7 +525,13 @@ else:
 # with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
 with st.container():
     st.header("**:red[PFSS extension (BETA)]**", divider='grey')
-    st.error("Be aware that the PFSS extension is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/Solar-MACH/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).")
+    st.error('''
+             Be aware that the PFSS extension is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).
+    
+             Note that at the moment saving a 3d figure will always provide the *default* view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.
+             ''')
+
+
     form = st.form("PFSS_form")
     # form.write("If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)!")
     form.caption('If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)! Note that for the semi-logarithmic PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
