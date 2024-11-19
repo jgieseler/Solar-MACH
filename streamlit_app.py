@@ -70,7 +70,7 @@ scroll_navbar(
                                           },
                      "navbarButtonHover": {"backgroundColor": "#ae3434",  # Set a custom hover color for the buttons
                                            },
-                     "navbarButtonActive": {"backgroundColor": "#922c2b",  # Set a custom color for the active buttons
+                     "navbarButtonActive": {"backgroundColor": "#ff4b4b",  # 922c2b. Set a custom color for the active buttons
                                            },
                      "navigationBarBase": {"backgroundColor": "#f8f9fa",  # Change the navigation bar background color
                                            "height": "60px",
