@@ -8,4 +8,5 @@ git+https://github.com/jgieseler/solarmach/
 stqdm
 streamlit
 streamlit-analytics2
+streamlit_scroll_navigation>=1.1.6
 sunpy>=4.1.5

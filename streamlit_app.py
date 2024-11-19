@@ -12,6 +12,7 @@ import streamlit as st
 from astropy.coordinates import SkyCoord
 from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed, calculate_pfss_solution, get_gong_map
+from streamlit_scroll_navigation import scroll_navbar
 
 
 def delete_from_state(vars):
@@ -37,7 +38,7 @@ st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
                    menu_items=menu_items)
 
 st.title('Solar-MACH')
-st.header('Multi-spacecraft configuration plotter')
+st.header('Multi-spacecraft configuration plotter', anchor='classic')
 
 # TODO: This doesn't seem to work anymore with streamlit version 1.28.1
 st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.0rem; } </style> ", unsafe_allow_html=True)
@@ -54,7 +55,29 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.success("⬇️ **Scroll down for new 3d view and PFSS extension (both BETA)!** ⬇️")
+# st.success("⬇️ **Scroll down for new 3d view and PFSS extension (both BETA)!** ⬇️")
+
+scroll_navbar(
+    ['classic', '3d', 'PFSS'],
+    key="navbar",
+    anchor_labels=["Classic view", "3d view (BETA)", "PFSS extension (BETA)"],
+    orientation="horizontal",
+    override_styles={
+                     "navbarButtonBase": {"backgroundColor": "#ff4b4b",  # Set a custom button background color
+                                          "color": "#ffffff",  # Set custom text color
+                                          "border-radius": "5px",
+                                          "padding-top": "8px",
+                                          },
+                     "navbarButtonHover": {"backgroundColor": "#ae3434",  # Set a custom hover color for the buttons
+                                           },
+                     "navbarButtonActive": {"backgroundColor": "#922c2b",  # Set a custom color for the active buttons
+                                           },
+                     "navigationBarBase": {"backgroundColor": "#f8f9fa",  # Change the navigation bar background color
+                                           "height": "60px",
+                                           },                      
+                    },
+    auto_update_anchor=True,
+    )
 
 # st.info("""
 #        📢 **Update November 2022** 📢
@@ -141,7 +164,7 @@ def show_classic_plots():
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
     # load 3d plot
-    st.subheader("**:red[3d view (BETA)]**")
+    st.subheader("**:red[3d view (BETA)]**", anchor='3d')
     st.error('''
              Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).
     
@@ -532,7 +555,7 @@ else:
 # experimental PFSS extension
 # with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
 with st.container():
-    st.header("**:red[PFSS extension (BETA)]**", divider='grey')
+    st.header("**:red[PFSS extension (BETA)]**", divider='grey', anchor='PFSS')
     st.error('''
              Be aware that the PFSS extension is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).
     
