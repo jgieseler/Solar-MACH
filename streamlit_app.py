@@ -473,11 +473,15 @@ st.markdown('For the Streamlit interface to the python package, refer to **Solar
              [<img src="https://img.shields.io/static/v1?label=GitHub&message=Solar-MACH&color=blue&logo=github" height="20">](https://github.com/jgieseler/Solar-MACH/) \
              [<img src="https://img.shields.io/static/v1?label=Contact&message=jan.gieseler@utu.fi&color=red&logo=gmail" height="20">](mailto:jan.gieseler@utu.fi?subject=Solar-MACH)', unsafe_allow_html=True)
 
-col1, col2 = st.columns((5, 1))
-col1.markdown("*The development of the online tool has received funding from the European Union's Horizon 2020 \
-              research and innovation programme under grant agreement No 101004159 (SERPENTINE).*")
-col2.markdown('[<img src="https://serpentine-h2020.eu/wp-content/uploads/2021/02/SERPENTINE_logo_new.png" \
-                height="80">](https://serpentine-h2020.eu)', unsafe_allow_html=True)
+col1, col2 = st.columns((5, 2))
+col1.markdown("*This project has received funding from the European Union's Horizon Europe research and \
+               innovation programme under grant agreement No 101134999 ([SOLER](https://soler-horizon.eu)) and from the EU's \
+               Horizon 2020 research and innovation programme under grant agreement No 101004159 ([SERPENTINE](https://serpentine-h2020.eu)).*")
+col2.markdown(' \
+               [<img src="app/static/SOLER_logo.png" height="80">](https://soler-horizon.eu) \
+               [<img src="https://serpentine-h2020.eu/wp-content/uploads/2021/02/SERPENTINE_logo_new.png" height="80">](https://serpentine-h2020.eu) \
+              ', unsafe_allow_html=True)
+# col2.markdown('[<img src="app/static/SOLER_logo.png" height="80">](https://soler-horizon.eu)', unsafe_allow_html=True)
 
 st.markdown('Powered by: \
             [<img src="https://matplotlib.org/_static/logo_dark.svg" height="25">](https://matplotlib.org) \
