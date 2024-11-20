@@ -488,7 +488,8 @@ st.markdown('Powered by: \
             [<img src="https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.svg" height="30">](https://streamlit.io) \
             [<img src="https://raw.githubusercontent.com/sunpy/sunpy-logo/master/generated/sunpy_logo_landscape.svg" height="30">](https://sunpy.org) \
             [<img src="https://raw.githubusercontent.com/SciQLop/speasy/main/logo/logo_speasy.svg" height="30">](https://pypi.org/project/speasy/) \
-            [<img src="app/static/amdaPrint.png" height="30">](http://amda.irap.omp.eu/)',
+            [<img src="app/static/amdaPrint.png" height="30">](http://amda.irap.omp.eu/) \
+            [<img src="https://avatars.githubusercontent.com/u/5997976?s=64&v=4" height="25">](https://github.com/plotly/plotly.py)',
             unsafe_allow_html=True)
 
 if "verbose" in st.session_state.keys():
