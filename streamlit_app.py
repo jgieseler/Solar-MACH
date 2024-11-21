@@ -58,26 +58,26 @@ st.markdown(
 # st.success("⬇️ **Scroll down for new 3d view and PFSS extension (both BETA)!** ⬇️")
 
 scroll_navbar(
-    ['classic', '3d', 'PFSS'],
-    key="navbar",
-    anchor_labels=["Classic view", "3d view (BETA)", "PFSS extension (BETA)"],
-    orientation="horizontal",
-    override_styles={
-                     "navbarButtonBase": {"backgroundColor": "#ff4b4b",  # Set a custom button background color
-                                          "color": "#ffffff",  # Set custom text color
-                                          "border-radius": "5px",
-                                          "padding-top": "8px",
-                                          },
-                     "navbarButtonHover": {"backgroundColor": "#ae3434",  # Set a custom hover color for the buttons
-                                           },
-                     "navbarButtonActive": {"backgroundColor": "#ff4b4b",  # 922c2b. Set a custom color for the active buttons
-                                           },
-                     "navigationBarBase": {"backgroundColor": "#f8f9fa",  # Change the navigation bar background color
-                                           "height": "60px",
-                                           },                      
-                    },
-    auto_update_anchor=True,
-    )
+        ['classic', '3d', 'PFSS'],
+        key="navbar",
+        anchor_labels=["Classic view", "3d view (BETA)", "PFSS extension (BETA)"],
+        orientation="horizontal",
+        override_styles={
+                        "navbarButtonBase": {"backgroundColor": "#ff4b4b",  # Set a custom button background color
+                                            "color": "#ffffff",  # Set custom text color
+                                            "border-radius": "5px",
+                                            "padding-top": "8px",
+                                            },
+                        "navbarButtonHover": {"backgroundColor": "#ae3434",  # Set a custom hover color for the buttons
+                                            },
+                        "navbarButtonActive": {"backgroundColor": "#ff4b4b",  # 922c2b. Set a custom color for the active buttons
+                                            },
+                        "navigationBarBase": {"backgroundColor": "#f8f9fa",  # Change the navigation bar background color
+                                            "height": "60px",
+                                            },                      
+                        },
+        auto_update_anchor=True,
+        )
 
 # st.info("""
 #        📢 **Update November 2022** 📢
@@ -120,6 +120,14 @@ def obtain_vsw(body_list, date, default_vsw):
     st.session_state["obtained_vsw"] = obtained_vsw
     st.session_state["speeds"] = vsw_list2
 
+
+@st.fragment
+def download_table_button():
+    st.download_button(
+        label="Download table as .csv file",
+        data=c.coord_table.to_csv(index=False),
+        file_name=filename+'.csv',
+        mime='text/csv')
 
 def reset_vsw(body_list):
     delete_from_state(["obtained_vsw"])
@@ -539,11 +547,7 @@ if len(body_list) == len(vsw_list):
     st.table(df.T)
 
     # download coordinates
-    st.download_button(
-        label="Download table as .csv file",
-        data=c.coord_table.to_csv(index=False),
-        file_name=filename+'.csv',
-        mime='text/csv')
+    download_table_button()
 else:
     st.error(f"ERROR: Number of elements in the bodies/spacecraft list \
                ({len(body_list)}) and solar wind speed list ({len(vsw_list)}) \
@@ -605,20 +609,22 @@ st.markdown('###### Save or share this setup by bookmarking or distributing the 
 
 st.info(url)
 
-cont1 = st.container()
+
+@st.fragment
+def short_url_button(url):
+    def get_short_url(url):
+        """
+        generate short da.gd URL
+        """
+        s = pyshorteners.Shortener()
+        surl = s.dagd.short(url)
+        # cont1.write(surl)
+        cont1.success(surl)
+    cont1 = st.container()
+    cont1.button('Generate short URL', on_click=get_short_url, args=[url])
 
 
-def get_short_url(url):
-    """
-    generate short da.gd URL
-    """
-    s = pyshorteners.Shortener()
-    surl = s.dagd.short(url)
-    # cont1.write(surl)
-    cont1.success(surl)
-
-
-cont1.button('Generate short URL', on_click=get_short_url, args=[url])
+short_url_button(url=url)
 
 # st.warning('''
 #            ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022 and again in June 2023.** ⚠️
