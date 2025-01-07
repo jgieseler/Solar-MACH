@@ -443,7 +443,8 @@ with st.sidebar.container():
 
     with st.sidebar.expander("Solar wind speed (km/s) per S/C", expanded=True):
         vsw_dict = {}
-        st.button("Try to obtain measurements :mag:", on_click=obtain_vsw, args=[body_list, date, def_vsw_list], type='primary')
+        st.button("Try to obtain measurements* :mag:", on_click=obtain_vsw, args=[body_list, date, def_vsw_list], type='primary')
+        st.caption(r'\* Some data is preliminary browse data!')
         for i, body in enumerate(body_list):
             if "obtained_vsw" in st.session_state:
                 if st.session_state["obtained_vsw"][body]==-1:
