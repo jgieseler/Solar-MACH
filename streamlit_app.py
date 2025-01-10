@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.error("**2025-01-09: Solar-MACH is not working at the moment** due to technical problems at JPL! This is possibly connected to wildfire and may persist longer, see https://emergency.jpl.nasa.gov.", icon="⚠️")
+st.error("**2025-01-10: Due to a wildfire near JPL, Solar-MACH outages may occur.**", icon="⚠️")
 
 st.success("Try out Solar-MACH's **3d view** and **PFSS extension (both BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)!")
 
