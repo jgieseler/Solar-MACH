@@ -576,7 +576,7 @@ with st.container():
     # Set the height of the source surface as a boundary condition for pfss extrapolation
     col1, col2 = form.columns((3, 1))
     col1.write('Set source surface height (in solar radii):')
-    rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, step=0.1, label_visibility='collapsed')
+    rss = col2.number_input('Set source surface height (in solar radii)', value=2.5, min_value=0.99, step=0.1, label_visibility='collapsed')
     col1, col2 = form.columns((3, 1))
     col1.write('Track down a flux tube instead of a single field line:')
     vary = col2.checkbox('vary', value=False, label_visibility="collapsed")
