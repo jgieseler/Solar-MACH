@@ -54,7 +54,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.error("**2025-01-10: Due to a wildfire near JPL, Solar-MACH outages may occur.**", icon="⚠️")
+# st.error("**2025-01-10: Due to a wildfire near JPL, Solar-MACH outages may occur.**", icon="⚠️")
 
 st.success("Try out Solar-MACH's **3d view** and **PFSS extension (both BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)!")
 
