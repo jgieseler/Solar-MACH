@@ -419,8 +419,9 @@ st.sidebar.subheader('Choose bodies/spacecraft and measured solar wind speeds')
 with st.sidebar.container():
     all_bodies = print_body_list()
 
-    # rename L1 point and order body list alphabetically
-    all_bodies = all_bodies.replace('SEMB-L1', 'L1')
+    # rename Lx point and order body list alphabetically
+    for l in ['1', '2', '4', '5']:
+        all_bodies = all_bodies.replace(f'SEMB-L{l}', f'L{l}')
     all_bodies = all_bodies.sort_index()
 
     # set starting parameters from URL if available, otherwise use defaults
