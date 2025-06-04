@@ -56,7 +56,7 @@ st.markdown(
 
 # st.error("**2025-01-10: Due to a wildfire near JPL, Solar-MACH outages may occur.**", icon="⚠️")
 
-st.success("Try out Solar-MACH's **3d view** and **PFSS extension (both BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)!")
+st.success("Try out Solar-MACH's **3d view** and **PFSS extension (both BETA)** at [solar-mach-pfss.streamlit.app](https://solar-mach-pfss.streamlit.app)! 🚀")
 
 # st.info("""
 #        📢 **Update November 2022** 📢
@@ -435,8 +435,23 @@ st.markdown('###### Save or share this setup by bookmarking or distributing the 
 
 st.info(url)
 
-cont1 = st.container()
+with st.expander("⚠️ **The URL format has changed in July 2022 and again in June 2023. Click here for more info.**", expanded=False):
+    st.markdown('''
+           * Because of changes to Streamlit, the URL format has changed in July 2022 and in June 2023.
+           * If you still have old URLs, you can update them by replacing one of the following 
+             ```
+             https://share.streamlit.io/jgieseler/solar-mach?
 
+             https://solar-mach.streamlitapp.com/?embedded=true&
+             ```
+             with 
+             ```
+             https://solar-mach.streamlit.app/?embedded=true&
+             ```
+           * In order to update a short URL that has been generated in the past, first get the full URL by adding `/coshorten` to it, e.g., `https://da.gd/B95XM` ⇒ `https://da.gd/coshorten/B95XM`. After that, you can update the URL like above.
+           ''')
+
+cont1 = st.container()
 
 def get_short_url(url):
     """
@@ -447,15 +462,7 @@ def get_short_url(url):
     # cont1.write(surl)
     cont1.success(surl)
 
-
 cont1.button('Generate short URL', on_click=get_short_url, args=[url])
-
-st.warning('''
-           ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022 and again in June 2023.** ⚠️
-           * If you still have old URLs, you can update them by replacing either "https://share.streamlit.io/jgieseler/solar-mach?" or "https://solar-mach.streamlitapp.com/?embedded=true&" with "https://solar-mach.streamlit.app/?embedded=true&" (everything without quotation marks).
-           * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
-           * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
-           ''')
 
 # streamlit_analytics.start_tracking()  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 
