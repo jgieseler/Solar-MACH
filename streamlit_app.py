@@ -613,6 +613,21 @@ st.markdown('###### Save or share this setup by bookmarking or distributing the 
 
 st.info(url)
 
+with st.expander("⚠️ **The URL format has changed in July 2022 and again in June 2023. Click here for more info.**", expanded=False):
+    st.markdown('''
+           * Because of changes to Streamlit, the URL format has changed in July 2022 and in June 2023.
+           * If you still have old URLs, you can update them by replacing one of the following 
+             ```
+             https://share.streamlit.io/jgieseler/solar-mach?
+
+             https://solar-mach.streamlitapp.com/?embedded=true&
+             ```
+             with 
+             ```
+             https://solar-mach.streamlit.app/?embedded=true&
+             ```
+           * In order to update a short URL that has been generated in the past, first get the full URL by adding `/coshorten` to it, e.g., `https://da.gd/B95XM` ⇒ `https://da.gd/coshorten/B95XM`. After that, you can update the URL like above.
+           ''')
 
 @st.fragment
 def short_url_button(url):
@@ -629,13 +644,6 @@ def short_url_button(url):
 
 
 short_url_button(url=url)
-
-# st.warning('''
-#            ⚠️ **NOTE: Because of changes to Streamlit, the URL format has changed in July 2022 and again in June 2023.** ⚠️
-#            * If you still have old URLs, you can update them by replacing either "https://share.streamlit.io/jgieseler/solar-mach?" or "https://solar-mach.streamlitapp.com/?embedded=true&" with "https://solar-mach.streamlit.app/?embedded=true&" (everything without quotation marks).
-#            * In order to update a short URL that has been generated in the past, first get the full URL by adding "/coshorten" to it, e.g., https://da.gd/B95XM ⇒ https://da.gd/coshorten/B95XM. After that, you can update the URL like above.
-#            * Be aware that the new URL format might change in the near future again (hopefully to something more clear and permanent).
-#            ''')
 
 # streamlit_analytics.start_tracking()  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 
