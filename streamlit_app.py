@@ -588,7 +588,7 @@ with st.container():
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
 
     if run_pfss:
-        with st.spinner('Running PFSS analysis, please wait...'):
+        with st.spinner('Running PFSS analysis, please wait...', show_time=True):
             try:
                 # gong_map = get_gong_map(time=date, filepath=None)
                 gong_map = get_gong_map_cached(time=date, filepath=None)
