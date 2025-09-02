@@ -149,6 +149,20 @@ def show_classic_plots():
     configuration from Streamlit session state and provides options to download
     them in a way that won't cause the app to re-run.
     """
+
+    # first create hidden solarmach figure in pdf format
+    fig, ax = c.plot(
+                     plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
+                     plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
+                     reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
+                     transparent=st.session_state.def_transparent,
+                     markers=markers,
+                     long_offset=st.session_state.def_long_offset,
+                     outfile=filename+'.pdf',                                                   # output file (optional)
+                     return_plot_object=True
+                     )
+
+    # second figure in png format that will be displayed
     c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
@@ -160,15 +174,25 @@ def show_classic_plots():
         # outfile=filename+'.png'                               # output file (optional)
     )
 
-    # download plot
+    col_db_1, col_db_2 = st.columns(2, gap='small')
+    # download plot png
     plot2 = io.BytesIO()
     plt.savefig(plot2, format='png', bbox_inches="tight")
-    st.download_button(
+    col_db_1.download_button(
         label="Download figure as .png file",
         data=plot2.getvalue(),
         file_name=filename+'.png',
         on_click='ignore',
         mime="image/png")
+    
+    # download plot pdf
+    with open(filename+'.pdf', 'rb') as f:
+        col_db_2.download_button(
+            label="Download figure as .pdf file",
+            data=f,
+            file_name=filename+'.pdf',
+            on_click='ignore',
+            mime="application/pdf")
 
     # download plot, alternative. produces actual png image on server.
     # needs # outfile=filename+'.png' uncommented above
