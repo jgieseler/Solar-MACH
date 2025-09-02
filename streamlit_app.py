@@ -129,6 +129,7 @@ def download_table_button():
         label="Download table as .csv file",
         data=c.coord_table.to_csv(index=False),
         file_name=filename+'.csv',
+        on_click='ignore',
         mime='text/csv')
 
 def reset_vsw(body_list):
@@ -166,6 +167,7 @@ def show_classic_plots():
         label="Download figure as .png file",
         data=plot2.getvalue(),
         file_name=filename+'.png',
+        on_click='ignore',
         mime="image/png")
 
     # download plot, alternative. produces actual png image on server.
@@ -218,6 +220,7 @@ def show_pfss_plots():
         label="Download figure as .png file",
         data=plot2.getvalue(),
         file_name=filename+'_PFSS'+'.png',
+        on_click='ignore',
         mime="image/png")
 
     st.write("The following two plots show the same content, just at different default zoom levels:")
