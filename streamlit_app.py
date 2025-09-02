@@ -371,6 +371,7 @@ if len(body_list) == len(vsw_list):
         label="Download figure as .png file",
         data=plot2.getvalue(),
         file_name=filename+'.png',
+        on_click='ignore',
         mime="image/png")
 
     # download plot, alternative. produces actual png image on server.
@@ -424,6 +425,7 @@ if len(body_list) == len(vsw_list):
         label="Download table as .csv file",
         data=c.coord_table.to_csv(index=False),
         file_name=filename+'.csv',
+        on_click='ignore',
         mime='text/csv')
 else:
     st.error(f"ERROR: Number of elements in the bodies/spacecraft list \
