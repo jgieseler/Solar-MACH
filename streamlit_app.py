@@ -105,11 +105,6 @@ def reset_vsw(body_list):
     st.session_state["speeds"] = [400] * len(body_list)
 
 
-@st.cache_data
-def get_gong_map_cached(time, filepath=None):
-    return get_gong_map(time, filepath=filepath)
-
-
 # obtain query paramamters from URL; convert query dictionary to old format
 query_params = {}
 for key in st.query_params.keys():
