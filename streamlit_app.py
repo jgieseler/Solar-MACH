@@ -2,15 +2,15 @@ import datetime
 import io
 import os
 import pyshorteners
-import astropy.units as u
+# import astropy.units as u
 import matplotlib.pyplot as plt
-import numpy as np
+# import numpy as np
 from stqdm import stqdm
 import streamlit as st
 # import streamlit_analytics  # TODO: un-comment when streamlit-analytics has been updated with https://github.com/jrieke/streamlit-analytics/pull/44
 # import streamlit_analytics2 as streamlit_analytics
-from astropy.coordinates import SkyCoord
-from sunpy.coordinates import frames
+# from astropy.coordinates import SkyCoord
+# from sunpy.coordinates import frames
 from solarmach import SolarMACH, print_body_list, get_sw_speed, calculate_pfss_solution, get_gong_map
 from streamlit_scroll_navigation import scroll_navbar
 
