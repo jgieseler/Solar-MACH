@@ -32,7 +32,7 @@ menu_items = {'About': about_info,
               'Report a bug': report_bug_link}
 
 # set page config - must be the first Streamlit command in the app
-st.set_page_config(page_title='Solar-MACH', page_icon=":satellite:",
+st.set_page_config(page_title='Solar-MACH', page_icon="🛰️",
                    initial_sidebar_state="expanded",
                    menu_items=menu_items)
 
