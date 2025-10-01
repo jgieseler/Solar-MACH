@@ -55,14 +55,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# st.success("⬇️ **Scroll down for new 3d view and PFSS extension (both BETA)!** ⬇️")
-
 # st.error("**2025-01-10: Due to a wildfire near JPL, Solar-MACH outages may occur.**", icon="⚠️")
 
 scroll_navbar(
         ['classic', '3d', 'PFSS'],
         key="navbar",
-        anchor_labels=["Classic view", "3d view (BETA)", "PFSS extension (BETA)"],
+        anchor_labels=["Classic view", "3d view", "PFSS extension"],
         orientation="horizontal",
         override_styles={
                         "navbarButtonBase": {"backgroundColor": "#ff4b4b",  # Set a custom button background color
@@ -200,12 +198,7 @@ def show_classic_plots():
     #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
 
     # load 3d plot
-    st.subheader("**:red[3d view (BETA)]**", anchor='3d')
-    st.error('''
-             Be aware that the 3d view is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).
-    
-             Note that at the moment saving the figure will always provide the *default* view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.
-             ''')
+    st.subheader("**3d view**", anchor='3d')
     c.plot_3d(plot_spirals=st.session_state.def_plot_spirals,
               plot_sun_body_line=st.session_state.def_plot_sun_body_line,
               markers=markers,
@@ -215,6 +208,7 @@ def show_classic_plots():
               plot_vertical_line=st.session_state.def_plot_vertical_line,
               )
     st.caption('Sun not to scale. Hover over plot and click on 📷 in the top right to save the plot.')
+    st.caption('Note that at the moment saving the figure will always provide the default view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.')
     #
     return
 
@@ -269,6 +263,7 @@ def show_pfss_plots():
                 plot_vertical_line=st.session_state.def_plot_vertical_line,
                 zoom_out=True)
     st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
+    st.caption('Note that at the moment saving the figure will always provide the default view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.')
     #
     return
 
@@ -383,20 +378,26 @@ with st.sidebar.container():
     # st.session_state["plot_nr"] = [1] if st.session_state.def_numbered else [0]
     st.session_state["plot_markers"] = [st.session_state.def_markers]
 
-    if ("plot_eq" in query_params) and int(query_params["plot_eq"][0]) == 1:
-        st.session_state.def_plot_equatorial_plane = True
-    st.sidebar.checkbox(':red[Equatorial plane (only 3d plot)]', value=True, key='def_plot_equatorial_plane')  # , on_change=clear_url)
-    st.session_state["plot_eq"] = [1] if st.session_state.def_plot_equatorial_plane else [0]
+    with st.sidebar.container(border=True):
+        # st.subheader('3d plot options:')
+        # st.caption('**:primary[3d plot options]:**')
+        # st.markdown('**3d plot options:**')
+        st.write(r"$\textsf{\footnotesize 3d view options:}$")
+        if ("plot_eq" in query_params) and int(query_params["plot_eq"][0]) == 1:
+            st.session_state.def_plot_equatorial_plane = True
+        st.checkbox('Heliographic equatorial plane', value=True, key='def_plot_equatorial_plane')  # , on_change=clear_url)
+        st.session_state["plot_eq"] = [1] if st.session_state.def_plot_equatorial_plane else [0]
 
-    if ("plot_3d_axis" in query_params) and int(query_params["plot_3d_axis"][0]) == 1:
-        st.session_state.def_plot_3d_grid = True
-    st.sidebar.checkbox(':red[x, y, z axis & grid (only 3d plot)]', value=True, key='def_plot_3d_grid')  # , on_change=clear_url)
-    st.session_state["plot_3d_axis"] = [1] if st.session_state.def_plot_3d_grid else [0]
+        if ("plot_3d_axis" in query_params) and int(query_params["plot_3d_axis"][0]) == 1:
+            st.session_state.def_plot_3d_grid = True
+        st.checkbox('x, y, z axes & grid', value=True, key='def_plot_3d_grid')  # , on_change=clear_url)
+        st.session_state["plot_3d_axis"] = [1] if st.session_state.def_plot_3d_grid else [0]
 
-    if ("plot_vertical_line" in query_params) and int(query_params["plot_vertical_line"][0]) == 1:
-        st.session_state.def_plot_vertical_line = True
-    st.sidebar.checkbox(':red[Vertical line from eq. plane to body (only 3d plot)]', value=False, key='def_plot_vertical_line')  # , on_change=clear_url)
-    st.session_state["plot_vertical_line"] = [1] if st.session_state.def_plot_vertical_line else [0]
+        if ("plot_vertical_line" in query_params) and int(query_params["plot_vertical_line"][0]) == 1:
+            st.session_state.def_plot_vertical_line = True
+        st.checkbox('Vertical line from eq. plane to body', value=False, key='def_plot_vertical_line')  # , on_change=clear_url)
+        st.session_state["plot_vertical_line"] = [1] if st.session_state.def_plot_vertical_line else [0]
+
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
@@ -543,6 +544,8 @@ if len(body_list) == len(vsw_list):
            Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
            [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
            ''')
+        
+    st.warning('Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
     # display coordinates table
     df = c.coord_table
@@ -590,13 +593,7 @@ else:
 # experimental PFSS extension
 # with st.expander(":red[**PFSS extension (experimental)**]", expanded=True):
 with st.container():
-    st.header("**:red[PFSS extension (BETA)]**", divider='grey', anchor='PFSS')
-    st.error('''
-             Be aware that the PFSS extension is still in beta stage! Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).
-    
-             Note that at the moment saving a 3d figure will always provide the *default* view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.
-             ''')
-
+    st.header("**PFSS extension**", divider='grey', anchor='PFSS')
 
     form = st.form("PFSS_form")
     # form.write("If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)!")
@@ -692,11 +689,13 @@ st.markdown('For the Streamlit interface to the python package, refer to **Solar
              [<img src="https://img.shields.io/static/v1?label=GitHub&message=Solar-MACH&color=blue&logo=github" height="20">](https://github.com/jgieseler/Solar-MACH/) \
              [<img src="https://img.shields.io/static/v1?label=Contact&message=jan.gieseler@utu.fi&color=red&logo=gmail" height="20">](mailto:jan.gieseler@utu.fi?subject=Solar-MACH)', unsafe_allow_html=True)
 
-col1, col2 = st.columns((5, 1))
-col1.markdown("*The development of the online tool has received funding from the European Union's Horizon 2020 \
-              research and innovation programme under grant agreement No 101004159 (SERPENTINE).*")
-col2.markdown('[<img src="https://serpentine-h2020.eu/wp-content/uploads/2021/02/SERPENTINE_logo_new.png" \
-                height="80">](https://serpentine-h2020.eu)', unsafe_allow_html=True)
+st.markdown("*This tool has received funding from the European Union's Horizon Europe research and innovation programme under grant agreement No 101134999 ([SOLER](https://soler-horizon.eu)) \
+                and from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 101004159 ([SERPENTINE](https://serpentine-h2020.eu)).*")
+col1, col2 = st.columns((4, 2))
+col1.markdown("*The tool reflects only the authors’ view and the European Commission is not responsible for any use that may be made of the information it contains.*")
+col2.markdown('<img src="https://github.com/user-attachments/assets/5bec543a-5d80-4083-9357-f11bc4b339bd" alt="SOLER logo" height="80">\
+               <img src="https://github.com/user-attachments/assets/28c60e00-85b4-4cf3-a422-6f0524c42234" alt="EU flag" height="80">\
+               ', unsafe_allow_html=True)
 
 st.markdown('Powered by: \
             [<img src="https://matplotlib.org/_static/logo_dark.svg" height="25">](https://matplotlib.org) \
