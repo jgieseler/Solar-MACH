@@ -626,7 +626,10 @@ with st.container():
                 show_pfss_plots()
 
             except IndexError:
-                st.warning("Couldn't obtain input GONG map. Probably too recent (or old) date selected.", icon="⚠️")
+                st.error("Couldn't obtain input GONG map. This usually happens when selecting a too recent date, \
+                            or for old dates when there is no corresponding GONG map at the selected time. \
+                            In the latter case, you can [browse the GONG archive](https://magmap.nso.edu/QR/zq1/) \
+                            and select a date/time when a map is available.", icon="⚠️")
             # import plotly.graph_objects as go
             # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
 
