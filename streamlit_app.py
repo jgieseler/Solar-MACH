@@ -39,8 +39,27 @@ st.set_page_config(page_title='Solar-MACH', page_icon="🛰️",
 st.title('Solar-MACH')
 st.header('Multi-spacecraft longitudinal configuration plotter')
 
-# TODO: This doesn't seem to work anymore with streamlit version 1.28.1
-st.markdown(" <style> div[class^='st-emotion-cache-10oheav'] { padding-top: 0.0rem; } </style> ", unsafe_allow_html=True)
+# adjust main block and sidebar padding
+st.markdown(
+    """
+        <style>
+                .stMainBlockContainer {
+                    # padding-left: 0rem;
+                    # padding-right: 0rem;
+                    padding-top: 2rem;
+                    padding-bottom: 0rem;
+                }
+                .stAppHeader {
+                    background-color: rgba(255, 255, 255, 0.0);
+                    visibility: visible;
+                }
+                [data-testid = "stSidebarHeader"] {
+                    height: 2rem; /* 2rem keeps just enough space for the icon*/
+                }
+        </style>
+        """,
+    unsafe_allow_html=True,
+)
 
 # Inject custom CSS to set the width of the sidebar
 st.markdown(
