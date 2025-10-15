@@ -6,3 +6,4 @@ env/
 .ipynb_checkpoints/
 tstex_modules/
 .streamlit/secrets.toml
+.DS_Store
