@@ -191,7 +191,7 @@ with st.sidebar.container():
     # set starting parameters from URL if available, otherwise use defaults
     # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
     def_coord_sys = int(st.session_state["coord_sys"][0]) if "coord_sys" in st.session_state else 0
-    coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True, on_change=delete_from_state(["reference_long"]))
+    coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)  #, on_change=delete_from_state(["reference_long"]))
     st.session_state["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
 
     st.sidebar.subheader('Plot options:')
@@ -257,9 +257,15 @@ with st.sidebar.container():
 
         # read in coordinates from user
         if coord_sys == 'Carrington':
+            if def_reference_long < 0 or def_reference_long > 360:
+                st.warning('⚠️ **ERROR:** For Carrington coordinates, longitude must be between 0 and 360 degrees! Setting to 0.')
+                def_reference_long = 0
             reference_long = st.number_input('Longitude (0 to 360):', min_value=0, max_value=360, value=def_reference_long)  # , on_change=clear_url)
             reference_lat = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
         elif coord_sys == 'Stonyhurst':
+            if def_reference_long < -180 or def_reference_long > 180:
+                st.warning('⚠️ **ERROR:** For Stonyhurst coordinates, longitude must be between -180 and 180 degrees! Setting to 0.')
+                def_reference_long = 0
             reference_long = st.number_input('Longitude (-180 to 180):', min_value=-180, max_value=180, value=def_reference_long)  # , on_change=clear_url)
             reference_lat = st.number_input('Latitude (-90 to 90):', min_value=-90, max_value=90, value=def_reference_lat)  # , on_change=clear_url)
 
