@@ -263,7 +263,7 @@ def show_pfss_plots():
     st.write("The following two plots show the same content, just at different default zoom levels:")
 
     # load 3d plot
-    c.pfss_3d(color_code="object", rss=rss,
+    c.plot_pfss_3d(color_code="object", rss=rss,
                 plot_spirals=st.session_state.def_plot_spirals,
                 plot_sun_body_line=st.session_state.def_plot_sun_body_line,
                 markers=markers,
@@ -272,7 +272,7 @@ def show_pfss_plots():
                 plot_3d_grid=st.session_state.def_plot_3d_grid,
                 plot_vertical_line=st.session_state.def_plot_vertical_line,
                 zoom_out=False)
-    c.pfss_3d(color_code="object", rss=rss,
+    c.plot_pfss_3d(color_code="object", rss=rss,
                 plot_spirals=st.session_state.def_plot_spirals,
                 plot_sun_body_line=st.session_state.def_plot_sun_body_line,
                 markers=markers,
@@ -656,7 +656,7 @@ with st.container():
                             You can [browse the GONG archive](https://magmap.nso.edu/QR/zq1/) \
                             and select a date/time when a map is available.", icon="⚠️")
             # import plotly.graph_objects as go
-            # st.plotly_chart(go.Figure(data=[c.pfss_3d(color_code="object")]))
+            # st.plotly_chart(go.Figure(data=[c.plot_pfss_3d(color_code="object")]))
 
 
 st.markdown("""---""")
