@@ -1,6 +1,6 @@
 matplotlib
 numpy
-parfive>=2.3.0
+parfive==2.1.0
 pyshorteners
 scipy
 speasy>=1.2.7
