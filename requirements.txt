@@ -1,6 +1,6 @@
 matplotlib
 numpy
-parfive==2.1.0  # TODO: relax when parfive is working again for downloading GONG maps
+parfive>=2.3.1
 pyshorteners
 scipy
 speasy>=1.2.7
