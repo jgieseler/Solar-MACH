@@ -284,6 +284,40 @@ def show_pfss_plots():
     st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
     st.caption('Note that at the moment saving the figure will always provide the default view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.')
     #
+    df_pfss = c.pfss_table
+
+    df_pfss.index = df_pfss['Spacecraft/Body']
+    df_pfss = df_pfss.drop(columns=['Spacecraft/Body'])
+    df_pfss = df_pfss.rename(columns={"Spacecraft/Body": "Spacecraft / body",
+                            f"{coord_sys} longitude (°)": f"{coord_sys} longitude [°]",
+                            f"{coord_sys} latitude (°)": f"{coord_sys} latitude [°]",
+                            "Heliocentric_distance (R_Sun)": "Heliocent. distance [R_Sun]",
+                            "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
+                            "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
+                            "Vsw": "Solar wind speed [km/s]",
+                            f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
+                            "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
+                            "Longitudinal separation between body's magnetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
+                            "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
+
+    df_pfss2 = df_pfss.copy()
+    decimals = 1
+    df_pfss = df_pfss.round({f"{coord_sys} longitude [°]": decimals,
+                             f"{coord_sys} latitude [°]": decimals,
+                             "Heliocent. distance [R_Sun]": decimals,
+                             "Footpoint lon separation to Earth's footpoint lon": decimals,
+                             "Footpoint lat separation to Earth's footpoint lat": decimals,
+                             "Solar wind speed [km/s]": decimals,
+                             f"Magnetic footpoint {coord_sys} longitude [°]": decimals,
+                             "Longitud. separation bw. body & reference [°]": decimals,
+                             "Longitud. separation bw. body's magnetic footpoint & reference [°]": decimals,
+                             "Latitudinal separation bw. body & reference [°]": decimals
+                             }).astype(str)
+    #               }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0" if using decimals=0
+    df_pfss['Magnetic footpoint (PFSS)'] = df_pfss2['Magnetic footpoint (PFSS)'].apply(lambda x: (float(round(x[0], decimals)), float(round(x[1], decimals)))).astype(str)
+
+    st.table(df_pfss.T)
+
     return
 
 
