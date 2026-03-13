@@ -314,7 +314,7 @@ def show_pfss_plots():
                              "Latitudinal separation bw. body & reference [°]": decimals
                              }).astype(str)
     #               }).astype(np.int64).astype(str)  # yes, convert to int64 first and then to str to get rid of ".0" if using decimals=0
-    df_pfss['Magnetic footpoint (PFSS)'] = df_pfss2['Magnetic footpoint (PFSS)'].apply(lambda x: (float(round(x[0], decimals)), float(round(x[1], decimals)))).astype(str)
+    df_pfss['Magnetic footpoint (long, lat) at photosphere derived by PFSS'] = df_pfss2['Magnetic footpoint (long, lat) at photosphere derived by PFSS'].apply(lambda x: (float(round(x[0], decimals)), float(round(x[1], decimals)))).astype(str)
 
     st.table(df_pfss.T)
 
