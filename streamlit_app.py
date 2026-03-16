@@ -76,27 +76,25 @@ st.markdown(
 
 # st.error("**2025-01-10: Due to a wildfire near JPL, Solar-MACH outages may occur.**", icon="⚠️")
 
-scroll_navbar(
-        ['classic', '3d', 'PFSS'],
-        key="navbar",
-        anchor_labels=["Classic view", "3d view", "PFSS extension"],
-        orientation="horizontal",
-        override_styles={
-                        "navbarButtonBase": {"backgroundColor": "#ff4b4b",  # Set a custom button background color
-                                            "color": "#ffffff",  # Set custom text color
-                                            "border-radius": "5px",
-                                            "padding-top": "8px",
-                                            },
-                        "navbarButtonHover": {"backgroundColor": "#ae3434",  # Set a custom hover color for the buttons
-                                            },
-                        "navbarButtonActive": {"backgroundColor": "#ff4b4b",  # 922c2b. Set a custom color for the active buttons
-                                            },
-                        "navigationBarBase": {"backgroundColor": "#f8f9fa",  # Change the navigation bar background color
-                                            "height": "60px",
-                                            },                      
-                        },
-        auto_update_anchor=True,
-        )
+scroll_navbar(['classic', '3d', 'PFSS'],
+              key="navbar",
+              anchor_labels=["Classic view", "3d view", "PFSS extension"],
+              orientation="horizontal",
+              override_styles={"navbarButtonBase": {"backgroundColor": "#ff4b4b",  # Set a custom button background color
+                                                    "color": "#ffffff",  # Set custom text color
+                                                    "border-radius": "5px",
+                                                    "padding-top": "8px",
+                                                    },
+                               "navbarButtonHover": {"backgroundColor": "#ae3434",  # Set a custom hover color for the buttons
+                                                     },
+                               "navbarButtonActive": {"backgroundColor": "#ff4b4b",  # 922c2b. Set a custom color for the active buttons
+                                                      },
+                               "navigationBarBase": {"backgroundColor": "#f8f9fa",  # Change the navigation bar background color
+                                                     "height": "60px",
+                                                     },
+                               },
+              auto_update_anchor=True,
+              )
 
 # st.info("""
 #        📢 **Update November 2022** 📢
@@ -126,7 +124,7 @@ def clear_url():
 # @st.cache_data
 def obtain_vsw(body_list, date, default_vsw):
     vsw_list2 = []
-    obtained_vsw = {}  #[]
+    obtained_vsw = {}  # []
     for i, body in stqdm(enumerate(body_list), desc="Obtaining solar wind speeds for selected bodies..."):
         vsw = get_sw_speed(body, date, default_vsw=default_vsw[i])
         vsw_list2.append(vsw)
@@ -149,6 +147,7 @@ def download_table_button():
         on_click='ignore',
         mime='text/csv')
 
+
 def reset_vsw(body_list):
     delete_from_state(["obtained_vsw"])
     st.session_state["speeds"] = [400] * len(body_list)
@@ -168,8 +167,7 @@ def show_classic_plots():
     """
 
     # first create hidden solarmach figure in pdf format
-    fig, ax = c.plot(
-                     plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
+    fig, ax = c.plot(plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
                      plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
                      reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
                      transparent=st.session_state.def_transparent,
@@ -201,7 +199,7 @@ def show_classic_plots():
         file_name=filename+'.png',
         on_click='ignore',
         mime="image/png")
-    
+
     # download plot pdf
     with open(filename+'.pdf', 'rb') as f:
         col_db_2.download_button(
@@ -264,23 +262,23 @@ def show_pfss_plots():
 
     # load 3d plot
     c.plot_pfss_3d(color_code="object", rss=rss,
-                plot_spirals=st.session_state.def_plot_spirals,
-                plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-                markers=markers,
-                reference_vsw=st.session_state.def_reference_vsw,
-                plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
-                plot_3d_grid=st.session_state.def_plot_3d_grid,
-                plot_vertical_line=st.session_state.def_plot_vertical_line,
-                zoom_out=False)
+                   plot_spirals=st.session_state.def_plot_spirals,
+                   plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                   markers=markers,
+                   reference_vsw=st.session_state.def_reference_vsw,
+                   plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                   plot_3d_grid=st.session_state.def_plot_3d_grid,
+                   plot_vertical_line=st.session_state.def_plot_vertical_line,
+                   zoom_out=False)
     c.plot_pfss_3d(color_code="object", rss=rss,
-                plot_spirals=st.session_state.def_plot_spirals,
-                plot_sun_body_line=st.session_state.def_plot_sun_body_line,
-                markers=markers,
-                reference_vsw=st.session_state.def_reference_vsw,
-                plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
-                plot_3d_grid=st.session_state.def_plot_3d_grid,
-                plot_vertical_line=st.session_state.def_plot_vertical_line,
-                zoom_out=True)
+                   plot_spirals=st.session_state.def_plot_spirals,
+                   plot_sun_body_line=st.session_state.def_plot_sun_body_line,
+                   markers=markers,
+                   reference_vsw=st.session_state.def_reference_vsw,
+                   plot_equatorial_plane=st.session_state.def_plot_equatorial_plane,
+                   plot_3d_grid=st.session_state.def_plot_3d_grid,
+                   plot_vertical_line=st.session_state.def_plot_vertical_line,
+                   zoom_out=True)
     st.caption('Hover over plot and click on 📷 in the top right to save the plot.')
     st.caption('Note that at the moment saving the figure will always provide the default view of it (see [#35](https://github.com/jgieseler/Solar-MACH/issues/35) for details). If you want to save a custom view, you need to make a screenshot.')
     #
@@ -289,16 +287,16 @@ def show_pfss_plots():
     df_pfss.index = df_pfss['Spacecraft/Body']
     df_pfss = df_pfss.drop(columns=['Spacecraft/Body'])
     df_pfss = df_pfss.rename(columns={"Spacecraft/Body": "Spacecraft / body",
-                            f"{coord_sys} longitude (°)": f"{coord_sys} longitude [°]",
-                            f"{coord_sys} latitude (°)": f"{coord_sys} latitude [°]",
-                            "Heliocentric_distance (R_Sun)": "Heliocent. distance [R_Sun]",
-                            "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
-                            "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
-                            "Vsw": "Solar wind speed [km/s]",
-                            f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
-                            "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
-                            "Longitudinal separation between body's magnetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
-                            "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
+                                      f"{coord_sys} longitude (°)": f"{coord_sys} longitude [°]",
+                                      f"{coord_sys} latitude (°)": f"{coord_sys} latitude [°]",
+                                      "Heliocentric_distance (R_Sun)": "Heliocent. distance [R_Sun]",
+                                      "Longitudinal separation to Earth's longitude": "Longitud. separation to Earth longitude [°]",
+                                      "Latitudinal separation to Earth's latitude": "Latitud. separation to Earth latitude [°]",
+                                      "Vsw": "Solar wind speed [km/s]",
+                                      f"Magnetic footpoint longitude ({coord_sys})": f"Magnetic footpoint {coord_sys} longitude [°]",
+                                      "Longitudinal separation between body and reference_long": "Longitud. separation bw. body & reference [°]",
+                                      "Longitudinal separation between body's magnetic footpoint and reference_long": "Longitud. separation bw. body's magnetic footpoint & reference [°]",
+                                      "Latitudinal separation between body and reference_lat": "Latitudinal separation bw. body & reference [°]"})
 
     df_pfss2 = df_pfss.copy()
     decimals = 1
@@ -374,10 +372,10 @@ stime = st.session_state.time_input.strftime("%H%M")
 
 # if changing datetime, remove obtained_vsw from session_state (bc. new vsw need to be obtained for changed datetime)
 if "date" in st.session_state.keys():
-    if st.session_state["date"] != [sdate]: 
+    if st.session_state["date"] != [sdate]:
         delete_from_state(["obtained_vsw"])
 if "time" in st.session_state.keys():
-    if st.session_state["time"] != [stime]: 
+    if st.session_state["time"] != [stime]:
         delete_from_state(["obtained_vsw"])
 
 st.session_state["date"] = [sdate]
@@ -390,7 +388,7 @@ with st.sidebar.container():
     # set starting parameters from URL if available, otherwise use defaults
     # def_reference_sys = int(query_params["reference_sys"][0]) if "reference_sys" in query_params else 0
     def_coord_sys = int(st.session_state["coord_sys"][0]) if "coord_sys" in st.session_state else 0
-    coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)  #, on_change=delete_from_state(["reference_long"]))
+    coord_sys = st.sidebar.radio('Coordinate system:', coord_sys_list, index=def_coord_sys, horizontal=True)  # , on_change=delete_from_state(["reference_long"]))
     st.session_state["coord_sys"] = [str(coord_sys_list.index(coord_sys))]
 
     st.sidebar.subheader('Plot options:')
@@ -452,7 +450,6 @@ with st.sidebar.container():
             st.session_state.def_plot_vertical_line = True
         st.checkbox('Vertical line from eq. plane to body', value=False, key='def_plot_vertical_line')  # , on_change=clear_url)
         st.session_state["plot_vertical_line"] = [1] if st.session_state.def_plot_vertical_line else [0]
-
 
     if ("long_offset" in query_params):
         st.session_state.def_long_offset = int(st.session_state["long_offset"][0])
@@ -544,7 +541,7 @@ with st.sidebar.container():
                 if st.session_state["obtained_vsw"][body]==1:
                     obtained_vsw_status = '  ✅'
             else:
-                obtained_vsw_status = ''    
+                obtained_vsw_status = ''
             vsw_dict[body] = int(st.number_input(body+obtained_vsw_status, min_value=0,
                                  value=def_vsw_dict.get(body, 400),
                                  step=50))  # , on_change=clear_url))
@@ -605,7 +602,7 @@ if len(body_list) == len(vsw_list):
            Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
            [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
            ''')
-        
+
     st.warning('Please give us feedback through [GitHub issues](https://github.com/jgieseler/solarmach/issues) or by sending an [e-mail](mailto:jan.gieseler@utu.fi?subject=Solar-MACH).')
 
     # display coordinates table
@@ -704,18 +701,19 @@ st.info(url)
 with st.expander("⚠️ **The URL format has changed in July 2022 and again in June 2023. Click here for more info.**", expanded=False):
     st.markdown('''
            * Because of changes to Streamlit, the URL format has changed in July 2022 and in June 2023.
-           * If you still have old URLs, you can update them by replacing one of the following 
+           * If you still have old URLs, you can update them by replacing one of the following
              ```
              https://share.streamlit.io/jgieseler/solar-mach?
 
              https://solar-mach.streamlitapp.com/?embedded=true&
              ```
-             with 
+             with
              ```
              https://solar-mach.streamlit.app/?embedded=true&
              ```
            * In order to update a short URL that has been generated in the past, first get the full URL by adding `/coshorten` to it, e.g., `https://da.gd/B95XM` ⇒ `https://da.gd/coshorten/B95XM`. After that, you can update the URL like above.
            ''')
+
 
 @st.fragment
 def short_url_button(url):
