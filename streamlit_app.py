@@ -121,7 +121,6 @@ def clear_url():
     st.query_params["embedded"] = 'true'
 
 
-# @st.cache_data
 def obtain_vsw(body_list, date, default_vsw):
     vsw_list2 = []
     obtained_vsw = {}  # []
@@ -151,11 +150,6 @@ def download_table_button():
 def reset_vsw(body_list):
     delete_from_state(["obtained_vsw"])
     st.session_state["speeds"] = [400] * len(body_list)
-
-
-@st.cache_data
-def get_gong_map_cached(time, filepath=None):
-    return get_gong_map(time, filepath=filepath)
 
 
 @st.fragment
@@ -682,8 +676,7 @@ with st.container():
     if run_pfss:
         with st.spinner('Running PFSS analysis, please wait...', show_time=True):
             try:
-                # gong_map = get_gong_map(time=date, filepath=None)
-                gong_map = get_gong_map_cached(time=date, filepath='gong_maps')  # use cached version of GONG map if available, otherwise download and cache it; this probably won't affect running on the streamlit cloud, but locally it should
+                gong_map = get_gong_map(time=date, filepath='gong_maps')
                 st.toast('GONG map obtained.')
 
                 # Calculate the potential field source surface solution
