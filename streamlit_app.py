@@ -166,19 +166,8 @@ def show_classic_plots():
     them in a way that won't cause the app to re-run.
     """
 
-    # first create hidden solarmach figure in pdf format
-    fig, ax = c.plot(plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
-                     plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
-                     reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
-                     transparent=st.session_state.def_transparent,
-                     markers=markers,
-                     long_offset=st.session_state.def_long_offset,
-                     outfile=filename+'.pdf',                                                   # output file (optional)
-                     return_plot_object=True
-                     )
-
-    # second figure in png format that will be displayed
-    c.plot(
+    # get figure object before Streamlit renders it
+    fig, ax = c.plot(
         plot_spirals=st.session_state.def_plot_spirals,                            # plot Parker spirals for each body
         plot_sun_body_line=st.session_state.def_plot_sun_body_line,                # plot straight line between Sun and body
         reference_vsw=st.session_state.def_reference_vsw,                          # define solar wind speed at reference
@@ -187,32 +176,35 @@ def show_classic_plots():
         markers=markers,
         long_offset=st.session_state.def_long_offset,
         # outfile=filename+'.png'                               # output file (optional)
+        return_plot_object=True
     )
 
+    # save both formats from the figure object before the canvas becomes stale
+    plot_png = io.BytesIO()
+    fig.savefig(plot_png, format='png', bbox_inches="tight")
+
+    plot_pdf = io.BytesIO()
+    fig.savefig(plot_pdf, format='pdf', bbox_inches="tight")
+
+    plt.close(fig)
+
     col_db_1, col_db_2 = st.columns(2, gap='small')
+
     # download plot png
-    plot2 = io.BytesIO()
-    plt.savefig(plot2, format='png', bbox_inches="tight")
     col_db_1.download_button(
         label="Download figure as .png file",
-        data=plot2.getvalue(),
+        data=plot_png.getvalue(),
         file_name=filename+'.png',
         on_click='ignore',
         mime="image/png")
 
     # download plot pdf
-    with open(filename+'.pdf', 'rb') as f:
-        col_db_2.download_button(
-            label="Download figure as .pdf file",
-            data=f,
-            file_name=filename+'.pdf',
-            on_click='ignore',
-            mime="application/pdf")
-
-    # download plot, alternative. produces actual png image on server.
-    # needs # outfile=filename+'.png' uncommented above
-    # with open(filename+'.png', 'rb') as f:
-    #     st.download_button('Download figure as .png file', f, file_name=filename+'.png', mime="image/png")
+    col_db_2.download_button(
+        label="Download figure as .pdf file",
+        data=plot_pdf.getvalue(),
+        file_name=filename+'.pdf',
+        on_click='ignore',
+        mime="application/pdf")
 
     # load 3d plot
     st.subheader("**3d view**", anchor='3d')
@@ -752,9 +744,9 @@ st.markdown('For the Streamlit interface to the python package, refer to **Solar
              [<img src="https://img.shields.io/static/v1?label=Contact&message=jan.gieseler@utu.fi&color=red&logo=gmail" height="20">](mailto:jan.gieseler@utu.fi?subject=Solar-MACH)', unsafe_allow_html=True)
 
 st.markdown("*This tool has received funding from the European Union's Horizon Europe research and innovation programme under grant agreement No 101134999 ([SOLER](https://soler-horizon.eu)) \
-                and from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 101004159 ([SERPENTINE](https://serpentine-h2020.eu)).*")
+                and from the European Union's Horizon 2020 research and innovation programme under grant agreement No 101004159 ([SERPENTINE](https://serpentine-h2020.eu)).*")
 col1, col2 = st.columns((4, 2))
-col1.markdown("*The tool reflects only the authors’ view and the European Commission is not responsible for any use that may be made of the information it contains.*")
+col1.markdown("*The tool reflects only the authors' view and the European Commission is not responsible for any use that may be made of the information it contains.*")
 col2.markdown('<img src="https://github.com/user-attachments/assets/5bec543a-5d80-4083-9357-f11bc4b339bd" alt="SOLER logo" height="80">\
                <img src="https://github.com/user-attachments/assets/28c60e00-85b4-4cf3-a422-6f0524c42234" alt="EU flag" height="80">\
                ', unsafe_allow_html=True)
