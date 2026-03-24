@@ -228,27 +228,45 @@ def show_pfss_plots():
     Generates and displays PFSS plots and provides options to download them in
     a way that won't cause the app to re-run.
     """
-    c.plot_pfss(rss=rss,
-                pfss_solution=pfss_solution,
-                vary=vary,
-                n_varies=n_varies,
-                long_offset=st.session_state.def_long_offset,
-                reference_vsw=st.session_state.def_reference_vsw,
-                markers=markers,
-                plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
-                figsize=(12, 8),
-                dpi=200,
-                # outfile=pfss_filename+'.png'
-                )
-    # download plot
-    plot2 = io.BytesIO()
-    plt.savefig(plot2, format='png', bbox_inches="tight")
-    st.download_button(
+    fig, ax = c.plot_pfss(rss=rss,
+                          pfss_solution=pfss_solution,
+                          vary=vary,
+                          n_varies=n_varies,
+                          long_offset=st.session_state.def_long_offset,
+                          reference_vsw=st.session_state.def_reference_vsw,
+                          markers=markers,
+                          plot_spirals=True,  # st.session_state.def_plot_spirals - crashes for False
+                          figsize=(12, 8),
+                          dpi=200,
+                          return_plot_object=True
+                          )
+
+    # save both formats from the figure object before the canvas becomes stale
+    plot_png = io.BytesIO()
+    fig.savefig(plot_png, format='png', bbox_inches="tight")
+
+    plot_pdf = io.BytesIO()
+    fig.savefig(plot_pdf, format='pdf', bbox_inches="tight")
+
+    plt.close(fig)
+
+    col_db_1, col_db_2 = st.columns(2, gap='small')
+
+    # download plot png
+    col_db_1.download_button(
         label="Download figure as .png file",
-        data=plot2.getvalue(),
+        data=plot_png.getvalue(),
         file_name=filename+'_PFSS'+'.png',
         on_click='ignore',
         mime="image/png")
+
+    # download plot pdf
+    col_db_2.download_button(
+        label="Download figure as .pdf file",
+        data=plot_pdf.getvalue(),
+        file_name=filename+'_PFSS'+'.pdf',
+        on_click='ignore',
+        mime="application/pdf")
 
     st.write("The following two plots show the same content, just at different default zoom levels:")
 
