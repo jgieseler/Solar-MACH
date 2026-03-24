@@ -673,7 +673,7 @@ with st.container():
         with st.spinner('Running PFSS analysis, please wait...', show_time=True):
             try:
                 # gong_map = get_gong_map(time=date, filepath=None)
-                gong_map = get_gong_map_cached(time=date, filepath=None)
+                gong_map = get_gong_map_cached(time=date, filepath='gong_maps')  # use cached version of GONG map if available, otherwise download and cache it; this probably won't affect running on the streamlit cloud, but locally it should
                 st.toast('GONG map obtained.')
 
                 # Calculate the potential field source surface solution
