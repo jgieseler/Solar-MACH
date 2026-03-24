@@ -676,7 +676,7 @@ with st.container():
     if run_pfss:
         with st.spinner('Running PFSS analysis, please wait...', show_time=True):
             try:
-                gong_map = get_gong_map(time=date, filepath='gong_maps')
+                gong_map = get_gong_map(time=date, filepath=None)
                 st.toast('GONG map obtained.')
 
                 # Calculate the potential field source surface solution
