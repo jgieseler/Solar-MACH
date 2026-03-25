@@ -152,6 +152,11 @@ def reset_vsw(body_list):
     st.session_state["speeds"] = [400] * len(body_list)
 
 
+@st.cache_data
+def get_gong_map_cached(time, filepath=None):
+    return get_gong_map(time, filepath=filepath)
+
+
 @st.fragment
 def show_classic_plots():
     """
@@ -676,7 +681,8 @@ with st.container():
     if run_pfss:
         with st.spinner('Running PFSS analysis, please wait...', show_time=True):
             try:
-                gong_map = get_gong_map(time=date, filepath=None)
+                # gong_map = get_gong_map(time=date, filepath=None)
+                gong_map = get_gong_map_cached(time=date, filepath=None)
                 st.toast('GONG map obtained.')
                 st.write(f'GONG magnetogram date: {gong_map.date.iso}')
 
