@@ -678,6 +678,7 @@ with st.container():
             try:
                 gong_map = get_gong_map(time=date, filepath=None)
                 st.toast('GONG map obtained.')
+                st.write(f'GONG magnetogram date: {gong_map.date.iso}')
 
                 # Calculate the potential field source surface solution
                 pfss_solution = calculate_pfss_solution(gong_map=gong_map, rss=rss, coord_sys=coord_sys)
