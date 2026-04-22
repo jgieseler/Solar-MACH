@@ -587,9 +587,17 @@ url = url.replace(' ', '+')
 # url2 = url2.replace(' ', '+')
 
 
+@st.cache_resource(show_spinner="Initializing Solar-MACH...")
+def get_solarmach(date, body_list, vsw_list, reference_long, reference_lat, coord_sys):
+    # use tuple for body_list/vsw_list so it's hashable
+    return SolarMACH(date, list(body_list), list(vsw_list), reference_long, reference_lat, coord_sys)
+
+
 if len(body_list) == len(vsw_list):
     # initialize the bodies
-    c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
+    # c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
+    # use tuple for body_list/vsw_list so it's hashable
+    c = get_solarmach(date, tuple(body_list), tuple(vsw_list), reference_long, reference_lat, coord_sys)
 
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M")
