@@ -1,11 +1,12 @@
 # Solar MAgnetic Connection Haus tool
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://solar-mach.github.io)
-  [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.7100481-blue)](https://doi.org/10.5281/zenodo.7100481)  [![Python](https://img.shields.io/pypi/pyversions/solarmach?style=flat&logo=python)](https://pypi.org/project/solarmach/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.7100481-blue)](https://doi.org/10.5281/zenodo.7100481)
+[![Python](https://img.shields.io/pypi/pyversions/solarmach?style=flat&logo=python)](https://pypi.org/project/solarmach/)
 
 Streamlit frontend to the PyPI package [solarmach](https://pypi.org/project/solarmach/), used for [solar-mach.github.io](https://solar-mach.github.io).
 
-To install and start a local Streamlit server, run the following commands in your terminal:
+To install the requirements, run the following commands in your terminal:
 
 ```python
 # optional: create and activate virtual environment in python (alternatively use conda)
@@ -14,8 +15,11 @@ source env/bin/activate
 
 # install requirements with pip (alternatively use conda)
 pip3 install -r requirements.txt
+```
 
-# run the actual streamlit app
+To start a local Streamlit server, run the following command in your terminal (activate the virtual envirionment if created in the previous step):
+
+```python
 streamlit run streamlit_app.py 
 ```
 
