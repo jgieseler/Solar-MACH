@@ -6,17 +6,20 @@
 
 Streamlit frontend to the PyPI package [solarmach](https://pypi.org/project/solarmach/), used for [solar-mach.github.io](https://solar-mach.github.io).
 
-To install and start a local Streamlit server, run the following commands in your terminal:
+To install the requirements, run the following commands in your terminal:
 
 ```python
-# optional: create and activate virtual environment in python (alternatively use anaconda)
+# optional: create and activate virtual environment in python (alternatively use conda)
 python3 -m venv env
 source env/bin/activate
 
-# install requirements with pip (alternatively use anaconda)
+# install requirements with pip (alternatively use conda)
 pip3 install -r requirements.txt
+```
 
-# run the actual streamlit app
+To start a local Streamlit server, run the following command in your terminal (activate the virtual envirionment if created in the previous step):
+
+```python
 streamlit run streamlit_app.py 
 ```
 
