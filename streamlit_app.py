@@ -672,7 +672,7 @@ with st.container():
 
     form = st.form("PFSS_form")
     # form.write("If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)!")
-    form.caption('If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)! Note that for the semi-logarithmic PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never.')
+    form.caption('If you change any parameter (here or on the left), you have to re-run the PFSS analysis (though it should be faster after the initial run)! Note that for the semi-logarithmic PFSS plot _Parker spirals_ will always be plotted and _straight lines from Sun to body_ never. See [solarmach documentation](https://solarmach.readthedocs.io/en/latest/usage.html#Generate-a-semi-logarithmic-PFSS-plot-(can-take-a-minute)) for more details on the PFSS extension.')
     # Set the height of the source surface as a boundary condition for pfss extrapolation
     col1, col2 = form.columns((3, 1))
     col1.write('Set source surface height (in solar radii):')
