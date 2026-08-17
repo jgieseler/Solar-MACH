@@ -6,7 +6,7 @@ scipy
 speasy>=1.2.7
 git+https://github.com/jgieseler/solarmach/
 stqdm
-streamlit
+streamlit==1.56.0
 streamlit-analytics2
 streamlit_scroll_navigation>=1.2.2
 sunpy>=4.1.5
