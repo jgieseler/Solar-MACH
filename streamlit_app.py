@@ -154,7 +154,7 @@ def reset_vsw(body_list):
 
 @st.cache_data
 def get_gong_map_cached(time, filepath=None):
-    return get_gong_map(time, filepath=filepath)
+    return get_gong_map(time, filepath=filepath, verbose=True)
 
 
 @st.fragment
