@@ -402,7 +402,7 @@ if len(body_list) == len(vsw_list):
     st.success('''
            📄 **Citation:** Please cite the following paper if you use Solar-MACH in your publication.
 
-           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2022).
+           Gieseler, J., Dresing, N., Palmroos, C., von Forstner, J.L.F., Price, D.J., Vainio, R. et al. (2023).
            Solar-MACH: An open-source tool to analyze solar magnetic connection configurations. *Front. Astronomy Space Sci.* 9.
            [doi:10.3389/fspas.2022.1058810](https://doi.org/10.3389/fspas.2022.1058810)
            ''')
