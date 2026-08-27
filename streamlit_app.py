@@ -684,6 +684,7 @@ with st.container():
     col1.write('Thickness of flux tube (n * 0.03 rad * height_of_ss):')
     n_varies = col2.number_input('n_varies', value=1, step=1, label_visibility='collapsed')
 
+    form.warning("⚠️ **August 2026:** There are currently connection problems with the GONG archive. If you get an error message that the GONG map could not be obtained, please try again later. Alternatively, running the tool locally on your computer seems to be much less affected by the issue. See [solarmach documentation](https://solarmach.readthedocs.io/en/latest/usage.html#9.-Further-backmapping-with-PFSS) for more information.")
     run_pfss = form.form_submit_button('Start PFSS', type='primary')
 
     if run_pfss:
