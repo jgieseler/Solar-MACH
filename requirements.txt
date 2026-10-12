@@ -1,4 +1,4 @@
-matplotlib<3.11
+matplotlib
 numpy
 parfive>=2.3.1
 pyshorteners
