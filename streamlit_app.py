@@ -363,7 +363,19 @@ url = url.replace(' ', '+')
 
 if len(body_list) == len(vsw_list):
     # initialize the bodies
-    c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
+    try:
+        c = SolarMACH(date, body_list, vsw_list, reference_long, reference_lat, coord_sys)
+    except RuntimeError as e:
+        # Check specifically for the JPL Horizons connectivity issue
+        if "JPL Horizons" in str(e):
+            st.error(
+                "⚠️ **Could not reach JPL Horizons!**\n\n"
+                "There is a server-side issue trying to reach JPL Horizons (https://ssd.jpl.nasa.gov/horizons/). Please try again in a few minutes.\n\n"
+                f"**Technical details:**\n```\n{e}\n```"
+            )
+        else:
+            st.error(f"⚠️ **An unexpected error occurred:**\n\n```\n{e}\n```")
+        st.stop()  # Prevent the rest of the app from running with no valid `c`
 
     # make the longitudinal constellation plot
     filename = 'Solar-MACH_'+datetime.datetime.combine(st.session_state.date_input, st.session_state.time_input).strftime("%Y-%m-%d_%H-%M")
